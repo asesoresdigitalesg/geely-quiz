@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>¿Qué Geely puedes comprar HOY? | Geely Serdán Puebla</title>
+<title>¿Qué Geely puedes comprar HOY? | AsesoresDigitalesG Puebla</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -354,7 +354,7 @@
 
 <div class="wrapper">
   <div class="topbar">
-    <span class="topbar-logo">Geely Serdán</span>
+    <span class="topbar-logo">AsesoresDigitalesG</span>
     <div class="topbar-dot"></div>
     <span class="topbar-logo">Puebla 2026</span>
   </div>
@@ -374,7 +374,7 @@
     <button class="btn-next on" onclick="go('s-quiz'); renderQ()">
       Descubrir mi opción →
     </button>
-    <p class="legal" style="margin-top:16px">Geely Serdán · Financiamiento bancario y financiera · Puebla</p>
+    <p class="legal" style="margin-top:16px">AsesoresDigitalesG · Financiamiento bancario y financiera · Puebla</p>
   </div>
 
   <!-- ══════════════ QUIZ ══════════════ -->
@@ -425,7 +425,7 @@
             style="width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:13px;
             padding:16px 16px 16px 46px;color:var(--text);font-family:'DM Sans',sans-serif;
             font-size:15px;outline:none;transition:border-color 0.2s;"
-            oninput="checkCapture()"
+            oninput="checkCapture()" onpaste="setTimeout(checkCapture,10)" onchange="checkCapture()"
             onfocus="this.style.borderColor='var(--accent)'"
             onblur="this.style.borderColor='var(--border)'">
         </div>
@@ -441,7 +441,15 @@
         </div>
       </div>
 
-      <button class="btn-next" id="btn-capture" onclick="submitCapture()" style="margin-top:0">
+      <label id="privacy-wrap" style="display:flex;align-items:flex-start;gap:10px;margin-bottom:16px;cursor:pointer;">
+        <input type="checkbox" id="privacy-check" onchange="checkPrivacy()"
+          style="margin-top:3px;width:16px;height:16px;accent-color:var(--accent);flex-shrink:0;">
+        <span style="font-size:12px;color:var(--muted);line-height:1.5;">
+          Acepto que mis datos sean usados para recibir información sobre productos y promociones Geely.
+          <a href="#" onclick="showPrivacy(event)" style="color:var(--accent);text-decoration:none;">Ver aviso de privacidad</a>
+        </span>
+      </label>
+      <button class="btn-next on" id="btn-capture" onclick="submitCapture()" style="margin-top:0">
         Ver mi resultado →
       </button>
       <p style="font-size:11px;color:var(--muted);margin-top:14px;line-height:1.5;">
@@ -460,6 +468,8 @@
         <div class="result-model" id="r-model"></div>
         <div class="result-subtitle" id="r-subtitle"></div>
         <div class="fin-grid" id="r-fin"></div>
+        <div class="also-block" id="r-bono" style="display:none"></div>
+        <div class="also-block" id="r-versions" style="display:none"></div>
         <div class="also-block" id="r-also"></div>
         <div class="why-block" id="r-why"></div>
       </div>
@@ -468,10 +478,10 @@
         Quiero hablar con un asesor
       </a>
       <a class="cta-maps" href="https://maps.google.com/?q=Geely+Serdan+Puebla" target="_blank">
-        📍 Ver Geely Serdán en el mapa
+        📍 Ver AsesoresDigitalesG en el mapa
       </a>
       <button class="btn-restart" onclick="restart()">Volver a hacer el test</button>
-      <p class="legal">Mensualidades estimadas a 60 meses. Sujeto a aprobación crediticia.<br>Geely Serdán · Puebla · Precios 2026</p>
+      <p class="legal">Mensualidades estimadas a 60 meses. Sujeto a aprobación crediticia.<br>AsesoresDigitalesG · Puebla · Precios 2026</p>
     </div>
   </div>
 </div>
@@ -547,18 +557,132 @@ const questions = [
 // ══════════════════════════════════════════════════════
 // MODELOS Y PRECIOS (Puebla 2026, enganche 10%, 60 meses)
 // ══════════════════════════════════════════════════════
+// Precios Especiales Oferta Comercial Abril 2026 (BGFS-2404-2026)
+// Mensualidades estimadas a 60 meses con enganche 10%, tasa 10.99%–12.99%
 const models = {
-  emgrand:     { name: "EMGRAND",   full: "Geely Emgrand · Sedán",           price: 299990, monthly: [5100, 6200] },
-  coolray_l:   { name: "COOLRAY LITE", full: "Geely Coolray Lite · SUV",      price: 329990, monthly: [5600, 6800] },
-  ex2:         { name: "EX2",        full: "Geely EX2 · SUV Eléctrico",       price: 369990, monthly: [6300, 7600] },
-  coolray:     { name: "COOLRAY",    full: "Geely Coolray · SUV Turbo",       price: 399990, monthly: [6800, 8200] },
-  coolray_p:   { name: "COOLRAY PLUS", full: "Geely Coolray Plus · SUV",      price: 429990, monthly: [7300, 8800] },
-  cityray:     { name: "CITYRAY",    full: "Geely Cityray · SUV Compacto",    price: 449990, monthly: [7600, 9200] },
-  ex5:         { name: "EX5",        full: "Geely EX5 · SUV Eléctrico",       price: 489990, monthly: [8300, 10000] },
-  starray:     { name: "STARRAY",    full: "Geely Starray · SUV Premium",     price: 548990, monthly: [9300, 11200] },
-  okavango:    { name: "OKAVANGO",   full: "Geely Okavango · SUV Familiar",   price: 589990, monthly: [10000, 12000] },
-  monjaro:     { name: "MONJARO",    full: "Geely Monjaro · SUV Premium",     price: 749990, monthly: [12700, 15400] },
+  emgrand: {
+    name: "EMGRAND", full: "Geely Emgrand 2026 · Sedan",
+    bono: "Bono hasta $60,000 o Seguro Gratis",
+    tasa: "Tasa desde 10.99%",
+    versions: [
+      { ver: "GC", price: 264990, m: [4200, 5100] },
+      { ver: "GL", price: 297990, m: [4800, 5800] },
+      { ver: "GF", price: 313990, m: [5000, 6100] }
+    ]
+  },
+  gx3pro: {
+    name: "GX3 PRO", full: "Geely GX3 Pro 2026 · SUV Compacto",
+    bono: "Bono $35,000 o Seguro Gratis",
+    tasa: "Tasa desde 10.49% + 0% CxA",
+    versions: [
+      { ver: "GC", price: 294990, m: [4700, 5700] },
+      { ver: "GF", price: 324990, m: [5200, 6300] }
+    ]
+  },
+  coolray_l: {
+    name: "COOLRAY LITE", full: "Geely Coolray Lite 2026 · SUV",
+    bono: "Bono $10,000 en version GS MT",
+    tasa: "Tasa desde 10.49% + 0% CxA",
+    versions: [
+      { ver: "GS MT", price: 329990, m: [5200, 6300] },
+      { ver: "GS CVT", price: 359990, m: [5700, 6900] }
+    ]
+  },
+  ex2: {
+    name: "EX2", full: "Geely EX2 2026 · SUV Electrico",
+    bono: "Sin bono · Incluye Wallbox",
+    tasa: "Tasa desde 10.49% + 0% CxA",
+    versions: [
+      { ver: "GL", price: 389900, m: [6200, 7500] },
+      { ver: "GF", price: 419900, m: [6700, 8100] }
+    ]
+  },
+  coolray: {
+    name: "COOLRAY", full: "Geely Coolray 2026 · SUV Turbo",
+    bono: "Bono $40,000 o Seguro Gratis",
+    tasa: "Tasa desde 10.99% · 0% CxA con Plan CAMP",
+    versions: [
+      { ver: "GC", price: 399990, m: [6400, 7700] },
+      { ver: "GL", price: 419990, m: [6700, 8100] },
+      { ver: "GF", price: 469990, m: [7500, 9100] }
+    ]
+  },
+  new_coolray: {
+    name: "NEW COOLRAY", full: "Geely New Coolray 2026 · SUV",
+    bono: "Sin bono ni seguro gratis",
+    tasa: "Tasa desde 10.99% o 0% CxA",
+    versions: [
+      { ver: "GC PLUS", price: 399990, m: [6400, 7700] },
+      { ver: "GL PLUS", price: 419990, m: [6700, 8100] },
+      { ver: "GF PLUS", price: 469990, m: [7500, 9100] }
+    ]
+  },
+  cityray: {
+    name: "CITYRAY", full: "Geely Cityray 2026 · SUV Compacto",
+    bono: "Sin bono · Enganche desde $48,899",
+    tasa: "0% CxA con Plan CAMP",
+    versions: [
+      { ver: "GL", price: 488990, m: [7800, 9400] },
+      { ver: "GF", price: 518990, m: [8300, 10000] },
+      { ver: "GF Bitono", price: 528990, m: [8400, 10200] }
+    ]
+  },
+  starray25: {
+    name: "STARRAY 2025", full: "Geely Starray 2025 · SUV Premium",
+    bono: "Bono $70,000 o Seguro Gratis",
+    tasa: "Tasa desde 8.99%",
+    versions: [
+      { ver: "GL 1.5", price: 489990, m: [7800, 9400] },
+      { ver: "GL 2.0", price: 529990, m: [8500, 10200] },
+      { ver: "GF 2.0", price: 585990, m: [9400, 11300] }
+    ]
+  },
+  starray26: {
+    name: "STARRAY 2026", full: "Geely Starray 2026 · SUV Premium",
+    bono: "Sin bono ni seguro gratis",
+    tasa: "Tasa desde 10.99% o 0% CxA",
+    versions: [
+      { ver: "GL 2.0", price: 599990, m: [9600, 11500] },
+      { ver: "GF 2.0", price: 655990, m: [10500, 12600] }
+    ]
+  },
+  ex5emi: {
+    name: "EX5 EM-I", full: "Geely EX5 EM-i 2026 · SUV Hibrido enchufable",
+    bono: "Version GL: Bono $40,000 o Seguro Gratis · Incluye Wallbox",
+    tasa: "Tasa desde 10.49% + 0% CxA",
+    versions: [
+      { ver: "GL (c/bono)", price: 529990, m: [8500, 10200] },
+      { ver: "GF", price: 599990, m: [9600, 11500] }
+    ]
+  },
+  ex5: {
+    name: "EX5", full: "Geely EX5 2026 · SUV Electrico",
+    bono: "Bono $20,000 · Incluye Wallbox",
+    tasa: "Tasa desde 10.49% + 0% CxA",
+    versions: [
+      { ver: "GF (c/bono)", price: 679990, m: [10900, 13100] }
+    ]
+  },
+  okavango: {
+    name: "OKAVANGO", full: "Geely Okavango 2026 · SUV Familiar 7 pasajeros",
+    bono: "Sin bono ni seguro gratis",
+    tasa: "Tasa desde 10.99% + 0% CxA",
+    versions: [
+      { ver: "GF Suite", price: 729888, m: [11700, 14000] }
+    ]
+  },
+  monjaro: {
+    name: "MONJARO", full: "Geely Monjaro 2026 · SUV Premium",
+    bono: "Bono $20,000 o Seguro Gratis",
+    tasa: "Tasa desde 10.99%",
+    versions: [
+      { ver: "GF (c/bono)", price: 679990, m: [10900, 13100] }
+    ]
+  }
 };
+
+function modelBase(m) { return m.versions[0]; }
+function modelTop(m)  { return m.versions[m.versions.length - 1]; }
 
 function fmt(n) {
   return "$" + n.toLocaleString("es-MX");
@@ -627,28 +751,28 @@ const perfilData = {
     cls: "s", icon: "🏆",
     label: "Perfil S — Excelente calificación",
     why: "Tu perfil financiero es sólido. Con tu nivel de ingreso, historial crediticio y enganche disponible, tienes alta probabilidad de aprobación para los modelos premium de Geely. Un asesor puede prepararte una cotización formal en menos de 24 horas.",
-    waMsg: (model, d, nombre) => `Hola! Soy ${nombre || 'un prospecto'} y acabo de hacer el test de Geely Serdán 🚗\n\n📋 *Perfil:* S — Excelente calificación\n🚘 *Modelo recomendado:* Geely ${model}\n\n💰 *Ingreso mensual:* ${d.ingreso}\n💵 *Enganche disponible:* ${d.enganche}\n📊 *Historial crediticio:* ${d.historial}\n📅 *Mensualidad estimada:* ${d.mensualidad} a 60 meses\n\nMe gustaría agendar un test drive y conocer mi cotización real. ¿Cuándo podemos hablar?`,
+    waMsg: (model, d, nombre) => `Hola! Soy ${nombre || 'un prospecto'} y acabo de hacer el test de AsesoresDigitalesG 🚗\n\n📋 *Perfil:* S — Excelente calificación\n🚘 *Modelo recomendado:* Geely ${model}\n\n💰 *Ingreso mensual:* ${d.ingreso}\n💵 *Enganche disponible:* ${d.enganche}\n📊 *Historial crediticio:* ${d.historial}\n📅 *Mensualidad estimada:* ${d.mensualidad} a 60 meses\n\nMe gustaría agendar un test drive y conocer mi cotización real. ¿Cuándo podemos hablar?`,
     prob: "ALTA", probColor: "#00e59b"
   },
   A: {
     cls: "a", icon: "✅",
     label: "Perfil A — Buen perfil, listo para avanzar",
     why: "Tienes un buen perfil crediticio y financiero. Las opciones recomendadas son totalmente accesibles para tu situación actual. Solo necesitas presentar documentos básicos (comprobante de ingresos, INE, comprobante de domicilio) y podemos tramitar tu crédito.",
-    waMsg: (model, d, nombre) => `Hola! Soy ${nombre || 'un prospecto'} y acabo de hacer el test de Geely Serdán 🚗\n\n📋 *Perfil:* A — Buen perfil\n🚘 *Modelo recomendado:* Geely ${model}\n\n💰 *Ingreso mensual:* ${d.ingreso}\n💵 *Enganche disponible:* ${d.enganche}\n📊 *Historial crediticio:* ${d.historial}\n📅 *Mensualidad estimada:* ${d.mensualidad} a 60 meses\n\n¿Qué documentos necesito para iniciar mi trámite de crédito?`,
+    waMsg: (model, d, nombre) => `Hola! Soy ${nombre || 'un prospecto'} y acabo de hacer el test de AsesoresDigitalesG 🚗\n\n📋 *Perfil:* A — Buen perfil\n🚘 *Modelo recomendado:* Geely ${model}\n\n💰 *Ingreso mensual:* ${d.ingreso}\n💵 *Enganche disponible:* ${d.enganche}\n📊 *Historial crediticio:* ${d.historial}\n📅 *Mensualidad estimada:* ${d.mensualidad} a 60 meses\n\n¿Qué documentos necesito para iniciar mi trámite de crédito?`,
     prob: "BUENA", probColor: "#00d4ff"
   },
   B: {
     cls: "b", icon: "🟡",
     label: "Perfil B — Hay opciones, hay que revisar",
     why: "Sí puedes tener tu Geely, pero depende de algunos factores que hay que revisar en persona. Hay opciones con financiera de respaldo que son más accesibles que el financiamiento bancario. Escríbeme y te explico exactamente qué necesitas para que te aprueben.",
-    waMsg: (model, d, nombre) => `Hola! Soy ${nombre || 'un prospecto'} y acabo de hacer el test de Geely Serdán 🚗\n\n📋 *Perfil:* B — En revisión\n🚘 *Modelo recomendado:* Geely ${model}\n\n💰 *Ingreso mensual:* ${d.ingreso}\n💵 *Enganche disponible:* ${d.enganche}\n📊 *Historial crediticio:* ${d.historial}\n📅 *Mensualidad estimada:* ${d.mensualidad} a 60 meses\n\n¿Qué opciones de financiamiento tengo disponibles para mi caso?`,
+    waMsg: (model, d, nombre) => `Hola! Soy ${nombre || 'un prospecto'} y acabo de hacer el test de AsesoresDigitalesG 🚗\n\n📋 *Perfil:* B — En revisión\n🚘 *Modelo recomendado:* Geely ${model}\n\n💰 *Ingreso mensual:* ${d.ingreso}\n💵 *Enganche disponible:* ${d.enganche}\n📊 *Historial crediticio:* ${d.historial}\n📅 *Mensualidad estimada:* ${d.mensualidad} a 60 meses\n\n¿Qué opciones de financiamiento tengo disponibles para mi caso?`,
     prob: "MEDIA", probColor: "#ff8c00"
   },
   C: {
     cls: "c", icon: "⏳",
     label: "Perfil C — Preparación recomendada",
     why: "Todavía no es el momento ideal, pero podemos prepararte para lograrlo. Escríbeme y te armo un plan de 3 a 6 meses para que llegues listo: qué enganche juntar, cómo mejorar tu historial y cuáles son las opciones más accesibles cuando estés listo.",
-    waMsg: (model, d, nombre) => `Hola! Soy ${nombre || 'un prospecto'} y acabo de hacer el test de Geely Serdán 🚗\n\n📋 *Perfil:* C — Preparándome\n🚘 *Modelo de interés:* Geely ${model}\n\n💰 *Ingreso mensual:* ${d.ingreso}\n💵 *Enganche disponible:* ${d.enganche}\n📊 *Historial crediticio:* ${d.historial}\n\nMe interesa prepararme para tener mi Geely. ¿Me pueden orientar?`,
+    waMsg: (model, d, nombre) => `Hola! Soy ${nombre || 'un prospecto'} y acabo de hacer el test de AsesoresDigitalesG 🚗\n\n📋 *Perfil:* C — Preparándome\n🚘 *Modelo de interés:* Geely ${model}\n\n💰 *Ingreso mensual:* ${d.ingreso}\n💵 *Enganche disponible:* ${d.enganche}\n📊 *Historial crediticio:* ${d.historial}\n\nMe interesa prepararme para tener mi Geely. ¿Me pueden orientar?`,
     prob: "EN PROCESO", probColor: "#ff4444"
   }
 };
@@ -672,10 +796,33 @@ function checkCapture() {
   }
 }
 
+function checkPrivacy() {
+  // Optional: could enable/disable button based on checkbox
+}
+
+function showPrivacy(e) {
+  e.preventDefault();
+  document.getElementById('privacy-modal').style.display = 'flex';
+}
+
+function closePrivacy() {
+  document.getElementById('privacy-modal').style.display = 'none';
+  document.getElementById('privacy-check').checked = true;
+}
+
 function submitCapture() {
   prospecto.nombre = document.getElementById('cap-nombre').value.trim();
   prospecto.tel    = document.getElementById('cap-tel').value.trim();
-  if (!prospecto.nombre || prospecto.tel.length < 10) return;
+  if (!prospecto.nombre || prospecto.nombre.length < 2) {
+    document.getElementById('cap-nombre').style.borderColor = 'var(--red)';
+    document.getElementById('cap-nombre').focus();
+    return;
+  }
+  if (prospecto.tel.length < 8) {
+    document.getElementById('cap-tel').style.borderColor = 'var(--red)';
+    document.getElementById('cap-tel').focus();
+    return;
+  }
   showResult();
 }
 
@@ -763,9 +910,10 @@ function showResult() {
   const { main, also } = getRecommendation(perfil, tipo, uso);
   const pd = perfilData[perfil];
 
-  // Enganche y mensualidad
-  const enganche = Math.round(main.price * 0.10);
-  const [mMin, mMax] = main.monthly;
+  // Enganche y mensualidad — usar versión base
+  const baseVer = modelBase(main);
+  const enganche = Math.round(baseVer.price * 0.10);
+  const [mMin, mMax] = baseVer.m;
 
   // Badge
   const badge = document.getElementById('r-badge');
@@ -780,9 +928,9 @@ function showResult() {
   const fin = document.getElementById('r-fin');
   fin.innerHTML = `
     <div class="fin-item">
-      <div class="fin-label">Precio de lista</div>
-      <div class="fin-val gold">${fmt(main.price)}</div>
-      <div class="fin-sub">MXN · Puebla 2026</div>
+      <div class="fin-label">Desde</div>
+      <div class="fin-val gold">${fmt(baseVer.price)}</div>
+      <div class="fin-sub">Versión ${baseVer.ver} · Abril 2026</div>
     </div>
     <div class="fin-item">
       <div class="fin-label">Enganche mínimo</div>
@@ -801,13 +949,52 @@ function showResult() {
     </div>
   `;
 
+  // Mostrar bono si existe
+  const bonoEl = document.getElementById('r-bono');
+  if (bonoEl) {
+    if (main.bono) {
+      bonoEl.innerHTML = `<div class="also-label">🎁 Promoción activa</div><p style="font-size:13px;color:var(--accent);font-weight:500;">${main.bono}</p>`;
+      bonoEl.style.display = 'block';
+    } else {
+      bonoEl.style.display = 'none';
+    }
+  }
+
+  // Tabla de versiones del modelo recomendado
+  const versionsEl = document.getElementById('r-versions');
+  if (versionsEl) {
+    if (main.versions.length > 1) {
+      versionsEl.innerHTML = `
+        <div class="also-label">Versiones disponibles</div>
+        <table style="width:100%;border-collapse:collapse;font-size:13px;">
+          <tr style="color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:0.08em;">
+            <td style="padding:6px 4px;">Versión</td>
+            <td style="padding:6px 4px;text-align:right;">Precio especial</td>
+            <td style="padding:6px 4px;text-align:right;">Mensualidad est.</td>
+          </tr>
+          ${main.versions.map((v,i) => `
+            <tr style="border-top:1px solid var(--border);${i===0?'color:var(--accent);font-weight:500;':''}">
+              <td style="padding:8px 4px;">${v.ver}${i===0?' ⭐':''}</td>
+              <td style="padding:8px 4px;text-align:right;">${fmt(v.price)}</td>
+              <td style="padding:8px 4px;text-align:right;">${fmt(v.m[0])}–${fmt(v.m[1])}</td>
+            </tr>
+          `).join('')}
+        </table>
+        <p style="font-size:11px;color:var(--muted);margin-top:8px;">⭐ Versión recomendada según tu perfil · 60 meses · enganche 10%</p>
+      `;
+      versionsEl.style.display = 'block';
+    } else {
+      versionsEl.style.display = 'none';
+    }
+  }
+
   // También puede interesarte
   const alsoEl = document.getElementById('r-also');
   if (also.length > 0) {
     alsoEl.innerHTML = `
       <div class="also-label">También podrías calificar para</div>
       <div class="also-models">
-        ${also.map(m => `<span class="also-pill">${m.name}</span>`).join('')}
+        ${also.map(m => `<span class="also-pill">${m.name} desde ${fmt(modelBase(m).price)}</span>`).join('')}
       </div>
     `;
     alsoEl.style.display = 'block';
@@ -833,7 +1020,7 @@ function showResult() {
     nombre:      prospecto.nombre,
     telefono:    prospecto.tel,
     perfil:      perfil,
-    modelo:      main.name,
+    modelo:      main.name + ' ' + baseVer.ver,
     otros_modelos: alsoNames,
     ingreso:     datos.ingreso,
     enganche:    datos.enganche,
@@ -862,5 +1049,31 @@ function restart() {
   renderQ();
 }
 </script>
+
+<!-- Privacy Modal -->
+<div id="privacy-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:999;align-items:center;justify-content:center;padding:20px;">
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:20px;padding:32px 28px;max-width:480px;width:100%;max-height:80vh;overflow-y:auto;">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:0.04em;margin-bottom:16px;color:var(--text);">Aviso de Privacidad</div>
+    <p style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:12px;">
+      <strong style="color:var(--text);">Responsable:</strong> AsesoresDigitalesG by Abel Zarate, asesor comercial autorizado de Geely Serdán, Puebla, México.
+    </p>
+    <p style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:12px;">
+      <strong style="color:var(--text);">Datos que recopilamos:</strong> Nombre, número de WhatsApp y las respuestas que proporcionas en este cuestionario (ingreso estimado, enganche disponible, historial crediticio, preferencias de vehículo).
+    </p>
+    <p style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:12px;">
+      <strong style="color:var(--text);">Finalidad:</strong> Contactarte para brindarte información personalizada sobre vehículos Geely, promociones vigentes, opciones de financiamiento y agendar una cita o test drive. Tus datos no serán vendidos ni compartidos con terceros ajenos a Geely Serdán.
+    </p>
+    <p style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:12px;">
+      <strong style="color:var(--text);">Almacenamiento:</strong> Tu información se guarda de forma segura y únicamente es accesible por el asesor responsable de tu caso.
+    </p>
+    <p style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:20px;">
+      <strong style="color:var(--text);">Derechos ARCO:</strong> Puedes solicitar acceso, rectificación, cancelación u oposición al uso de tus datos en cualquier momento escribiéndonos por WhatsApp al número de contacto de la agencia.
+    </p>
+    <button onclick="closePrivacy()" style="width:100%;background:linear-gradient(135deg,var(--accent2),var(--accent));color:#000;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;border:none;border-radius:13px;padding:16px;cursor:pointer;">
+      Entendido, acepto ✓
+    </button>
+  </div>
+</div>
+
 </body>
 </html>
