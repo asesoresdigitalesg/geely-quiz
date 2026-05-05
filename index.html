@@ -419,15 +419,26 @@
       <div class="q-sub" style="margin-bottom:28px;">Déjanos tus datos para mandarte tu perfil personalizado con el modelo, enganche y mensualidad exacta que te corresponde.</div>
 
       <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:20px;">
-        <div style="position:relative;">
-          <span style="position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:16px;">👤</span>
-          <input id="cap-nombre" type="text" placeholder="Tu nombre" autocomplete="given-name"
-            style="width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:13px;
-            padding:16px 16px 16px 46px;color:var(--text);font-family:'DM Sans',sans-serif;
-            font-size:15px;outline:none;transition:border-color 0.2s;"
-            oninput="checkCapture()" onpaste="setTimeout(checkCapture,10)" onchange="checkCapture()"
-            onfocus="this.style.borderColor='var(--accent)'"
-            onblur="this.style.borderColor='var(--border)'">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div style="position:relative;">
+            <span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:15px;">👤</span>
+            <input id="cap-nombre" type="text" placeholder="Nombre" autocomplete="given-name"
+              style="width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:13px;
+              padding:15px 14px 15px 42px;color:var(--text);font-family:'DM Sans',sans-serif;
+              font-size:14px;outline:none;transition:border-color 0.2s;"
+              oninput="checkCapture()" onpaste="setTimeout(checkCapture,10)" onchange="checkCapture()"
+              onfocus="this.style.borderColor='var(--accent)'"
+              onblur="this.style.borderColor='var(--border)'">
+          </div>
+          <div style="position:relative;">
+            <input id="cap-apellido" type="text" placeholder="Apellido" autocomplete="family-name"
+              style="width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:13px;
+              padding:15px 14px;color:var(--text);font-family:'DM Sans',sans-serif;
+              font-size:14px;outline:none;transition:border-color 0.2s;"
+              oninput="checkCapture()" onpaste="setTimeout(checkCapture,10)" onchange="checkCapture()"
+              onfocus="this.style.borderColor='var(--accent)'"
+              onblur="this.style.borderColor='var(--border)'">
+          </div>
         </div>
         <div style="position:relative;">
           <span style="position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:16px;">📱</span>
@@ -438,6 +449,51 @@
             oninput="checkCapture()"
             onfocus="this.style.borderColor='var(--accent)'"
             onblur="this.style.borderColor='var(--border)'">
+        </div>
+        <div style="position:relative;">
+          <span style="position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:16px;">📍</span>
+          <select id="cap-estado"
+            style="width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:13px;
+            padding:16px 16px 16px 46px;color:var(--text);font-family:'DM Sans',sans-serif;
+            font-size:15px;outline:none;transition:border-color 0.2s;appearance:none;cursor:pointer;"
+            onchange="checkCapture()"
+            onfocus="this.style.borderColor='var(--accent)'"
+            onblur="this.style.borderColor='var(--border)'">
+            <option value="" disabled selected>¿De qué estado eres?</option>
+            <option value="Puebla">Puebla</option>
+            <option value="CDMX">Ciudad de México</option>
+            <option value="Estado de México">Estado de México</option>
+            <option value="Jalisco">Jalisco</option>
+            <option value="Nuevo León">Nuevo León</option>
+            <option value="Veracruz">Veracruz</option>
+            <option value="Tlaxcala">Tlaxcala</option>
+            <option value="Hidalgo">Hidalgo</option>
+            <option value="Morelos">Morelos</option>
+            <option value="Guerrero">Guerrero</option>
+            <option value="Oaxaca">Oaxaca</option>
+            <option value="Chiapas">Chiapas</option>
+            <option value="Michoacán">Michoacán</option>
+            <option value="Guanajuato">Guanajuato</option>
+            <option value="Querétaro">Querétaro</option>
+            <option value="San Luis Potosí">San Luis Potosí</option>
+            <option value="Aguascalientes">Aguascalientes</option>
+            <option value="Zacatecas">Zacatecas</option>
+            <option value="Durango">Durango</option>
+            <option value="Chihuahua">Chihuahua</option>
+            <option value="Sonora">Sonora</option>
+            <option value="Baja California">Baja California</option>
+            <option value="Baja California Sur">Baja California Sur</option>
+            <option value="Sinaloa">Sinaloa</option>
+            <option value="Nayarit">Nayarit</option>
+            <option value="Colima">Colima</option>
+            <option value="Tabasco">Tabasco</option>
+            <option value="Campeche">Campeche</option>
+            <option value="Yucatán">Yucatán</option>
+            <option value="Quintana Roo">Quintana Roo</option>
+            <option value="Tamaulipas">Tamaulipas</option>
+            <option value="Coahuila">Coahuila</option>
+            <option value="Otro">Otro / Extranjero</option>
+          </select>
         </div>
       </div>
 
@@ -783,7 +839,7 @@ const perfilData = {
 // ══════════════════════════════════════════════════════
 const SHEET_URL = "https://script.google.com/macros/s/AKfycbxGUPnH0HUVq0KkmBwzWl6EAK064HqPomzo-_eZoddjDw9NaiOaMB3lNztSJp13YoKi/exec";
 
-let prospecto = { nombre: "", tel: "" };
+let prospecto = { nombre: "", apellido: "", tel: "", estado: "" };
 
 function checkCapture() {
   const n = document.getElementById('cap-nombre').value.trim();
@@ -811,8 +867,10 @@ function closePrivacy() {
 }
 
 function submitCapture() {
-  prospecto.nombre = document.getElementById('cap-nombre').value.trim();
-  prospecto.tel    = document.getElementById('cap-tel').value.trim();
+  prospecto.nombre   = document.getElementById('cap-nombre').value.trim();
+  prospecto.apellido = document.getElementById('cap-apellido').value.trim();
+  prospecto.tel      = document.getElementById('cap-tel').value.trim();
+  prospecto.estado   = document.getElementById('cap-estado').value;
   if (!prospecto.nombre || prospecto.nombre.length < 2) {
     document.getElementById('cap-nombre').style.borderColor = 'var(--red)';
     document.getElementById('cap-nombre').focus();
@@ -1016,16 +1074,17 @@ function showResult() {
   // Enviar a Google Sheets
   const alsoNames = also.map(m => m.name).join(', ') || '—';
   sendToSheet({
-    fecha:       new Date().toLocaleString('es-MX', {timeZone:'America/Mexico_City'}),
-    nombre:      prospecto.nombre,
-    telefono:    prospecto.tel,
-    perfil:      perfil,
-    modelo:      main.name + ' ' + baseVer.ver,
+    fecha:         new Date().toLocaleString('es-MX', {timeZone:'America/Mexico_City'}),
+    nombre:        prospecto.nombre + ' ' + prospecto.apellido,
+    telefono:      prospecto.tel,
+    estado:        prospecto.estado || 'No indicado',
+    perfil:        perfil,
+    modelo:        main.name + ' ' + baseVer.ver,
     otros_modelos: alsoNames,
-    ingreso:     datos.ingreso,
-    enganche:    datos.enganche,
-    historial:   datos.historial,
-    mensualidad: datos.mensualidad
+    ingreso:       datos.ingreso,
+    enganche:      datos.enganche,
+    historial:     datos.historial,
+    mensualidad:   datos.mensualidad
   });
 
   // Mensaje WA incluye nombre
@@ -1043,7 +1102,9 @@ function restart() {
   qIdx = 0; answers = []; selected = null;
   prospecto = { nombre: "", tel: "" };
   document.getElementById('cap-nombre').value = '';
+  document.getElementById('cap-apellido').value = '';
   document.getElementById('cap-tel').value = '';
+  document.getElementById('cap-estado').value = '';
   document.getElementById('btn-capture').classList.remove('on');
   go('s-quiz');
   renderQ();
