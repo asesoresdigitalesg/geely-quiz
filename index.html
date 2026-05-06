@@ -497,6 +497,7 @@
         </div>
       </div>
 
+      <div id="cap-error" style="display:none;background:rgba(255,68,68,0.1);border:1px solid rgba(255,68,68,0.3);border-radius:10px;padding:10px 14px;font-size:12px;color:#ff6b6b;text-align:center;margin-bottom:4px;">⚠️ Por favor completa todos los campos correctamente</div>
       <label id="privacy-wrap" style="display:flex;align-items:flex-start;gap:10px;margin-bottom:16px;cursor:pointer;">
         <input type="checkbox" id="privacy-check" onchange="checkPrivacy()"
           style="margin-top:3px;width:16px;height:16px;accent-color:var(--accent);flex-shrink:0;">
@@ -871,16 +872,42 @@ function submitCapture() {
   prospecto.apellido = document.getElementById('cap-apellido').value.trim();
   prospecto.tel      = document.getElementById('cap-tel').value.trim();
   prospecto.estado   = document.getElementById('cap-estado').value;
+
+  let valid = true;
+
   if (!prospecto.nombre || prospecto.nombre.length < 2) {
     document.getElementById('cap-nombre').style.borderColor = 'var(--red)';
-    document.getElementById('cap-nombre').focus();
-    return;
+    if (valid) { document.getElementById('cap-nombre').focus(); valid = false; }
+  } else {
+    document.getElementById('cap-nombre').style.borderColor = 'var(--accent)';
   }
-  if (prospecto.tel.length < 8) {
+
+  if (!prospecto.apellido || prospecto.apellido.length < 2) {
+    document.getElementById('cap-apellido').style.borderColor = 'var(--red)';
+    if (valid) { document.getElementById('cap-apellido').focus(); valid = false; }
+  } else {
+    document.getElementById('cap-apellido').style.borderColor = 'var(--accent)';
+  }
+
+  if (prospecto.tel.length < 10) {
     document.getElementById('cap-tel').style.borderColor = 'var(--red)';
-    document.getElementById('cap-tel').focus();
+    if (valid) { document.getElementById('cap-tel').focus(); valid = false; }
+  } else {
+    document.getElementById('cap-tel').style.borderColor = 'var(--accent)';
+  }
+
+  if (!prospecto.estado) {
+    document.getElementById('cap-estado').style.borderColor = 'var(--red)';
+    if (valid) { document.getElementById('cap-estado').focus(); valid = false; }
+  } else {
+    document.getElementById('cap-estado').style.borderColor = 'var(--accent)';
+  }
+
+  if (!valid) {
+    document.getElementById('cap-error').style.display = 'block';
     return;
   }
+  document.getElementById('cap-error').style.display = 'none';
   showResult();
 }
 
@@ -1101,6 +1128,7 @@ function showResult() {
 function restart() {
   qIdx = 0; answers = []; selected = null;
   prospecto = { nombre: "", tel: "" };
+  document.getElementById('cap-error').style.display = 'none';
   document.getElementById('cap-nombre').value = '';
   document.getElementById('cap-apellido').value = '';
   document.getElementById('cap-tel').value = '';
