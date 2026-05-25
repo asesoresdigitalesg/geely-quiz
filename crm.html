@@ -17,7 +17,7 @@
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;overflow:hidden}
 body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;display:flex;flex-direction:column}
-
+ 
 /* ── LOGIN ── */
 #login-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:999;flex-direction:column;gap:24px}
 .login-card{background:var(--s1);border:1px solid var(--border2);border-radius:24px;padding:40px;width:340px;text-align:center}
@@ -27,11 +27,11 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;dis
 .login-input:focus{border-color:var(--accent)}
 .login-btn{width:100%;background:linear-gradient(135deg,var(--accent2),var(--accent));color:#000;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;border:none;border-radius:12px;padding:15px;cursor:pointer}
 .login-err{font-size:12px;color:var(--red);margin-top:8px;display:none}
-
+ 
 /* ── APP LAYOUT ── */
 #app{display:flex;height:100vh;overflow:hidden}
 #app.hidden{display:none}
-
+ 
 /* SIDEBAR */
 .sb{width:200px;flex-shrink:0;background:var(--s1);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
 .sb-logo{padding:20px 18px 16px;border-bottom:1px solid var(--border)}
@@ -48,7 +48,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;dis
 .sync-btn{width:100%;background:var(--s2);border:1px solid var(--border2);color:var(--accent);font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;border-radius:9px;padding:9px;cursor:pointer;transition:all 0.2s}
 .sync-btn:hover{background:rgba(0,212,255,0.08)}
 .sync-status{font-size:10px;color:var(--muted);text-align:center;margin-top:6px;font-family:'DM Mono',monospace}
-
+ 
 /* MAIN */
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden}
 .topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;border-bottom:1px solid var(--border);flex-shrink:0}
@@ -56,12 +56,12 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;dis
 .topbar-right{display:flex;align-items:center;gap:12px}
 .alert-banner{background:rgba(255,68,85,0.1);border:1px solid rgba(255,68,85,0.25);border-radius:10px;padding:7px 14px;font-size:12px;color:var(--red);cursor:pointer;display:none}
 .alert-banner.show{display:flex;align-items:center;gap:7px}
-
+ 
 .content{flex:1;overflow-y:auto;padding:20px 24px}
-
+ 
 /* ── SCREENS ── */
 .screen{display:none}.screen.on{display:block}
-
+ 
 /* ── KPI STRIP ── */
 .kpi-strip{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px}
 .kpi{background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:16px 18px}
@@ -69,7 +69,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;dis
 .kpi-val{font-family:'Bebas Neue',sans-serif;font-size:36px;line-height:1;letter-spacing:0.02em}
 .kpi-sub{font-size:10px;color:var(--muted);margin-top:4px}
 .kv-blue{color:var(--accent)}.kv-green{color:var(--green)}.kv-gold{color:var(--gold)}.kv-orange{color:var(--orange)}.kv-red{color:var(--red)}
-
+ 
 /* ── PIPELINE KANBAN ── */
 .kanban{display:flex;gap:12px;overflow-x:auto;padding-bottom:8px;min-height:calc(100vh - 220px)}
 .kanban::-webkit-scrollbar{height:4px}
@@ -81,7 +81,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;dis
 .kol-body{overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:8px;flex:1}
 .kol-body::-webkit-scrollbar{width:3px}
 .kol-body::-webkit-scrollbar-thumb{background:var(--muted2);border-radius:100px}
-
+ 
 /* LEAD CARD */
 .lcard{background:var(--s2);border:1px solid var(--border);border-radius:11px;padding:12px;cursor:pointer;transition:all 0.15s;position:relative}
 .lcard:hover{border-color:var(--accent);transform:translateY(-1px)}
@@ -102,7 +102,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;dis
 .lcard-time{font-size:9px;color:var(--muted);font-family:'DM Mono',monospace}
 .lcard-task{font-size:10px;color:var(--gold);margin-top:6px;display:flex;align-items:center;gap:4px}
 .lcard-task.overdue{color:var(--red)}
-
+ 
 /* ── LISTA VIEW ── */
 .table-toolbar{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
 .fi{background:var(--s1);border:1px solid var(--border);border-radius:9px;padding:8px 12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:12px;outline:none;cursor:pointer}
@@ -110,7 +110,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;dis
 .fi-search{width:200px}.fi-search::placeholder{color:var(--muted)}
 .sort-btn{background:var(--s1);border:1px solid var(--border);border-radius:9px;padding:8px 12px;color:var(--muted);font-size:11px;cursor:pointer;white-space:nowrap}
 .sort-btn.on{border-color:var(--accent);color:var(--accent)}
-
+ 
 .tbl-wrap{background:var(--s1);border:1px solid var(--border);border-radius:14px;overflow:hidden}
 table{width:100%;border-collapse:collapse}
 thead tr{background:var(--s2)}
@@ -121,7 +121,7 @@ td{padding:10px 14px;font-size:12px;vertical-align:middle}
 .td-heat{width:12px}
 .score-bar{height:4px;border-radius:100px;background:var(--s3)}
 .score-fill{height:100%;border-radius:100px}
-
+ 
 /* ── DETAIL MODAL ── */
 .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:300;align-items:flex-start;justify-content:flex-end;padding:0}
 .overlay.open{display:flex}
@@ -136,69 +136,69 @@ td{padding:10px 14px;font-size:12px;vertical-align:middle}
 .d-label{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px}
 .d-val{font-size:13px;font-weight:500}
 .d-full{grid-column:1/-1}
-
+ 
 /* Pipeline selector */
 .pipe-selector{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
 .pipe-opt{padding:6px 12px;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--s2);color:var(--muted);transition:all 0.15s}
 .pipe-opt:hover{border-color:var(--border2);color:var(--text)}
 .pipe-opt.sel{color:#000}
-
+ 
 /* Task */
 .task-row{display:flex;gap:8px;margin-bottom:12px}
 .task-input{flex:1;background:var(--s2);border:1px solid var(--border);border-radius:9px;padding:9px 12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:12px;outline:none}
 .task-input:focus{border-color:var(--gold)}
 .task-date{background:var(--s2);border:1px solid var(--border);border-radius:9px;padding:9px 10px;color:var(--text);font-family:'DM Mono',sans-serif;font-size:11px;outline:none;cursor:pointer}
 .task-date:focus{border-color:var(--gold)}
-
+ 
 /* Notes */
 .notes-ta{width:100%;background:var(--s2);border:1px solid var(--border);border-radius:9px;padding:10px 12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:12px;resize:vertical;min-height:80px;outline:none;margin-bottom:14px}
 .notes-ta:focus{border-color:var(--accent)}
-
+ 
 /* History */
 .hist-item{padding:8px 0;border-bottom:1px solid var(--border);font-size:11px}
 .hist-time{color:var(--muted);font-family:'DM Mono',monospace;font-size:10px}
 .hist-text{margin-top:2px}
-
+ 
 /* Actions */
 .d-actions{display:flex;gap:8px;margin-top:4px}
 .btn-wa{flex:1;background:#22c55e;color:#fff;border:none;border-radius:10px;padding:12px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer}
 .btn-save{background:linear-gradient(135deg,var(--accent2),var(--accent));color:#000;border:none;border-radius:10px;padding:12px 18px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer}
-
+ 
 /* ── DASHBOARD CHARTS ── */
 .dash-grid{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:16px}
 .chart-card{background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:18px}
 .chart-title{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:14px}
 .charts-row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
-
+ 
 .pbar-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
 .pbar-label{font-size:11px;font-weight:500;width:60px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0}
 .pbar-track{flex:1;height:6px;background:var(--s3);border-radius:100px;overflow:hidden}
 .pbar-fill{height:100%;border-radius:100px;transition:width 0.6s}
 .pbar-count{font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;width:24px;text-align:right}
-
+ 
 /* Funnel */
 .funnel-step{display:flex;align-items:center;gap:10px;margin-bottom:8px}
 .funnel-label{font-size:11px;width:90px;white-space:nowrap}
 .funnel-bar{height:22px;border-radius:6px;display:flex;align-items:center;padding:0 10px;font-size:11px;font-weight:600;color:#000;min-width:40px;transition:width 0.6s}
 .funnel-pct{font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;margin-left:6px}
-
+ 
 /* ── LOADING ── */
 .loading{text-align:center;padding:48px;color:var(--muted)}
 .spin{width:28px;height:28px;border:2px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:rot 0.7s linear infinite;margin:0 auto 12px}
 @keyframes rot{to{transform:rotate(360deg)}}
-
+ 
 /* Scrollbar */
 ::-webkit-scrollbar{width:4px;height:4px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--muted2);border-radius:100px}
-
+ 
 /* Urgent pulse */
 @keyframes urgentPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,68,85,0.4)}50%{box-shadow:0 0 0 6px rgba(255,68,85,0)}}
 .urgent{animation:urgentPulse 2s infinite}
 </style>
 </head>
 <body>
-
+ 
 <!-- LOGIN -->
 <div id="login-screen">
   <div class="login-card">
@@ -209,7 +209,7 @@ td{padding:10px 14px;font-size:12px;vertical-align:middle}
     <div class="login-err" id="login-err">Contraseña incorrecta</div>
   </div>
 </div>
-
+ 
 <!-- APP -->
 <div id="app" class="hidden">
   <!-- SIDEBAR -->
@@ -258,7 +258,7 @@ td{padding:10px 14px;font-size:12px;vertical-align:middle}
       <div class="sync-status" id="sync-status">–</div>
     </div>
   </nav>
-
+ 
   <!-- MAIN -->
   <div class="main">
     <div class="topbar">
@@ -269,14 +269,14 @@ td{padding:10px 14px;font-size:12px;vertical-align:middle}
         </div>
       </div>
     </div>
-
+ 
     <div class="content">
       <!-- PIPELINE -->
       <div class="screen on" id="screen-pipeline">
         <div class="kpi-strip" id="kpi-strip"></div>
         <div class="kanban" id="kanban"></div>
       </div>
-
+ 
       <!-- LISTA -->
       <div class="screen" id="screen-lista">
         <div class="table-toolbar">
@@ -307,7 +307,7 @@ td{padding:10px 14px;font-size:12px;vertical-align:middle}
           </table>
         </div>
       </div>
-
+ 
       <!-- DASHBOARD -->
       <div class="screen" id="screen-dashboard">
         <div class="kpi-strip" id="kpi-strip2"></div>
@@ -339,39 +339,39 @@ td{padding:10px 14px;font-size:12px;vertical-align:middle}
     </div>
   </div>
 </div>
-
+ 
 <!-- DRAWER DETALLE -->
 <div class="overlay" id="overlay" onclick="maybeClose(event)">
   <div class="drawer" id="drawer">
     <button class="drawer-close" onclick="closeDrawer()">✕</button>
     <div class="d-name" id="d-name"></div>
     <div class="d-sub" id="d-sub"></div>
-
+ 
     <div class="d-section">Etapa del pipeline</div>
     <div class="pipe-selector" id="pipe-selector"></div>
-
+ 
     <div class="d-section">Datos del prospecto</div>
     <div class="d-grid" id="d-grid"></div>
-
+ 
     <div class="d-section">Próxima acción</div>
     <div class="task-row">
       <input class="task-input" id="task-text" placeholder="Ej: Llamar para agendar test drive">
       <input class="task-date" type="date" id="task-date">
     </div>
-
+ 
     <div class="d-section">Notas del asesor</div>
     <textarea class="notes-ta" id="d-notes" placeholder="Escribe aquí todo lo relevante de este lead..."></textarea>
-
+ 
     <div class="d-section">Historial</div>
     <div id="d-history"></div>
-
+ 
     <div class="d-actions" style="margin-top:16px">
       <button class="btn-wa" id="d-wa">💬 WhatsApp</button>
       <button class="btn-save" onclick="saveLead()">Guardar ✓</button>
     </div>
   </div>
 </div>
-
+ 
 <script>
 // ══════════════════════════════════════════════════════
 // CONFIG
@@ -381,7 +381,7 @@ const SHEET_ID   = "1KoUs2mBRY45y3endT8Tx6QnI1iHSvdGL4JTHQd1M96c";
 const SHEET_NAME = "Hoja 1";
 const WA_NUM     = "522217729210";
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwB-ylsX33ZGE918Ty3s7YK0ZLXHv0en4aFbg_X4d7ac9iZ2C7s6JD6lTtRyi_yc1Po/exec";
-
+ 
 const ETAPAS = [
   {id:'nuevo',     label:'Nuevo',         color:'var(--accent)'},
   {id:'contactado',label:'Contactado',    color:'var(--purple)'},
@@ -391,7 +391,7 @@ const ETAPAS = [
   {id:'cerrado',   label:'Cerrado ✅',    color:'var(--green)'},
   {id:'perdido',   label:'Perdido',       color:'var(--red)'},
 ];
-
+ 
 // ══════════════════════════════════════════════════════
 // LOGIN
 // ══════════════════════════════════════════════════════
@@ -407,7 +407,7 @@ function tryLogin() {
     document.getElementById('pw-input').focus();
   }
 }
-
+ 
 // ══════════════════════════════════════════════════════
 // STATE
 // ══════════════════════════════════════════════════════
@@ -415,12 +415,12 @@ let allLeads = [];
 let activeId = null;
 let sortMode = 'score';
 let quickFilterMode = null;
-
+ 
 // Persistence — localStorage como cache + Sheet como fuente de verdad
 function getLocal(id) {
   try { return JSON.parse(localStorage.getItem('crm_' + id) || 'null') || {}; } catch { return {}; }
 }
-
+ 
 function setLocal(id, data) {
   const prev = getLocal(id);
   const merged = {...prev, ...data};
@@ -439,7 +439,7 @@ function setLocal(id, data) {
   // Guardar en Sheet
   saveToSheet(id, data);
 }
-
+ 
 async function saveToSheet(id, data) {
   try {
     await fetch(SCRIPT_URL, {
@@ -459,7 +459,7 @@ async function saveToSheet(id, data) {
     });
   } catch(e) { console.warn('Error guardando en Sheet:', e); }
 }
-
+ 
 // Al cargar datos del Sheet, mezclar con localStorage
 function mergeSheetData(leads) {
   return leads.map(l => {
@@ -478,7 +478,7 @@ function mergeSheetData(leads) {
     return l;
   });
 }
-
+ 
 // ══════════════════════════════════════════════════════
 // FETCH SHEET
 // ══════════════════════════════════════════════════════
@@ -490,7 +490,7 @@ async function syncData() {
     const text = await res.text();
     const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/)[1]);
     const rows = json.table.rows;
-
+ 
     allLeads = rows.slice(1).map((row, i) => {
       const c   = row.c || [];
       const val = x => (x && x.v != null) ? String(x.v).trim() : '';
@@ -517,7 +517,7 @@ async function syncData() {
         intentosSheet:      val(c[18]),
       };
     }).filter(l => l.nombre);
-
+ 
     allLeads = mergeSheetData(allLeads);
     const now = new Date();
     document.getElementById('sync-status').textContent = `${now.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'})}`;
@@ -527,22 +527,22 @@ async function syncData() {
     console.error(e);
   }
 }
-
+ 
 // ══════════════════════════════════════════════════════
 // SCORING
 // ══════════════════════════════════════════════════════
 const ESTADOS_LOCALES = ['Puebla', 'Tlaxcala']; // estados donde puedes vender
-
+ 
 function esPoblano(l) {
   return ESTADOS_LOCALES.some(e => l.estado && l.estado.toLowerCase().includes(e.toLowerCase()));
 }
-
+ 
 const TEST_NAMES = ['prueba', 'test', 'demo', 'ejemplo', 'fake', 'trial'];
 function isTestLead(l) {
   const nombre = l.nombre.toLowerCase();
   return TEST_NAMES.some(t => nombre.includes(t));
 }
-
+ 
 function calcScore(l) {
   const local = getLocal(l.id);
   let score = 0;
@@ -572,7 +572,7 @@ function calcScore(l) {
   else if (daysOld <= 7) score += 4;
   return Math.max(0, Math.min(score, 100));
 }
-
+ 
 function getHeat(l) {
   const daysOld = getDaysOld(l.fecha);
   const local = getLocal(l.id);
@@ -583,7 +583,7 @@ function getHeat(l) {
   if (daysOld <= 7) return 'cool';
   return 'cold';
 }
-
+ 
 function getDaysOld(fechaStr) {
   if (!fechaStr) return 999;
   try {
@@ -593,7 +593,7 @@ function getDaysOld(fechaStr) {
     return Math.floor((Date.now() - d.getTime()) / 86400000);
   } catch { return 0; }
 }
-
+ 
 function formatRelative(fechaStr) {
   const d = getDaysOld(fechaStr);
   if (d === 0) return 'Hoy';
@@ -601,7 +601,7 @@ function formatRelative(fechaStr) {
   if (d < 7)  return `Hace ${d}d`;
   return `Hace ${Math.floor(d/7)}sem`;
 }
-
+ 
 // ══════════════════════════════════════════════════════
 // RENDER ALL
 // ══════════════════════════════════════════════════════
@@ -612,7 +612,7 @@ function filterByEstado(estado) {
     if (el) { el.value = estado; renderLista(); }
   }, 100);
 }
-
+ 
 function renderAll() {
   renderKPIs();
   renderKanban();
@@ -621,7 +621,7 @@ function renderAll() {
   updateAlerts();
   updateBadges();
 }
-
+ 
 // ── KPIs ──
 function renderKPIs() {
   const total = allLeads.length;
@@ -648,7 +648,7 @@ function renderKPIs() {
     if (el) el.innerHTML = html;
   });
 }
-
+ 
 // ── KANBAN ──
 function renderKanban() {
   const container = document.getElementById('kanban');
@@ -660,9 +660,9 @@ function renderKanban() {
     if (cols[etapa]) cols[etapa].push(l);
     else cols['nuevo'].push(l);
   });
-
+ 
   let filtered = quickFilterMode ? getQuickFiltered() : null;
-
+ 
   container.innerHTML = ETAPAS.map(etapa => {
     let cards = cols[etapa.id];
     if (filtered) cards = cards.filter(l => filtered.has(l.id));
@@ -680,7 +680,7 @@ function renderKanban() {
     `;
   }).join('');
 }
-
+ 
 function renderCard(l) {
   const local = getLocal(l.id);
   const heat  = getHeat(l);
@@ -709,7 +709,7 @@ function renderCard(l) {
     ${hasTask ? `<div class="lcard-task ${taskOverdue?'overdue':''}">📅 ${local.taskText}</div>` : ''}
   </div>`;
 }
-
+ 
 // ── LISTA ──
 let sortDir = -1;
 function toggleSort(mode) {
@@ -719,7 +719,7 @@ function toggleSort(mode) {
   document.getElementById('sort-' + mode).classList.add('on');
   renderLista();
 }
-
+ 
 function renderLista() {
   const q = (document.getElementById('s-search').value||'').toLowerCase();
   const fp = document.getElementById('s-perfil').value;
@@ -727,7 +727,7 @@ function renderLista() {
   const fm = document.getElementById('s-modelo').value;
   const fes = document.getElementById('s-estado') ? document.getElementById('s-estado').value : '';
   let filtered = quickFilterMode ? getQuickFiltered() : new Set(allLeads.map(l=>l.id));
-
+ 
   let leads = allLeads.filter(l => {
     if (!filtered.has(l.id)) return false;
     const local = getLocal(l.id);
@@ -739,12 +739,12 @@ function renderLista() {
     const matchEs = !fes || l.estado === fes;
     return matchQ && matchP && matchE && matchM && matchEs;
   });
-
+ 
   leads.sort((a,b) => {
     if (sortMode === 'score') return (calcScore(b) - calcScore(a)) * sortDir;
     return (getDaysOld(b.fecha) - getDaysOld(a.fecha)) * sortDir;
   });
-
+ 
   // Populate etapa filter
   const etapaEl = document.getElementById('s-etapa');
   if (etapaEl.children.length <= 1) {
@@ -772,10 +772,26 @@ function renderLista() {
       estadoEl.appendChild(opt);
     });
   }
-
+ 
   const tbody = document.getElementById('lista-tbody');
   if (!leads.length) {
-    tbody.innerHTML = `<tr><td colspan="10" style="text-align:center;padding:32px;color:var(--muted)">Sin resultados</td></tr>`;
+    const emptyMessages = {
+      hot:    { icon: '🔴', msg: 'No hay leads urgentes', sub: 'Todos tus leads tienen más de 24 horas o ya fueron contactados' },
+      new:    { icon: '✨', msg: 'No hay leads nuevos hoy', sub: 'Aún no han llegado leads el día de hoy' },
+      S:      { icon: '⭐', msg: 'No hay leads con Perfil S', sub: 'Ningún lead tiene el perfil crediticio más alto' },
+      task:   { icon: '📅', msg: 'No hay tareas para hoy', sub: 'Abre un lead y asígnale una tarea con fecha de hoy para verla aquí' },
+      puebla: { icon: '📍', msg: 'No hay leads de Puebla o Tlaxcala', sub: 'Ningún lead registró estar en tu zona de venta' },
+      fuera:  { icon: '🚫', msg: 'No hay leads fuera de zona', sub: 'Todos tus leads son de Puebla o Tlaxcala' },
+      test:   { icon: '🧪', msg: 'No hay leads de prueba', sub: 'No se detectaron nombres como "prueba", "test" o "demo"' },
+    };
+    const em = quickFilterMode && emptyMessages[quickFilterMode]
+      ? emptyMessages[quickFilterMode]
+      : { icon: '🔍', msg: 'Sin resultados', sub: 'Intenta cambiar los filtros de búsqueda' };
+    tbody.innerHTML = `<tr><td colspan="11" style="text-align:center;padding:48px;color:var(--muted)">
+      <div style="font-size:36px;margin-bottom:12px">${em.icon}</div>
+      <div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px">${em.msg}</div>
+      <div style="font-size:12px;color:var(--muted);max-width:300px;margin:0 auto;line-height:1.5">${em.sub}</div>
+    </td></tr>`;
     return;
   }
   tbody.innerHTML = leads.map(l => {
@@ -807,7 +823,7 @@ function renderLista() {
     </tr>`;
   }).join('');
 }
-
+ 
 // ── DASHBOARD ──
 function renderDashboard() {
   // Funnel
@@ -825,7 +841,7 @@ function renderDashboard() {
       <span class="funnel-pct">${((counts[e.id]/maxF)*100).toFixed(0)}%</span>
     </div>
   `).join('');
-
+ 
   // Perfil
   const perfiles = {S:0,A:0,B:0,C:0};
   allLeads.forEach(l => { if(perfiles[l.perfil]!==undefined) perfiles[l.perfil]++; });
@@ -838,7 +854,7 @@ function renderDashboard() {
       <span class="pbar-count">${n}</span>
     </div>
   `).join('');
-
+ 
   // Modelos
   const modelos = {};
   allLeads.forEach(l => { const m=l.modelo.split(' ')[0]||'—'; modelos[m]=(modelos[m]||0)+1; });
@@ -851,7 +867,7 @@ function renderDashboard() {
       <span class="pbar-count">${n}</span>
     </div>
   `).join('');
-
+ 
   // Estados
   const estados = {};
   allLeads.forEach(l => { const e=l.estado||'—'; estados[e]=(estados[e]||0)+1; });
@@ -868,7 +884,7 @@ function renderDashboard() {
       <span style="font-size:9px;color:${color};font-family:'DM Mono',monospace;margin-left:4px;width:32px">${((n/totalLeads)*100).toFixed(0)}%</span>
     </div>`;
   }).join('');
-
+ 
   // Leads por día
   const byDay = {};
   allLeads.forEach(l => {
@@ -888,7 +904,7 @@ function renderDashboard() {
     </div>
   `).join('') || '<div style="color:var(--muted);font-size:12px">Sin datos recientes</div>';
 }
-
+ 
 // ── ALERTS ──
 function updateAlerts() {
   const urgentes = allLeads.filter(l => {
@@ -901,7 +917,7 @@ function updateAlerts() {
     document.getElementById('alert-text').textContent = `${urgentes.length} lead${urgentes.length>1?'s':''} urgente${urgentes.length>1?'s':''} sin contactar hoy`;
   } else banner.classList.remove('show');
 }
-
+ 
 function updateBadges() {
   const urgentes = allLeads.filter(l => {
     const etapa = getLocal(l.id).etapa || 'nuevo';
@@ -911,7 +927,7 @@ function updateBadges() {
   if (urgentes > 0) { badge.style.display='inline'; badge.textContent=urgentes; }
   else badge.style.display='none';
 }
-
+ 
 // ── QUICK FILTERS ──
 function getQuickFiltered() {
   const set = new Set();
@@ -923,8 +939,22 @@ function getQuickFiltered() {
     if (quickFilterMode === 'new' && getDaysOld(l.fecha)===0) set.add(l.id);
     if (quickFilterMode === 'S' && l.perfil==='S') set.add(l.id);
     if (quickFilterMode === 'task') {
-      const today = new Date().toISOString().split('T')[0];
-      if (local.taskDate === today) set.add(l.id);
+      const today = new Date();
+      const todayISO = today.toISOString().split('T')[0]; // 2026-05-24
+      const todayMX  = today.toLocaleDateString('es-MX').replace(/\//g, '/'); // 24/5/2026
+      const d = local.taskDate || '';
+      // Normalize taskDate to compare — handle both formats
+      const normalize = s => {
+        if (!s) return '';
+        if (s.includes('-')) return s; // already ISO
+        const parts = s.split('/');
+        if (parts.length === 3) {
+          const [day, mon, yr] = parts;
+          return `${yr}-${mon.padStart(2,'0')}-${day.padStart(2,'0')}`;
+        }
+        return s;
+      };
+      if (normalize(d) === todayISO) set.add(l.id);
     }
     if (quickFilterMode === 'puebla' && esPoblano(l)) set.add(l.id);
     if (quickFilterMode === 'fuera' && l.estado && l.estado !== '—' && !esPoblano(l)) set.add(l.id);
@@ -932,7 +962,7 @@ function getQuickFiltered() {
   });
   return set;
 }
-
+ 
 function quickFilter(mode) {
   quickFilterMode = quickFilterMode === mode ? null : mode;
   document.querySelectorAll('.nav-btn').forEach(b => {
@@ -944,7 +974,7 @@ function quickFilter(mode) {
   }
   showScreen('lista', true);
 }
-
+ 
 // ══════════════════════════════════════════════════════
 // LEAD DRAWER
 // ══════════════════════════════════════════════════════
@@ -953,10 +983,10 @@ function openLead(id) {
   if (!l) return;
   activeId = id;
   const local = getLocal(id);
-
+ 
   document.getElementById('d-name').textContent = l.nombre;
   document.getElementById('d-sub').textContent = `${l.telefono} · ${l.estado} · ${formatRelative(l.fecha)}`;
-
+ 
   // Etapa selector
   document.getElementById('pipe-selector').innerHTML = ETAPAS.map(e => `
     <div class="pipe-opt ${(local.etapa||'nuevo')===e.id?'sel':''}"
@@ -965,7 +995,7 @@ function openLead(id) {
       ${e.label}
     </div>
   `).join('');
-
+ 
   // Data grid
   const items = [
     {label:'Perfil',val:`<span class="lcard-perfil p-${l.perfil}">${l.perfil}</span>`},
@@ -987,29 +1017,29 @@ function openLead(id) {
       <div class="d-val">${i.val}</div>
     </div>
   `).join('');
-
+ 
   // Task
   document.getElementById('task-text').value = local.taskText || '';
   document.getElementById('task-date').value = local.taskDate || '';
-
+ 
   // Notes
   document.getElementById('d-notes').value = local.notes || '';
-
+ 
   // History
   const hist = local.history || [];
   document.getElementById('d-history').innerHTML = hist.length
     ? hist.map(h => `<div class="hist-item"><div class="hist-time">${h.time}</div><div class="hist-text">${h.text}</div></div>`).join('')
     : '<div style="font-size:11px;color:var(--muted)">Sin historial aún</div>';
-
+ 
   // WA button
   const tel = l.telefono.replace(/\D/g,'');
   const waNum = tel.length===10 ? '52'+tel : tel;
   const waMsg = encodeURIComponent(`Hola ${l.nombre}! Te contacto de AsesoresDigitalesG. Hiciste el test de Geely y tu modelo recomendado fue el ${l.modelo}. ¿Tienes un momento para platicar?`);
   document.getElementById('d-wa').onclick = () => window.open(`https://wa.me/${waNum}?text=${waMsg}`, '_blank');
-
+ 
   document.getElementById('overlay').classList.add('open');
 }
-
+ 
 function setEtapa(id, el, color) {
   document.querySelectorAll('.pipe-opt').forEach(o => {
     o.classList.remove('sel');
@@ -1021,7 +1051,7 @@ function setEtapa(id, el, color) {
   local.etapa = id;
   setLocal(activeId, local);
 }
-
+ 
 function saveLead() {
   if (activeId === null) return;
   const local = getLocal(activeId) || {};
@@ -1035,10 +1065,10 @@ function saveLead() {
   closeDrawer();
   renderAll();
 }
-
+ 
 function maybeClose(e) { if (e.target===document.getElementById('overlay')) closeDrawer(); }
 function closeDrawer() { document.getElementById('overlay').classList.remove('open'); activeId=null; }
-
+ 
 // ══════════════════════════════════════════════════════
 // NAVIGATION
 // ══════════════════════════════════════════════════════
@@ -1054,9 +1084,10 @@ function showScreen(name, keepFilter) {
   document.getElementById('page-title').textContent = titles[name]||name;
   renderAll();
 }
-
+ 
 // Auto-sync cada 3 minutos
 setInterval(syncData, 3*60*1000);
 </script>
 </body>
 </html>
+ 
