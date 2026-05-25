@@ -1044,16 +1044,18 @@ function getQuickFiltered() {
     if (quickFilterMode === 'fuera'  && l.estado && l.estado !== '—' && !esPoblano(l)) set.add(l.id);
     if (quickFilterMode === 'test'   && isTestLead(l)) set.add(l.id);
     if (quickFilterMode === 'task') {
-      // Normalizar fecha de tarea a ISO para comparar
       const d = local.taskDate || '';
-      let iso = d;
-      if (d.includes('/')) {
-        const parts = d.split('/');
+      let iso = d.trim();
+      // Normalizar si viene en formato dd/mm/yyyy
+      if (iso.includes('/')) {
+        const parts = iso.split('/');
         if (parts.length === 3) {
           const [day, mon, yr] = parts;
           iso = `${yr}-${mon.padStart(2,'0')}-${day.padStart(2,'0')}`;
         }
       }
+      // Log de los primeros matches para debug
+      if (l.id < 5 && iso) dbg(`Lead ${l.id} taskDate="${iso}" vs hoy="${todayISO}" match=${iso===todayISO}`, iso===todayISO?'ok':'warn');
       if (iso === todayISO) set.add(l.id);
     }
   });
@@ -1140,12 +1142,36 @@ function setEtapa(id, el, color) {
 function saveLead() {
   if (activeId === null) return;
   const local = getLocal(activeId) || {};
-  setLocal(activeId, {
+  const taskText = document.getElementById('task-text').value;
+  const taskDate = document.getElementById('task-date').value;
+  const notes    = document.getElementById('d-notes').value;
+  
+  const updated = {
     ...local,
-    taskText: document.getElementById('task-text').value,
-    taskDate: document.getElementById('task-date').value,
-    notes:    document.getElementById('d-notes').value,
-  });
+    taskText,
+    taskDate,
+    notes,
+  };
+  
+  // Guardar en localStorage directamente (fuente de verdad local)
+  try { 
+    localStorage.setItem('crm_' + activeId, JSON.stringify(updated));
+    dbg(`Guardado local: tarea="${taskText}" fecha="${taskDate}"`, 'ok');
+  } catch(e) { 
+    dbg(`Error localStorage: ${e.message}`, 'err'); 
+  }
+  
+  // Agregar al historial si hay tarea nueva
+  if (taskText && taskText !== (local.taskText||'')) {
+    const hist = updated.history || [];
+    hist.unshift({time: new Date().toLocaleString('es-MX'), text: `Tarea: ${taskText} → ${taskDate}`});
+    updated.history = hist.slice(0, 20);
+    localStorage.setItem('crm_' + activeId, JSON.stringify(updated));
+  }
+  
+  // Intentar guardar en Sheet (best-effort, no bloquea)
+  saveToSheet(activeId, updated);
+  
   closeDrawer();
   renderAll();
 }
