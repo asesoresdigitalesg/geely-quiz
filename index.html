@@ -6,215 +6,117 @@
 <title>¿Qué Geely puedes comprar HOY? | AsesoresDigitalesG Puebla</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg:#080810;--surface:#0f0f1a;--card:#13131f;--border:#1c1c2e;
-  --accent:#00d4ff;--accent2:#0055ff;--gold:#f5c518;--green:#00e59b;
-  --orange:#ff8c00;--red:#ff4444;--purple:#a855f7;--text:#eeeef8;--muted:#5a5a7a;
-}
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden}
-.bg-grid{position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.025) 1px,transparent 1px);background-size:44px 44px;pointer-events:none;z-index:0}
-.bg-glow{position:fixed;top:-40vh;left:50%;transform:translateX(-50%);width:90vw;height:70vh;background:radial-gradient(ellipse,rgba(0,60,200,0.13) 0%,transparent 70%);pointer-events:none;z-index:0}
-.wrapper{position:relative;z-index:1;max-width:620px;margin:0 auto;padding:0 18px 80px}
-.topbar{text-align:center;padding:22px 0 0;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);font-weight:500}
-.screen{display:none}.screen.on{display:block}
-
-/* INTRO */
-.intro{text-align:center;padding:44px 0 36px}
-.badge{display:inline-flex;align-items:center;gap:7px;background:rgba(0,212,255,.07);border:1px solid rgba(0,212,255,.18);border-radius:100px;padding:7px 18px;font-size:11px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:26px}
-.badge-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:blink 2s infinite}
-@keyframes blink{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(1.5)}}
-.headline{font-family:'Bebas Neue',sans-serif;font-size:clamp(40px,11vw,70px);line-height:.93;letter-spacing:.02em;margin-bottom:6px}
-.headline .hl{background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.sub{color:var(--muted);font-size:15px;font-weight:300;line-height:1.65;margin-top:18px}
-.perks{display:flex;justify-content:center;gap:20px;margin-top:24px;flex-wrap:wrap}
-.perk{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}.perk span{color:var(--accent);font-weight:700}
-
-/* PROGRESS */
-.progress-wrap{margin-bottom:28px}
-.progress-meta{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.07em;text-transform:uppercase;margin-bottom:9px}
-.progress-bar{height:2px;background:var(--border);border-radius:10px;overflow:hidden}
-.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent2),var(--accent));border-radius:10px;transition:width .55s cubic-bezier(.4,0,.2,1)}
-
-/* QUESTION */
-.q-card{background:var(--card);border:1px solid var(--border);border-radius:22px;padding:30px 28px 28px;margin-bottom:16px;animation:fadeUp .38s cubic-bezier(.4,0,.2,1)}
-@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
-.q-step{font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
-.q-title{font-size:21px;font-weight:500;line-height:1.3;margin-bottom:6px}
-.q-sub{font-size:13px;color:var(--muted);font-weight:300;margin-bottom:26px;line-height:1.5}
-.options{display:grid;gap:11px}
-.opt{display:flex;align-items:center;gap:14px;background:var(--surface);border:1.5px solid var(--border);border-radius:13px;padding:15px 18px;cursor:pointer;transition:border-color .18s,background .18s,transform .15s;text-align:left;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:400}
-.opt:hover{border-color:rgba(0,212,255,.35);transform:translateY(-1px)}
-.opt.sel{border-color:var(--accent);background:rgba(0,212,255,.05)}
-.opt-icon{font-size:22px;flex-shrink:0;width:32px;text-align:center}
-.opt-body{flex:1}.opt-body strong{display:block;font-weight:500;font-size:14px}
-.opt-body small{font-size:12px;color:var(--muted);font-weight:300}
-.opt-ring{width:19px;height:19px;border-radius:50%;border:1.5px solid var(--border);flex-shrink:0;transition:all .18s;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--bg)}
-.opt.sel .opt-ring{background:var(--accent);border-color:var(--accent)}
-.opt.sel .opt-ring::after{content:'✓';font-weight:800}
-
-/* BUTTONS */
-.btn-next{width:100%;background:linear-gradient(135deg,var(--accent2),var(--accent));color:#000;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;letter-spacing:.04em;border:none;border-radius:13px;padding:17px 24px;cursor:pointer;transition:all .2s;opacity:.35;pointer-events:none}
-.btn-next.on{opacity:1;pointer-events:all}
-.btn-next.on:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(0,85,255,.35)}
-
-/* CAPTURE */
-.cap-card{background:var(--card);border:1px solid var(--border);border-radius:22px;padding:36px 28px;text-align:center;animation:fadeUp .4s ease}
-.cap-icon{font-size:52px;margin-bottom:16px;display:block}
-.cap-title{font-size:22px;font-weight:500;margin-bottom:8px}
-.cap-sub{font-size:14px;color:var(--muted);line-height:1.6;margin-bottom:28px}
-.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
-.field-wrap{position:relative}
-.field-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:15px;pointer-events:none}
-.field-input{width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:13px;padding:15px 14px 15px 42px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border-color .2s}
-.field-input:focus{border-color:var(--accent)}
-.field-full{grid-column:1/-1}
-.field-select{width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:13px;padding:15px 14px 15px 42px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;appearance:none;cursor:pointer;transition:border-color .2s}
-.field-select:focus{border-color:var(--accent)}
-.cap-error{display:none;background:rgba(255,68,68,.1);border:1px solid rgba(255,68,68,.3);border-radius:10px;padding:10px 14px;font-size:12px;color:#ff6b6b;text-align:center;margin-bottom:12px}
-.privacy-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:20px;text-align:left}
-.privacy-row input{margin-top:3px;width:16px;height:16px;accent-color:var(--accent);flex-shrink:0}
-.privacy-text{font-size:12px;color:var(--muted);line-height:1.5}
-.privacy-link{color:var(--accent);text-decoration:none}
-
-/* RESULT */
-.result-wrap{animation:fadeUp .5s ease}
-
-/* Score card */
-.score-card{background:var(--card);border:1px solid var(--border);border-radius:22px;padding:32px 28px;margin-bottom:16px;text-align:center;position:relative;overflow:hidden}
-.score-glow{position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:200px;height:200px;border-radius:50%;opacity:.15;filter:blur(40px)}
-.score-label{font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:16px}
-.score-ring{width:140px;height:140px;margin:0 auto 20px;position:relative}
-.score-ring svg{transform:rotate(-90deg)}
-.score-ring-track{fill:none;stroke:var(--border);stroke-width:8}
-.score-ring-fill{fill:none;stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset 1.2s cubic-bezier(.4,0,.2,1)}
-.score-number{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
-.score-num{font-family:'Bebas Neue',sans-serif;font-size:48px;line-height:1;letter-spacing:.02em}
-.score-max{font-size:12px;color:var(--muted)}
-.score-perfil{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:.04em;margin-bottom:6px}
-.score-desc{font-size:14px;color:var(--muted);line-height:1.5;max-width:380px;margin:0 auto}
-
-/* Perfil badge */
-.perfil-badge{display:inline-flex;align-items:center;gap:8px;border-radius:100px;padding:8px 20px;font-size:13px;font-weight:700;margin-bottom:20px}
-.pb-S{background:rgba(0,229,155,.1);border:1px solid rgba(0,229,155,.25);color:var(--green)}
-.pb-A{background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.2);color:var(--accent)}
-.pb-B{background:rgba(255,140,0,.08);border:1px solid rgba(255,140,0,.2);color:var(--orange)}
-.pb-C{background:rgba(255,68,68,.08);border:1px solid rgba(255,68,68,.2);color:var(--red)}
-
-/* Model card */
-.model-card{background:var(--card);border:1px solid var(--border);border-radius:22px;padding:28px;margin-bottom:16px}
-.model-tag{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
-.model-name{font-family:'Bebas Neue',sans-serif;font-size:clamp(48px,13vw,80px);line-height:.88;letter-spacing:.02em;background:linear-gradient(135deg,var(--text) 30%,var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px}
-.model-full{font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:24px}
-.fin-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
-.fin-item{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px}
-.fin-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px}
-.fin-val{font-family:'Bebas Neue',sans-serif;font-size:24px;line-height:1;letter-spacing:.02em}
-.fin-sub{font-size:11px;color:var(--muted);margin-top:3px}
-.fv-gold{color:var(--gold)}.fv-green{color:var(--green)}.fv-accent{color:var(--accent)}.fv-orange{color:var(--orange)}
-
-/* Bono */
-.bono-block{background:rgba(245,197,24,.06);border:1px solid rgba(245,197,24,.2);border-radius:12px;padding:14px 16px;margin-bottom:16px;display:flex;align-items:flex-start;gap:10px}
-.bono-icon{font-size:18px;flex-shrink:0;margin-top:1px}
-.bono-text{font-size:13px;color:var(--gold);line-height:1.5}
-
-/* Versions table */
-.versions-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:16px}
-.versions-title{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px}
-table.vtable{width:100%;border-collapse:collapse;font-size:13px}
-.vtable tr{border-top:1px solid var(--border)}
-.vtable tr:first-child{border:none}
-.vtable td{padding:8px 4px;vertical-align:middle}
-.vtable .star{color:var(--accent);font-weight:700}
-.vtable .price{text-align:right;font-family:'DM Mono',monospace;font-size:12px}
-.vtable .mens{text-align:right;color:var(--green);font-size:11px}
-
-/* Also models */
-.also-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:16px}
-.also-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px}
-.also-pills{display:flex;flex-wrap:wrap;gap:8px}
-.also-pill{background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.15);border-radius:100px;padding:5px 14px;font-size:12px;color:var(--accent);font-weight:500}
-
-/* PLAN DE ACCIÓN */
-.plan-card{background:var(--card);border:1px solid var(--border);border-radius:22px;padding:28px;margin-bottom:16px}
-.plan-header{display:flex;align-items:center;gap:12px;margin-bottom:20px}
-.plan-icon{font-size:28px}
-.plan-title{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:.04em}
-.plan-sub{font-size:12px;color:var(--muted);margin-top:2px}
-.plan-steps{display:flex;flex-direction:column;gap:12px}
-.plan-step{display:flex;gap:14px;align-items:flex-start}
-.step-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:1px}
-.step-body{}
-.step-title{font-size:14px;font-weight:600;margin-bottom:3px}
-.step-desc{font-size:12px;color:var(--muted);line-height:1.5}
-.step-tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;margin-top:4px;text-transform:uppercase;letter-spacing:.08em}
-
-/* CTA */
-.cta-wa{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;background:#22c55e;color:#fff;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;border:none;border-radius:13px;padding:18px 24px;cursor:pointer;text-decoration:none;margin-bottom:10px;transition:all .2s}
-.cta-wa:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(34,197,94,.35);background:#16a34a}
-.cta-maps{display:block;width:100%;text-align:center;background:transparent;border:1.5px solid var(--border);color:var(--muted);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:400;border-radius:13px;padding:13px 24px;cursor:pointer;text-decoration:none;transition:all .2s;margin-bottom:12px}
-.cta-maps:hover{border-color:var(--accent);color:var(--accent)}
-.legal{text-align:center;font-size:11px;color:var(--muted);line-height:1.5}
-.btn-restart{background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;text-decoration:underline;display:block;margin:12px auto 0;text-align:center}
-
-/* ADVISOR SIGNATURE */
-.advisor-card{position:relative;background:linear-gradient(155deg,rgba(0,212,255,.06),rgba(0,229,155,.03) 60%,transparent);border:1px solid rgba(0,212,255,.18);border-radius:20px;padding:26px 24px;margin-bottom:18px;text-align:center;overflow:hidden}
-.advisor-card::before{content:'';position:absolute;top:-50%;left:50%;transform:translateX(-50%);width:220px;height:220px;background:radial-gradient(circle,rgba(0,212,255,.12),transparent 70%);pointer-events:none}
-.advisor-avatar{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--accent2),var(--accent));display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-family:'Bebas Neue',sans-serif;font-size:22px;color:#000;letter-spacing:.02em;position:relative;box-shadow:0 6px 20px rgba(0,212,255,.25)}
-.advisor-verified{position:absolute;bottom:-2px;right:-2px;width:19px;height:19px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;color:#000;border:2px solid var(--card)}
-.advisor-msg{font-size:14px;color:var(--text);line-height:1.65;font-weight:300;max-width:420px;margin:0 auto 14px;position:relative}
-.advisor-msg strong{font-weight:600;color:var(--accent)}
-.advisor-sign{display:flex;align-items:center;justify-content:center;gap:8px;position:relative}
-.advisor-name{font-size:13px;font-weight:700;color:var(--text)}
-.advisor-role{font-size:11px;color:var(--muted);font-weight:300}
-.advisor-divider{width:3px;height:3px;border-radius:50%;background:var(--muted)}
-
-/* Privacy modal */
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:200;align-items:center;justify-content:center;padding:20px}
-.modal-overlay.open{display:flex}
-.modal-box{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:32px 28px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;position:relative}
-.modal-close{position:absolute;top:14px;right:14px;background:var(--surface);border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:5px 10px;cursor:pointer;font-size:13px}
-.modal-title{font-family:'Bebas Neue',sans-serif;font-size:28px;margin-bottom:16px}
-.modal-p{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:10px}
-.modal-btn{width:100%;background:linear-gradient(135deg,var(--accent2),var(--accent));color:#000;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;border:none;border-radius:12px;padding:14px;cursor:pointer;margin-top:8px}
-
-::-webkit-scrollbar{width:4px;height:4px}
-::-webkit-scrollbar-thumb{background:#3a3a5a;border-radius:100px}
-@media(max-width:400px){.fin-grid{grid-template-columns:1fr 1fr}.field-grid{grid-template-columns:1fr}}
-
-/* FLOATING WHATSAPP CTA */
-.float-wa{position:fixed;left:50%;bottom:18px;transform:translateX(-50%) translateY(0);width:calc(100% - 36px);max-width:560px;z-index:150;display:none;align-items:center;justify-content:center;gap:9px;background:#22c55e;color:#fff;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;border:none;border-radius:100px;padding:15px 22px;text-decoration:none;box-shadow:0 10px 34px rgba(0,0,0,.45),0 0 0 1px rgba(255,255,255,.06);transition:transform .2s,box-shadow .2s;animation:floatIn .4s cubic-bezier(.4,0,.2,1)}
-.float-wa.show{display:flex}
-.float-wa:hover{transform:translateX(-50%) translateY(-2px);box-shadow:0 14px 40px rgba(34,197,94,.4)}
-.float-wa svg{flex-shrink:0}
-@keyframes floatIn{from{opacity:0;transform:translateX(-50%) translateY(16px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
-body.has-float .wrapper{padding-bottom:96px}
+  :root {
+    --bg: #080810;
+    --surface: #0f0f1a;
+    --card: #13131f;
+    --border: #1c1c2e;
+    --accent: #00d4ff;
+    --accent2: #0055ff;
+    --gold: #f5c518;
+    --green: #00e59b;
+    --orange: #ff8c00;
+    --red: #ff4444;
+    --text: #eeeef8;
+    --muted: #5a5a7a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; overflow-x: hidden; }
+  .bg-grid { position: fixed; inset: 0; background-image: linear-gradient(rgba(0,212,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(0,212,255,0.025) 1px, transparent 1px); background-size: 44px 44px; pointer-events: none; z-index: 0; }
+  .bg-glow { position: fixed; top: -40vh; left: 50%; transform: translateX(-50%); width: 90vw; height: 70vh; background: radial-gradient(ellipse, rgba(0,60,200,0.13) 0%, transparent 70%); pointer-events: none; z-index: 0; }
+  .wrapper { position: relative; z-index: 1; max-width: 600px; margin: 0 auto; padding: 0 18px 80px; }
+  .topbar { display: flex; align-items: center; justify-content: center; padding: 22px 0 0; gap: 10px; }
+  .topbar-logo { font-size: 11px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+  .topbar-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--muted); opacity: 0.4; }
+  .intro { text-align: center; padding: 44px 0 36px; }
+  .badge { display: inline-flex; align-items: center; gap: 7px; background: rgba(0,212,255,0.07); border: 1px solid rgba(0,212,255,0.18); border-radius: 100px; padding: 7px 18px; font-size: 11px; font-weight: 600; letter-spacing: 0.13em; text-transform: uppercase; color: var(--accent); margin-bottom: 26px; }
+  .badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: blink 2s infinite; }
+  @keyframes blink { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.3;transform:scale(1.5)} }
+  .headline { font-family: 'Bebas Neue', sans-serif; font-size: clamp(40px, 11vw, 70px); line-height: 0.93; letter-spacing: 0.02em; margin-bottom: 6px; }
+  .headline .hl { background: linear-gradient(90deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .sub { color: var(--muted); font-size: 15px; font-weight: 300; line-height: 1.65; margin-top: 18px; }
+  .perks { display: flex; justify-content: center; gap: 20px; margin-top: 24px; flex-wrap: wrap; }
+  .perk { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); font-weight: 400; }
+  .perk span { color: var(--accent); font-weight: 700; }
+  .progress-wrap { margin-bottom: 28px; }
+  .progress-meta { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 9px; }
+  .progress-bar { height: 2px; background: var(--border); border-radius: 10px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent2), var(--accent)); border-radius: 10px; transition: width 0.55s cubic-bezier(0.4,0,0.2,1); }
+  .q-card { background: var(--card); border: 1px solid var(--border); border-radius: 22px; padding: 30px 28px 28px; margin-bottom: 16px; animation: fadeUp 0.38s cubic-bezier(0.4,0,0.2,1); }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
+  .q-step { font-size: 10px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; }
+  .q-title { font-size: 21px; font-weight: 500; line-height: 1.3; margin-bottom: 6px; }
+  .q-sub { font-size: 13px; color: var(--muted); font-weight: 300; margin-bottom: 26px; line-height: 1.5; }
+  .options { display: grid; gap: 11px; }
+  .opt { display: flex; align-items: center; gap: 14px; background: var(--surface); border: 1.5px solid var(--border); border-radius: 13px; padding: 15px 18px; cursor: pointer; transition: border-color 0.18s, background 0.18s, transform 0.15s; text-align: left; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 400; position: relative; overflow: hidden; }
+  .opt:hover { border-color: rgba(0,212,255,0.35); transform: translateY(-1px); }
+  .opt.sel { border-color: var(--accent); background: rgba(0,212,255,0.05); }
+  .opt-icon { font-size: 22px; flex-shrink: 0; width: 32px; text-align: center; }
+  .opt-body { flex: 1; }
+  .opt-body strong { display: block; font-weight: 500; font-size: 14px; }
+  .opt-body small { font-size: 12px; color: var(--muted); font-weight: 300; }
+  .opt-ring { width: 19px; height: 19px; border-radius: 50%; border: 1.5px solid var(--border); flex-shrink: 0; transition: all 0.18s; display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--bg); }
+  .opt.sel .opt-ring { background: var(--accent); border-color: var(--accent); }
+  .opt.sel .opt-ring::after { content: '✓'; font-weight: 800; }
+  .btn-next { width: 100%; background: linear-gradient(135deg, var(--accent2), var(--accent)); color: #000; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 700; letter-spacing: 0.04em; border: none; border-radius: 13px; padding: 17px 24px; cursor: pointer; transition: all 0.2s; opacity: 0.35; pointer-events: none; }
+  .btn-next.on { opacity: 1; pointer-events: all; }
+  .btn-next.on:hover { transform: translateY(-2px); box-shadow: 0 14px 40px rgba(0,85,255,0.35); }
+  .result-wrap { animation: fadeUp 0.45s cubic-bezier(0.4,0,0.2,1); }
+  .perfil-badge { display: flex; align-items: center; gap: 10px; border-radius: 14px; padding: 14px 20px; margin-bottom: 20px; font-weight: 600; font-size: 14px; }
+  .perfil-badge.s { background: rgba(0,229,155,0.1); border: 1px solid rgba(0,229,155,0.25); color: var(--green); }
+  .perfil-badge.a { background: rgba(0,212,255,0.08); border: 1px solid rgba(0,212,255,0.2); color: var(--accent); }
+  .perfil-badge.b { background: rgba(255,140,0,0.08); border: 1px solid rgba(255,140,0,0.2); color: var(--orange); }
+  .perfil-badge.c { background: rgba(255,68,68,0.08); border: 1px solid rgba(255,68,68,0.2); color: var(--red); }
+  .result-card { background: var(--card); border: 1px solid var(--border); border-radius: 22px; padding: 32px 28px; margin-bottom: 14px; }
+  .result-tag { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+  .result-model { font-family: 'Bebas Neue', sans-serif; font-size: clamp(48px, 13vw, 80px); line-height: 0.88; letter-spacing: 0.02em; background: linear-gradient(135deg, var(--text) 30%, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 6px; }
+  .result-subtitle { font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 400; margin-bottom: 24px; }
+  .fin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+  .fin-item { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px 14px; }
+  .fin-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; margin-bottom: 6px; }
+  .fin-val { font-family: 'Bebas Neue', sans-serif; font-size: 26px; color: var(--accent); letter-spacing: 0.02em; line-height: 1; }
+  .fin-val.green { color: var(--green); }
+  .fin-val.gold { color: var(--gold); }
+  .fin-sub { font-size: 11px; color: var(--muted); margin-top: 3px; font-weight: 300; }
+  .also-block { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; margin-bottom: 20px; }
+  .also-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; margin-bottom: 10px; }
+  .also-models { display: flex; flex-wrap: wrap; gap: 8px; }
+  .also-pill { background: rgba(0,212,255,0.06); border: 1px solid rgba(0,212,255,0.15); border-radius: 100px; padding: 5px 14px; font-size: 12px; color: var(--accent); font-weight: 500; }
+  .why-block { font-size: 13px; line-height: 1.7; color: var(--text); opacity: 0.8; border-top: 1px solid var(--border); padding-top: 18px; margin-top: 4px; }
+  .cta-wa { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; background: #22c55e; color: #fff; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 700; border: none; border-radius: 13px; padding: 18px 24px; cursor: pointer; text-decoration: none; margin-bottom: 10px; transition: all 0.2s; }
+  .cta-wa:hover { transform: translateY(-2px); box-shadow: 0 12px 36px rgba(34,197,94,0.35); background: #16a34a; }
+  .cta-maps { display: block; width: 100%; text-align: center; background: transparent; border: 1.5px solid var(--border); color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 400; border-radius: 13px; padding: 13px 24px; cursor: pointer; text-decoration: none; transition: all 0.2s; }
+  .cta-maps:hover { border-color: var(--accent); color: var(--accent); }
+  .legal { text-align: center; font-size: 11px; color: var(--muted); margin-top: 18px; line-height: 1.5; }
+  .btn-restart { background: none; border: none; color: var(--muted); font-size: 12px; cursor: pointer; font-family: 'DM Sans', sans-serif; text-decoration: underline; display: block; margin: 12px auto 0; text-align: center; }
+  .screen { display: none; }
+  .screen.on { display: block; }
+  @media(max-width:380px){ .q-card, .result-card { padding: 22px 16px; } .fin-grid { grid-template-columns: 1fr 1fr; } }
 </style>
 </head>
 <body>
 <div class="bg-grid"></div>
 <div class="bg-glow"></div>
-
 <div class="wrapper">
-  <div class="topbar">AsesoresDigitalesG · Puebla · Julio 2026</div>
-
-  <!-- INTRO -->
+  <div class="topbar">
+    <span class="topbar-logo">AsesoresDigitalesG</span>
+    <div class="topbar-dot"></div>
+    <span class="topbar-logo">Puebla 2026</span>
+  </div>
   <div class="screen on" id="s-intro">
     <div class="intro">
-      <div class="badge"><div class="badge-dot"></div>Análisis gratuito · 5 preguntas</div>
+      <div class="badge"><div class="badge-dot"></div>Test gratuito · 5 preguntas</div>
       <div class="headline">¿Qué Geely<br>puedes comprar<br><span class="hl">HOY?</span></div>
-      <p class="sub">Descubre tu score financiero automotriz,<br>el modelo exacto que calificas y tu plan de acción.</p>
+      <p class="sub">Descubre exactamente qué modelo calificas,<br>cuánto pagarías al mes y cuál es tu enganche.</p>
       <div class="perks">
         <div class="perk"><span>⚡</span> 60 segundos</div>
-        <div class="perk"><span>🎯</span> Score personalizado</div>
-        <div class="perk"><span>📋</span> Plan de acción</div>
+        <div class="perk"><span>🔒</span> 100% gratuito</div>
+        <div class="perk"><span>🚗</span> Resultado real</div>
       </div>
     </div>
-    <button class="btn-next on" onclick="startQuiz()">Descubrir mi score →</button>
-    <p class="legal" style="margin-top:16px">Geely Serdán · Financiamiento bancario y financiera · Puebla</p>
+    <button class="btn-next on" onclick="go('s-quiz'); renderQ()">Descubrir mi opción →</button>
+    <p class="legal" style="margin-top:16px">AsesoresDigitalesG · Financiamiento bancario y financiera · Puebla</p>
   </div>
-
-  <!-- QUIZ -->
   <div class="screen" id="s-quiz">
     <div style="height:28px"></div>
     <div class="progress-wrap">
@@ -228,750 +130,350 @@ body.has-float .wrapper{padding-bottom:96px}
       <div class="options" id="opts"></div>
     </div>
     <button class="btn-next" id="btn-next" onclick="nextQ()">Siguiente →</button>
-    <button class="btn-restart" id="btn-back" onclick="prevQ()" style="margin-top:14px">← Regresar</button>
   </div>
-
-  <!-- CAPTURE -->
   <div class="screen" id="s-capture">
     <div style="height:28px"></div>
     <div class="progress-wrap">
       <div class="progress-meta"><span>¡Ya casi!</span><span>95%</span></div>
       <div class="progress-bar"><div class="progress-fill" style="width:95%"></div></div>
     </div>
-    <div class="cap-card">
-      <span class="cap-icon">🎯</span>
-      <div class="cap-title">Tu análisis está listo</div>
-      <p class="cap-sub">Déjanos tus datos para enviarte tu score personalizado con el modelo, enganche, mensualidad y plan de acción para tu perfil.</p>
-      <div class="field-grid">
-        <div class="field-wrap">
-          <span class="field-icon">👤</span>
-          <input class="field-input" id="cap-nombre" type="text" placeholder="Nombre" autocomplete="given-name" oninput="checkCap()" onpaste="setTimeout(checkCap,10)">
+    <div class="q-card" style="text-align:center; padding: 36px 28px;">
+      <div style="font-size:48px; margin-bottom:16px;">🎉</div>
+      <div class="q-step" style="justify-content:center; margin-bottom:12px;">¡Tu análisis está listo!</div>
+      <div class="q-title" style="font-size:20px; margin-bottom:8px;">¿A dónde enviamos<br>tu resultado?</div>
+      <div class="q-sub" style="margin-bottom:28px;">Déjanos tus datos para mandarte tu perfil personalizado con el modelo, enganche y mensualidad exacta que te corresponde.</div>
+      <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:20px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div style="position:relative;">
+            <span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:15px;">👤</span>
+            <input id="cap-nombre" type="text" placeholder="Nombre" autocomplete="given-name" style="width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:13px;padding:15px 14px 15px 42px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border-color 0.2s;" oninput="checkCapture()" onpaste="setTimeout(checkCapture,10)" onchange="checkCapture()" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
+          </div>
+          <div style="position:relative;">
+            <input id="cap-apellido" type="text" placeholder="Apellido" autocomplete="family-name" style="width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:13px;padding:15px 14px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border-color 0.2s;" oninput="checkCapture()" onpaste="setTimeout(checkCapture,10)" onchange="checkCapture()" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
+          </div>
         </div>
-        <div class="field-wrap">
-          <input class="field-input" id="cap-apellido" type="text" placeholder="Apellido" autocomplete="family-name" oninput="checkCap()" onpaste="setTimeout(checkCap,10)" style="padding-left:14px">
+        <div style="position:relative;">
+          <span style="position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:16px;">📱</span>
+          <input id="cap-tel" type="tel" placeholder="Tu WhatsApp (10 dígitos)" autocomplete="tel" style="width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:13px;padding:16px 16px 16px 46px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;outline:none;transition:border-color 0.2s;" oninput="checkCapture()" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
         </div>
-        <div class="field-wrap field-full">
-          <span class="field-icon">📱</span>
-          <input class="field-input" id="cap-tel" type="tel" placeholder="WhatsApp (10 dígitos)" autocomplete="tel" maxlength="10" inputmode="numeric" oninput="this.value=this.value.replace(/\D/g,'').slice(0,10)" onpaste="setTimeout(()=>{this.value=this.value.replace(/\D/g,'').slice(0,10)},10)">
-        </div>
-        <div class="field-wrap field-full" style="position:relative">
-          <span class="field-icon">📍</span>
-          <select class="field-select" id="cap-estado" onchange="checkCap()">
+        <div style="position:relative;">
+          <span style="position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:16px;">📍</span>
+          <select id="cap-estado" style="width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:13px;padding:16px 16px 16px 46px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;outline:none;transition:border-color 0.2s;appearance:none;cursor:pointer;" onchange="checkCapture()" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
             <option value="" disabled selected>¿De qué estado eres?</option>
-            <option>Puebla</option><option>Tlaxcala</option><option>CDMX</option>
-            <option>Estado de México</option><option>Jalisco</option><option>Nuevo León</option>
-            <option>Veracruz</option><option>Hidalgo</option><option>Morelos</option>
-            <option>Guerrero</option><option>Oaxaca</option><option>Chiapas</option>
-            <option>Michoacán</option><option>Guanajuato</option><option>Querétaro</option>
-            <option>San Luis Potosí</option><option>Aguascalientes</option><option>Zacatecas</option>
-            <option>Durango</option><option>Chihuahua</option><option>Sonora</option>
-            <option>Baja California</option><option>Baja California Sur</option><option>Sinaloa</option>
-            <option>Nayarit</option><option>Colima</option><option>Tabasco</option>
-            <option>Campeche</option><option>Yucatán</option><option>Quintana Roo</option>
-            <option>Tamaulipas</option><option>Coahuila</option><option>Otro / Extranjero</option>
+            <option value="Puebla">Puebla</option>
+            <option value="CDMX">Ciudad de México</option>
+            <option value="Estado de México">Estado de México</option>
+            <option value="Jalisco">Jalisco</option>
+            <option value="Nuevo León">Nuevo León</option>
+            <option value="Veracruz">Veracruz</option>
+            <option value="Tlaxcala">Tlaxcala</option>
+            <option value="Hidalgo">Hidalgo</option>
+            <option value="Morelos">Morelos</option>
+            <option value="Guerrero">Guerrero</option>
+            <option value="Oaxaca">Oaxaca</option>
+            <option value="Chiapas">Chiapas</option>
+            <option value="Michoacán">Michoacán</option>
+            <option value="Guanajuato">Guanajuato</option>
+            <option value="Querétaro">Querétaro</option>
+            <option value="San Luis Potosí">San Luis Potosí</option>
+            <option value="Aguascalientes">Aguascalientes</option>
+            <option value="Zacatecas">Zacatecas</option>
+            <option value="Durango">Durango</option>
+            <option value="Chihuahua">Chihuahua</option>
+            <option value="Sonora">Sonora</option>
+            <option value="Baja California">Baja California</option>
+            <option value="Baja California Sur">Baja California Sur</option>
+            <option value="Sinaloa">Sinaloa</option>
+            <option value="Nayarit">Nayarit</option>
+            <option value="Colima">Colima</option>
+            <option value="Tabasco">Tabasco</option>
+            <option value="Campeche">Campeche</option>
+            <option value="Yucatán">Yucatán</option>
+            <option value="Quintana Roo">Quintana Roo</option>
+            <option value="Tamaulipas">Tamaulipas</option>
+            <option value="Coahuila">Coahuila</option>
+            <option value="Otro">Otro / Extranjero</option>
           </select>
         </div>
       </div>
-      <div class="cap-error" id="cap-error">⚠️ Por favor completa todos los campos correctamente</div>
-      <div class="privacy-row">
-        <input type="checkbox" id="priv-check">
-        <span class="privacy-text">Acepto que mis datos sean usados para recibir información sobre productos Geely. <a class="privacy-link" href="#" onclick="openPrivacy(event)">Ver aviso de privacidad</a></span>
-      </div>
-      <button class="btn-next on" id="btn-capture" onclick="submitCapture()">Ver mi score y plan de acción →</button>
+      <div id="cap-error" style="display:none;background:rgba(255,68,68,0.1);border:1px solid rgba(255,68,68,0.3);border-radius:10px;padding:10px 14px;font-size:12px;color:#ff6b6b;text-align:center;margin-bottom:4px;">⚠️ Por favor completa todos los campos correctamente</div>
+      <label id="privacy-wrap" style="display:flex;align-items:flex-start;gap:10px;margin-bottom:16px;cursor:pointer;">
+        <input type="checkbox" id="privacy-check" onchange="checkPrivacy()" style="margin-top:3px;width:16px;height:16px;accent-color:var(--accent);flex-shrink:0;">
+        <span style="font-size:12px;color:var(--muted);line-height:1.5;">Acepto que mis datos sean usados para recibir información sobre productos y promociones Geely. <a href="#" onclick="showPrivacy(event)" style="color:var(--accent);text-decoration:none;">Ver aviso de privacidad</a></span>
+      </label>
+      <button class="btn-next on" id="btn-capture" onclick="submitCapture()" style="margin-top:0">Ver mi resultado →</button>
+      <p style="font-size:11px;color:var(--muted);margin-top:14px;line-height:1.5;">Solo usamos tus datos para enviarte tu resultado.<br>Sin spam. Sin llamadas no deseadas.</p>
     </div>
   </div>
-
-  <!-- RESULT -->
   <div class="screen" id="s-result">
     <div style="height:28px"></div>
     <div class="result-wrap">
-
-      <!-- Score card -->
-      <div class="score-card" id="score-card">
-        <div class="score-glow" id="score-glow"></div>
-        <div class="score-label">Tu Score Financiero Automotriz</div>
-        <div class="score-ring">
-          <svg viewBox="0 0 140 140" width="140" height="140">
-            <circle class="score-ring-track" cx="70" cy="70" r="58"/>
-            <circle class="score-ring-fill" id="ring-fill" cx="70" cy="70" r="58" stroke-dasharray="364.4" stroke-dashoffset="364.4"/>
-          </svg>
-          <div class="score-number">
-            <div class="score-num" id="score-num">0</div>
-            <div class="score-max">/100</div>
-          </div>
-        </div>
-        <div class="perfil-badge" id="perfil-badge"></div>
-        <div class="score-perfil" id="score-perfil"></div>
-        <div class="score-desc" id="score-desc"></div>
-      </div>
-
-      <!-- Model card -->
-      <div class="model-card" id="model-card">
-        <div class="model-tag">Tu mejor opción</div>
-        <div class="model-name" id="r-model"></div>
-        <div class="model-full" id="r-full"></div>
+      <div class="perfil-badge" id="r-badge"></div>
+      <div class="result-card">
+        <div class="result-tag">Tu mejor opción</div>
+        <div class="result-model" id="r-model"></div>
+        <div class="result-subtitle" id="r-subtitle"></div>
         <div class="fin-grid" id="r-fin"></div>
-        <div class="bono-block" id="r-bono" style="display:none"></div>
-        <div class="versions-block" id="r-versions" style="display:none"></div>
-        <div class="also-block" id="r-also" style="display:none"></div>
+        <div class="also-block" id="r-bono" style="display:none"></div>
+        <div class="also-block" id="r-versions" style="display:none"></div>
+        <div class="also-block" id="r-also"></div>
+        <div class="why-block" id="r-why"></div>
       </div>
-
-      <!-- Plan de acción -->
-      <div class="plan-card" id="plan-card">
-        <div class="plan-header">
-          <span class="plan-icon" id="plan-icon"></span>
-          <div>
-            <div class="plan-title" id="plan-title"></div>
-            <div class="plan-sub" id="plan-sub"></div>
-          </div>
-        </div>
-        <div class="plan-steps" id="plan-steps"></div>
-      </div>
-
-      <!-- Advisor signature -->
-      <div class="advisor-card">
-        <div class="advisor-avatar">AZ<span class="advisor-verified">✓</span></div>
-        <p class="advisor-msg">Si quieres una <strong>asesoría personalizada sin costo</strong>, estoy para ayudarte a encontrar la mejor opción para tu presupuesto y perfil.</p>
-        <div class="advisor-sign">
-          <span class="advisor-name">Abel Zarate</span>
-          <span class="advisor-divider"></span>
-          <span class="advisor-role">AsesoresDigitalesG · Geely Serdán</span>
-        </div>
-      </div>
-
-      <!-- CTAs -->
       <a class="cta-wa" id="r-wa" href="#" target="_blank">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-        Hablar con mi asesor ahora
+        Quiero hablar con un asesor
       </a>
-      <a class="cta-maps" href="https://maps.google.com/?q=Geely+Serdan+Puebla" target="_blank">📍 Ver Geely Serdán en el mapa</a>
+      <a class="cta-maps" href="https://maps.google.com/?q=Geely+Serdan+Puebla" target="_blank">📍 Ver AsesoresDigitalesG en el mapa</a>
       <button class="btn-restart" onclick="restart()">Volver a hacer el test</button>
-      <p class="legal">Mensualidades estimadas a 60 meses · Enganche 10% · Precios Julio 2026<br>AsesoresDigitalesG · Puebla · Sujeto a aprobación crediticia</p>
+      <p class="legal">Mensualidades estimadas a 60 meses. Sujeto a aprobación crediticia.<br>AsesoresDigitalesG · Puebla · Precios 2026</p>
     </div>
   </div>
 </div>
-
-<!-- Floating WhatsApp CTA (shown on result screen) -->
-<a class="float-wa" id="float-wa" href="#" target="_blank">
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-  Ayuda con el siguiente paso
-</a>
-
-<!-- Privacy Modal -->
-<div class="modal-overlay" id="priv-modal" onclick="closePrivacy(event)">
-  <div class="modal-box">
-    <button class="modal-close" onclick="document.getElementById('priv-modal').classList.remove('open')">✕</button>
-    <div class="modal-title">Aviso de Privacidad</div>
-    <p class="modal-p"><strong style="color:var(--text)">Responsable:</strong> AsesoresDigitalesG by Abel Zarate, asesor comercial autorizado de Geely Serdán, Puebla, México.</p>
-    <p class="modal-p"><strong style="color:var(--text)">Datos que recopilamos:</strong> Nombre, WhatsApp, estado y respuestas del cuestionario financiero.</p>
-    <p class="modal-p"><strong style="color:var(--text)">Finalidad:</strong> Contactarte con información personalizada sobre vehículos Geely, promociones y opciones de financiamiento. Tus datos no serán vendidos ni compartidos con terceros.</p>
-    <p class="modal-p"><strong style="color:var(--text)">Derechos ARCO:</strong> Puedes solicitar acceso, rectificación, cancelación u oposición escribiéndonos por WhatsApp.</p>
-    <button class="modal-btn" onclick="acceptPrivacy()">Entendido, acepto ✓</button>
-  </div>
-</div>
-
 <script>
-// ══════════════════════════════════════════════════════
-// CONFIG
-// ══════════════════════════════════════════════════════
-const WHATSAPP   = "522217729210";
-const SHEET_URL  = "https://script.google.com/macros/s/AKfycbwB-ylsX33ZGE918Ty3s7YK0ZLXHv0en4aFbg_X4d7ac9iZ2C7s6JD6lTtRyi_yc1Po/exec";
-
-// ══════════════════════════════════════════════════════
-// PREGUNTAS
-// ══════════════════════════════════════════════════════
+const WHATSAPP = "522222003265";
 const questions = [
-  {
-    step:"01 / 05", title:"¿Cuánto ganas al mes?",
-    sub:"Ingreso neto aproximado (lo que recibes después de impuestos)",
-    opts:[
-      {icon:"💼",text:"Menos de $12,000",sub:"Ingreso básico",val:"low"},
-      {icon:"📈",text:"$12,000 – $20,000",sub:"Ingreso medio-bajo",val:"mid_low"},
-      {icon:"💰",text:"$20,000 – $35,000",sub:"Ingreso medio-alto",val:"mid_high"},
-      {icon:"🏆",text:"Más de $35,000",sub:"Ingreso alto",val:"high"},
-    ]
-  },
-  {
-    step:"02 / 05", title:"¿Tienes enganche disponible?",
-    sub:"El enganche mínimo es el 10% del valor del auto",
-    opts:[
-      {icon:"❌",text:"No tengo enganche aún",sub:"Estoy ahorrando",val:"none"},
-      {icon:"💵",text:"Tengo menos de $30,000",sub:"Enganche básico",val:"low"},
-      {icon:"💵💵",text:"Tengo $30,000 – $60,000",sub:"Buen enganche",val:"mid"},
-      {icon:"💎",text:"Tengo más de $60,000",sub:"Enganche fuerte",val:"high"},
-    ]
-  },
-  {
-    step:"03 / 05", title:"¿Cómo está tu historial crediticio?",
-    sub:"Esto afecta directamente la aprobación bancaria",
-    opts:[
-      {icon:"✅",text:"Limpio y al corriente",sub:"Sin deudas pendientes",val:"clean"},
-      {icon:"🟡",text:"Deudas menores pero al corriente",sub:"Tarjetas o créditos pequeños",val:"ok"},
-      {icon:"🔴",text:"He tenido retrasos o deudas sin pagar",sub:"Historial irregular",val:"bad"},
-      {icon:"⚪",text:"Nunca he tenido crédito",sub:"Sin historial previo",val:"zero"},
-    ]
-  },
-  {
-    step:"04 / 05", title:"¿Qué tipo de auto buscas?",
-    sub:"Piensa en tu estilo de vida y lo que más usarías",
-    opts:[
-      {icon:"🚘",text:"Sedán económico y práctico",sub:"Ciudad, bajo mantenimiento",val:"sedan"},
-      {icon:"🏎️",text:"SUV compacto moderno",sub:"Diseño, potencia, urbano",val:"suv_c"},
-      {icon:"⚡",text:"Eléctrico o tecnológico",sub:"Sin gasolina, tech avanzado",val:"elec"},
-      {icon:"👨‍👩‍👧‍👦",text:"SUV familiar o espacioso",sub:"7 pasajeros, viajes, espacio",val:"fam"},
-      {icon:"👑",text:"Premium / que impacte",sub:"Lo mejor del portafolio",val:"prem"},
-    ]
-  },
-  {
-    step:"05 / 05", title:"¿Para qué usarás el auto principalmente?",
-    sub:"La última pregunta, te lo prometemos 🚗",
-    opts:[
-      {icon:"🏙️",text:"Trabajo diario en ciudad",sub:"Tráfico, estacionamiento diario",val:"city"},
-      {icon:"🛣️",text:"Viajes frecuentes a carretera",sub:"Puebla-CDMX, largas distancias",val:"road"},
-      {icon:"🏠",text:"Uso familiar y paseos",sub:"Fines de semana, familia",val:"family"},
-      {icon:"📱",text:"Uber u otra plataforma",sub:"Trabajo de plataforma digital",val:"uber"},
-    ]
-  }
+  { step: "01 / 05", title: "¿Cuánto ganas al mes?", sub: "Ingreso neto aproximado (lo que recibes después de impuestos)",
+    opts: [
+      { icon: "💼", text: "Menos de $12,000", sub: "Ingreso básico", val: "low" },
+      { icon: "📈", text: "$12,000 – $20,000", sub: "Ingreso medio-bajo", val: "mid_low" },
+      { icon: "💰", text: "$20,000 – $35,000", sub: "Ingreso medio-alto", val: "mid_high" },
+      { icon: "🏆", text: "Más de $35,000", sub: "Ingreso alto", val: "high" },
+    ] },
+  { step: "02 / 05", title: "¿Tienes enganche disponible?", sub: "El enganche mínimo es el 10% del valor del auto",
+    opts: [
+      { icon: "❌", text: "No tengo enganche aún", sub: "Estoy ahorrando", val: "none" },
+      { icon: "💵", text: "Tengo menos de $30,000", sub: "Enganche básico", val: "low" },
+      { icon: "💵💵", text: "Tengo $30,000 – $60,000", sub: "Buen enganche", val: "mid" },
+      { icon: "💎", text: "Tengo más de $60,000", sub: "Enganche fuerte", val: "high" },
+    ] },
+  { step: "03 / 05", title: "¿Cómo está tu historial crediticio?", sub: "Esto afecta directamente la aprobación bancaria",
+    opts: [
+      { icon: "✅", text: "Limpio y al corriente", sub: "Sin deudas pendientes", val: "clean" },
+      { icon: "🟡", text: "Tengo deudas menores pero al corriente", sub: "Tarjetas o créditos pequeños", val: "ok" },
+      { icon: "🔴", text: "He tenido retrasos o deudas sin pagar", sub: "Historial irregular", val: "bad" },
+      { icon: "⚪", text: "Nunca he tenido crédito", sub: "Sin historial previo", val: "zero" },
+    ] },
+  { step: "04 / 05", title: "¿Qué tipo de auto buscas?", sub: "Piensa en tu estilo de vida y lo que más usarías",
+    opts: [
+      { icon: "🚘", text: "Económico y práctico", sub: "Ciudad, poco mantenimiento", val: "eco" },
+      { icon: "🏎️", text: "SUV compacto moderno", sub: "Diseño, potencia, urbano", val: "suv_c" },
+      { icon: "⚡", text: "Eléctrico o tecnológico", sub: "Sin gasolina, tech avanzado", val: "elec" },
+      { icon: "👨‍👩‍👧‍👦", text: "Familiar o espacioso", sub: "7 pasajeros, viajes, espacio", val: "fam" },
+      { icon: "👑", text: "Premium / que impacte", sub: "Lo mejor del portafolio", val: "prem" },
+    ] },
+  { step: "05 / 05", title: "¿Para qué usarás el auto principalmente?", sub: "La última pregunta, te lo prometemos 🚗",
+    opts: [
+      { icon: "🏙️", text: "Trabajo diario en ciudad", sub: "Tráfico, estacionamiento diario", val: "city" },
+      { icon: "🛣️", text: "Viajes frecuentes a carretera", sub: "Puebla-CDMX, largas distancias", val: "road" },
+      { icon: "🏠", text: "Uso familiar y paseos", sub: "Fines de semana, familia", val: "family" },
+      { icon: "📱", text: "Uber u otra plataforma", sub: "Trabajo de plataforma digital", val: "uber" },
+    ] }
 ];
-
-// ══════════════════════════════════════════════════════
-// MODELOS — Precios Julio 2026 (BGFS-0107-2026 V1)
-// ══════════════════════════════════════════════════════
-const fmt = n => "$" + n.toLocaleString("es-MX");
-
 const models = {
-  emgrand: {
-    name:"EMGRAND", full:"Geely Emgrand 2026 · Sedán",
-    bono:"Bono hasta $50,000 disponible (requiere GFS/BBVA) o Seguro Gratis 12 meses",
-    tasa:"Tasa desde 10.99% · Plan BASE o CAMP",
-    versions:[
-      {ver:"GC",price:299990,bono:25000,m:[4500,5500]},
-      {ver:"GL",price:347990,bono:35000,m:[5200,6300]},
-      {ver:"GF",price:373990,bono:50000,m:[5600,6800]},
-    ]
-  },
-  gx3pro: {
-    name:"GX3 PRO", full:"Geely GX3 Pro 2026 · SUV Compacto",
-    bono:"Bono $35,000 (precio/tasa/enganche) o alternativa $23,100 + Seguro Gratis 12 meses",
-    tasa:"Tasa desde 10.99% · Plan BASE",
-    versions:[
-      {ver:"GC",price:329990,bono:35000,m:[4900,5900]},
-      {ver:"GF",price:359990,bono:35000,m:[5300,6400]},
-    ]
-  },
-  coolray_l: {
-    name:"COOLRAY LITE", full:"Geely Coolray Lite 2026 · SUV",
-    bono:"Bono $10,000 en versión GS MT · 0% CxA con plan LAN o CAMP",
-    tasa:"Tasa desde 10.49% con plan LAN",
-    versions:[
-      {ver:"GS MT",price:339990,bono:10000,m:[5000,6100]},
-      {ver:"GS CVT",price:359990,bono:0,m:[5400,6500]},
-    ]
-  },
-  new_coolray: {
-    name:"NUEVA COOLRAY", full:"Geely Nueva Coolray 2026 · SUV",
-    bono:"0% CxA con plan CAMP · Tasa desde 10.99% con BASE",
-    tasa:"Tasa desde 10.99%",
-    versions:[
-      {ver:"GC Plus",price:399990,bono:0,m:[6000,7200]},
-      {ver:"GL Plus",price:419990,bono:0,m:[6300,7600]},
-      {ver:"GF Plus",price:469990,bono:0,m:[7100,8500]},
-    ]
-  },
-  ex2: {
-    name:"EX2", full:"Geely EX2 2026 · SUV Eléctrico",
-    bono:"Tasa desde 10.49% con plan LAN · 0% CxA · Incluye Wallbox",
-    tasa:"Plan LAN o SOSTENIBLE",
-    versions:[
-      {ver:"GL",price:389900,bono:0,m:[5800,7000]},
-      {ver:"GF",price:419900,bono:0,m:[6300,7500]},
-    ]
-  },
-  cityray: {
-    name:"CITYRAY", full:"Geely Cityray 2026 · SUV Mediana",
-    bono:"Sin bono disponible · Tasa desde 10.99%",
-    tasa:"Plan BASE o CAMP",
-    versions:[
-      {ver:"GL",price:488990,bono:0,m:[7300,8800]},
-      {ver:"GF",price:518990,bono:0,m:[7800,9400]},
-      {ver:"GF Bitono",price:528990,bono:0,m:[7900,9600]},
-    ]
-  },
-  starray25: {
-    name:"STARRAY 2025", full:"Geely Starray 2025 · SUV Premium",
-    bono:"Bono $70,000 (precio/tasa/enganche, requiere GFS/BBVA) o Seguro Gratis 12 meses",
-    tasa:"Tasa desde 8.99% con GFS/BBVA",
-    versions:[
-      {ver:"GL 1.5",price:559990,bono:70000,m:[8000,9600]},
-      {ver:"GL 2.0",price:599990,bono:70000,m:[8600,10400]},
-      {ver:"GF 2.0",price:655990,bono:70000,m:[9400,11300]},
-    ]
-  },
-  starray26: {
-    name:"STARRAY 2026", full:"Geely Starray 2026 · SUV Premium",
-    bono:"Sin bono · Tasa desde 10.99% · 0% CxA con plan CAMP",
-    tasa:"Plan BASE o CAMP",
-    versions:[
-      {ver:"GL 2.0",price:599990,bono:0,m:[9000,10800]},
-      {ver:"GF 2.0",price:655990,bono:0,m:[9900,11900]},
-    ]
-  },
-  ex5emi: {
-    name:"EX5 EM-I", full:"Geely EX5 EM-i 2026 · SUV Híbrido enchufable",
-    bono:"Versión GL: Bono $40,000 (alternativa $23,200 + Seguro Gratis) · Tasa desde 10.49% · Wallbox incluido",
-    tasa:"Plan LAN o SOSTENIBLE",
-    versions:[
-      {ver:"GL (c/bono)",price:569990,bono:40000,m:[8200,9800]},
-      {ver:"GF",price:599990,bono:0,m:[9000,10800]},
-    ]
-  },
-  ex5: {
-    name:"EX5", full:"Geely EX5 2026 · SUV Eléctrico Premium",
-    bono:"Tasa subsidiada desde 6.00% (GFS/BBVA) o 7.96% + Seguro Gratis · 0% CxA con CAMP · Wallbox incluido",
-    tasa:"Tasa subsidiada 6.00% con GFS/BBVA",
-    versions:[
-      {ver:"GF",price:699990,bono:0,m:[9000,11000]},
-    ]
-  },
-  okavango: {
-    name:"OKAVANGO", full:"Geely Okavango · SUV Grande 7 pasajeros",
-    bono:"Seguro Gratis disponible en GF Suite · Tasa desde 10.99%",
-    tasa:"Plan BASE o CAMP",
-    versions:[
-      {ver:"GL",price:669888,bono:0,m:[10000,12100]},
-      {ver:"GF Suite",price:729888,bono:0,m:[11000,13200]},
-    ]
-  },
-  monjaro: {
-    name:"MONJARO", full:"Geely Monjaro 2026 · SUV Premium",
-    bono:"Tasa subsidiada desde 6.47% (GFS/BBVA) o 8.28% + Seguro Gratis · 0% CxA con plan CAMP",
-    tasa:"Tasa subsidiada 6.47% con GFS/BBVA",
-    versions:[
-      {ver:"GF",price:699990,bono:0,m:[9000,10800]},
-    ]
-  },
+  emgrand: { name: "EMGRAND", full: "Geely Emgrand 2026 · Sedan", bono: "Bono hasta $60,000 o Seguro Gratis", tasa: "Tasa desde 10.99%",
+    versions: [ { ver: "GC", price: 264990, m: [4200, 5100] }, { ver: "GL", price: 297990, m: [4800, 5800] }, { ver: "GF", price: 313990, m: [5000, 6100] } ] },
+  gx3pro: { name: "GX3 PRO", full: "Geely GX3 Pro 2026 · SUV Compacto", bono: "Bono $35,000 o Seguro Gratis", tasa: "Tasa desde 10.49% + 0% CxA",
+    versions: [ { ver: "GC", price: 294990, m: [4700, 5700] }, { ver: "GF", price: 324990, m: [5200, 6300] } ] },
+  coolray_l: { name: "COOLRAY LITE", full: "Geely Coolray Lite 2026 · SUV", bono: "Bono $10,000 en version GS MT", tasa: "Tasa desde 10.49% + 0% CxA",
+    versions: [ { ver: "GS MT", price: 329990, m: [5200, 6300] }, { ver: "GS CVT", price: 359990, m: [5700, 6900] } ] },
+  ex2: { name: "EX2", full: "Geely EX2 2026 · SUV Electrico", bono: "Sin bono · Incluye Wallbox", tasa: "Tasa desde 10.49% + 0% CxA",
+    versions: [ { ver: "GL", price: 389900, m: [6200, 7500] }, { ver: "GF", price: 419900, m: [6700, 8100] } ] },
+  coolray: { name: "COOLRAY", full: "Geely Coolray 2026 · SUV Turbo", bono: "Bono $40,000 o Seguro Gratis", tasa: "Tasa desde 10.99% · 0% CxA con Plan CAMP",
+    versions: [ { ver: "GC", price: 399990, m: [6400, 7700] }, { ver: "GL", price: 419990, m: [6700, 8100] }, { ver: "GF", price: 469990, m: [7500, 9100] } ] },
+  new_coolray: { name: "NEW COOLRAY", full: "Geely New Coolray 2026 · SUV", bono: "Sin bono ni seguro gratis", tasa: "Tasa desde 10.99% o 0% CxA",
+    versions: [ { ver: "GC PLUS", price: 399990, m: [6400, 7700] }, { ver: "GL PLUS", price: 419990, m: [6700, 8100] }, { ver: "GF PLUS", price: 469990, m: [7500, 9100] } ] },
+  cityray: { name: "CITYRAY", full: "Geely Cityray 2026 · SUV Compacto", bono: "Sin bono · Enganche desde $48,899", tasa: "0% CxA con Plan CAMP",
+    versions: [ { ver: "GL", price: 488990, m: [7800, 9400] }, { ver: "GF", price: 518990, m: [8300, 10000] }, { ver: "GF Bitono", price: 528990, m: [8400, 10200] } ] },
+  starray25: { name: "STARRAY 2025", full: "Geely Starray 2025 · SUV Premium", bono: "Bono $70,000 o Seguro Gratis", tasa: "Tasa desde 8.99%",
+    versions: [ { ver: "GL 1.5", price: 489990, m: [7800, 9400] }, { ver: "GL 2.0", price: 529990, m: [8500, 10200] }, { ver: "GF 2.0", price: 585990, m: [9400, 11300] } ] },
+  starray26: { name: "STARRAY 2026", full: "Geely Starray 2026 · SUV Premium", bono: "Sin bono ni seguro gratis", tasa: "Tasa desde 10.99% o 0% CxA",
+    versions: [ { ver: "GL 2.0", price: 599990, m: [9600, 11500] }, { ver: "GF 2.0", price: 655990, m: [10500, 12600] } ] },
+  ex5emi: { name: "EX5 EM-I", full: "Geely EX5 EM-i 2026 · SUV Hibrido enchufable", bono: "Version GL: Bono $40,000 o Seguro Gratis · Incluye Wallbox", tasa: "Tasa desde 10.49% + 0% CxA",
+    versions: [ { ver: "GL (c/bono)", price: 529990, m: [8500, 10200] }, { ver: "GF", price: 599990, m: [9600, 11500] } ] },
+  ex5: { name: "EX5", full: "Geely EX5 2026 · SUV Electrico", bono: "Bono $20,000 · Incluye Wallbox", tasa: "Tasa desde 10.49% + 0% CxA",
+    versions: [ { ver: "GF (c/bono)", price: 679990, m: [10900, 13100] } ] },
+  okavango: { name: "OKAVANGO", full: "Geely Okavango 2026 · SUV Familiar 7 pasajeros", bono: "Sin bono ni seguro gratis", tasa: "Tasa desde 10.99% + 0% CxA",
+    versions: [ { ver: "GF Suite", price: 729888, m: [11700, 14000] } ] },
+  monjaro: { name: "MONJARO", full: "Geely Monjaro 2026 · SUV Premium", bono: "Bono $20,000 o Seguro Gratis", tasa: "Tasa desde 10.99%",
+    versions: [ { ver: "GF (c/bono)", price: 679990, m: [10900, 13100] } ] }
 };
-
-function modelBase(m){ return m.versions[0]; }
-
-// ══════════════════════════════════════════════════════
-// PERFILES — Score + Plan de acción
-// ══════════════════════════════════════════════════════
-const perfiles = {
-  S: {
-    score: 92,
-    color: "#00e59b",
-    badgeClass: "pb-S",
-    badgeText: "🏆 Perfil S — Excelente",
-    titulo: "LISTO PARA ARRANCAR",
-    desc: "Tu perfil financiero es sólido. Tienes alta probabilidad de aprobación para los mejores modelos Geely. Un asesor puede prepararte una cotización formal en menos de 24 horas.",
-    planIcon: "🚀",
-    planTitle: "TU PLAN DE ACCIÓN",
-    planSub: "3 pasos para tener tu Geely esta semana",
-    steps: [
-      {
-        num:1, color:"#00e59b", bgColor:"rgba(0,229,155,0.12)",
-        title:"Hoy: Confirma tu enganche",
-        desc:"Con tu nivel de ingreso e historial, el banco te va a pedir entre el 10% y 20% del valor. Revisa que tengas ese monto disponible o transferible.",
-        tag:"⚡ Acción inmediata", tagColor:"rgba(0,229,155,0.15)", tagTextColor:"#00e59b"
-      },
-      {
-        num:2, color:"#00d4ff", bgColor:"rgba(0,212,255,0.12)",
-        title:"Esta semana: Junta tus documentos",
-        desc:"Necesitas: INE vigente, comprobante de ingresos de los últimos 3 meses, comprobante de domicilio no mayor a 3 meses y CURP.",
-        tag:"📋 Checklist", tagColor:"rgba(0,212,255,0.12)", tagTextColor:"#00d4ff"
-      },
-      {
-        num:3, color:"#f5c518", bgColor:"rgba(245,197,24,0.12)",
-        title:"Esta semana: Agenda tu test drive",
-        desc:"Escríbele a tu asesor HOY. Con tu perfil el trámite puede completarse en 48-72 horas hábiles. No esperes — los bonos y tasas especiales tienen fecha límite (julio 2026).",
-        tag:"🔥 Urgente", tagColor:"rgba(255,140,0,0.12)", tagTextColor:"#ff8c00"
-      }
-    ],
-    waMsg: (model, nombre, datos) => `Hola! Soy ${nombre} y acabo de hacer el test de AsesoresDigitalesG 🚗\n\n📊 *Mi Score:* 92/100 — Perfil S (Excelente)\n🚘 *Modelo recomendado:* Geely ${model}\n\n💰 *Ingreso mensual:* ${datos.ingreso}\n💵 *Enganche disponible:* ${datos.enganche}\n📊 *Historial crediticio:* ${datos.historial}\n📅 *Mensualidad estimada:* ${datos.mensualidad} (60 meses)\n\nMe gustaría agendar un test drive y conocer mi cotización real. ¿Cuándo podemos hablar?`
-  },
-  A: {
-    score: 74,
-    color: "#00d4ff",
-    badgeClass: "pb-A",
-    badgeText: "✅ Perfil A — Buen perfil",
-    titulo: "MUY CERCA DE TU GEELY",
-    desc: "Tienes un buen perfil crediticio y financiero. Las opciones recomendadas son totalmente accesibles. Solo necesitas documentos básicos y podemos tramitar tu crédito.",
-    planIcon: "📈",
-    planTitle: "TU PLAN DE ACCIÓN",
-    planSub: "3 pasos para avanzar esta semana",
-    steps: [
-      {
-        num:1, color:"#00d4ff", bgColor:"rgba(0,212,255,0.12)",
-        title:"Hoy: Confirma tu historial en Buró",
-        desc:"Entra a burodecredito.com y solicita tu reporte gratuito anual. Verifica que no haya deudas activas o errores que puedan frenar tu aprobación.",
-        tag:"🎯 Primer paso", tagColor:"rgba(0,212,255,0.12)", tagTextColor:"#00d4ff"
-      },
-      {
-        num:2, color:"#00e59b", bgColor:"rgba(0,229,155,0.12)",
-        title:"Esta semana: Junta tus documentos",
-        desc:"INE vigente, 3 últimos comprobantes de ingresos (nómina o estados de cuenta), comprobante de domicilio y CURP. Si eres independiente también RFC y constancia de situación fiscal.",
-        tag:"📋 Documentos", tagColor:"rgba(0,229,155,0.12)", tagTextColor:"#00e59b"
-      },
-      {
-        num:3, color:"#f5c518", bgColor:"rgba(245,197,24,0.12)",
-        title:"Esta semana: Visita la agencia",
-        desc:"Con tu perfil la pre-aprobación es muy probable. El asesor puede darte una respuesta en 24-48 horas. No pierdas los bonos y tasas de julio 2026.",
-        tag:"📅 Agenda tu cita", tagColor:"rgba(245,197,24,0.12)", tagTextColor:"#f5c518"
-      }
-    ],
-    waMsg: (model, nombre, datos) => `Hola! Soy ${nombre} y acabo de hacer el test de AsesoresDigitalesG 🚗\n\n📊 *Mi Score:* 74/100 — Perfil A (Buen perfil)\n🚘 *Modelo recomendado:* Geely ${model}\n\n💰 *Ingreso mensual:* ${datos.ingreso}\n💵 *Enganche disponible:* ${datos.enganche}\n📊 *Historial crediticio:* ${datos.historial}\n📅 *Mensualidad estimada:* ${datos.mensualidad} (60 meses)\n\n¿Qué documentos necesito para iniciar mi trámite?`
-  },
-  B: {
-    score: 51,
-    color: "#ff8c00",
-    badgeClass: "pb-B",
-    badgeText: "🟡 Perfil B — En proceso",
-    titulo: "POSIBLE CON EL PLAN CORRECTO",
-    desc: "Sí puedes tener tu Geely, pero hay factores que revisar. Con la financiera de respaldo hay opciones más accesibles. Tu asesor puede encontrar la mejor ruta para tu caso.",
-    planIcon: "🛠️",
-    planTitle: "TU PLAN DE ACCIÓN",
-    planSub: "Cómo fortalecer tu perfil en 30 días",
-    steps: [
-      {
-        num:1, color:"#ff8c00", bgColor:"rgba(255,140,0,0.12)",
-        title:"Esta semana: Revisa y limpia tu Buró",
-        desc:"Si tienes deudas pequeñas, liquídalas esta semana. Una cuenta al corriente mejora significativamente tu score. Puedes negociar descuentos con tus acreedores.",
-        tag:"🔍 Diagnóstico", tagColor:"rgba(255,140,0,0.12)", tagTextColor:"#ff8c00"
-      },
-      {
-        num:2, color:"#00d4ff", bgColor:"rgba(0,212,255,0.12)",
-        title:"Este mes: Aumenta tu enganche",
-        desc:"Entre más enganche pongas, más fácil es la aprobación. Intenta llegar al 20-30% del valor del auto. Cada peso de enganche reduce tu mensualidad y mejora tu perfil.",
-        tag:"💰 Estrategia", tagColor:"rgba(0,212,255,0.12)", tagTextColor:"#00d4ff"
-      },
-      {
-        num:3, color:"#a855f7", bgColor:"rgba(168,85,247,0.12)",
-        title:"Ahora: Habla con tu asesor",
-        desc:"Hay opciones con financiera de respaldo que no requieren historial perfecto. Tu asesor conoce las alternativas disponibles para tu situación específica.",
-        tag:"💬 Consulta gratis", tagColor:"rgba(168,85,247,0.12)", tagTextColor:"#a855f7"
-      }
-    ],
-    waMsg: (model, nombre, datos) => `Hola! Soy ${nombre} y acabo de hacer el test de AsesoresDigitalesG 🚗\n\n📊 *Mi Score:* 51/100 — Perfil B (En proceso)\n🚘 *Modelo de interés:* Geely ${model}\n\n💰 *Ingreso mensual:* ${datos.ingreso}\n💵 *Enganche disponible:* ${datos.enganche}\n📊 *Historial crediticio:* ${datos.historial}\n\n¿Qué opciones de financiamiento tengo disponibles para mi caso?`
-  },
-  C: {
-    score: 28,
-    color: "#ff4444",
-    badgeClass: "pb-C",
-    badgeText: "⏳ Perfil C — Preparándome",
-    titulo: "EN 90 DÍAS PUEDES LOGRARLO",
-    desc: "Todavía no es el momento ideal, pero con el plan correcto puedes tener tu Geely en 3 meses. Tu asesor puede darte una hoja de ruta personalizada para llegar listo.",
-    planIcon: "📅",
-    planTitle: "TU PLAN DE 90 DÍAS",
-    planSub: "Ruta para llegar listo a comprar tu Geely",
-    steps: [
-      {
-        num:1, color:"#ff4444", bgColor:"rgba(255,68,68,0.12)",
-        title:"Mes 1: Construye tu historial",
-        desc:"Si no tienes crédito: solicita una tarjeta departamental (Liverpool, Coppel) y úsala con pagos puntuales. Si tienes deudas: negocia y liquida. Esto es la base de todo.",
-        tag:"🏗️ Construir base", tagColor:"rgba(255,68,68,0.12)", tagTextColor:"#ff4444"
-      },
-      {
-        num:2, color:"#ff8c00", bgColor:"rgba(255,140,0,0.12)",
-        title:"Mes 2: Ahorra para el enganche",
-        desc:"El mínimo es 10% del valor. Para un Emgrand GC ($299,990) necesitas $30,000. Abre una cuenta de ahorro separada y deposita fijo cada quincena. Con $15,000 ya puedes explorar.",
-        tag:"💵 Meta de ahorro", tagColor:"rgba(255,140,0,0.12)", tagTextColor:"#ff8c00"
-      },
-      {
-        num:3, color:"#00e59b", bgColor:"rgba(0,229,155,0.12)",
-        title:"Mes 3: Visita la agencia listo",
-        desc:"Con historial activo y enganche disponible, tu probabilidad de aprobación sube drásticamente. Habla con tu asesor desde ahora — él te dirá exactamente qué necesitas.",
-        tag:"🎯 Meta final", tagColor:"rgba(0,229,155,0.12)", tagTextColor:"#00e59b"
-      }
-    ],
-    waMsg: (model, nombre, datos) => `Hola! Soy ${nombre} y acabo de hacer el test de AsesoresDigitalesG 🚗\n\n📊 *Mi Score:* 28/100 — Perfil C (Preparándome)\n🚘 *Modelo de interés:* Geely ${model}\n\n💰 *Ingreso mensual:* ${datos.ingreso}\n💵 *Enganche disponible:* ${datos.enganche}\n📊 *Historial crediticio:* ${datos.historial}\n\nMe interesa prepararme para comprar mi Geely. ¿Me pueden orientar con un plan?`
-  }
-};
-
-// ══════════════════════════════════════════════════════
-// LÓGICA DE PERFIL Y RECOMENDACIÓN
-// ══════════════════════════════════════════════════════
-const labelIngreso  = {low:"Menos de $12,000",mid_low:"$12,000–$20,000",mid_high:"$20,000–$35,000",high:"Más de $35,000"};
-const labelEnganche = {none:"Sin enganche aún",low:"Menos de $30,000",mid:"$30,000–$60,000",high:"Más de $60,000"};
-const labelHistorial= {clean:"Limpio y al corriente",ok:"Deudas menores al corriente",bad:"Retrasos o deudas sin pagar",zero:"Sin historial previo"};
-
-function calcPerfil(ans) {
-  const [ingreso, enganche, historial] = ans;
+function modelBase(m) { return m.versions[0]; }
+function fmt(n) { return "$" + n.toLocaleString("es-MX"); }
+function calcProfile(ans) {
+  const [ingreso, enganche, historial, tipo, uso] = ans;
+  let creditOk = (historial === "clean" || historial === "ok" || historial === "zero");
+  let creditGood = (historial === "clean");
   if (enganche === "none") return "C";
+  if (ingreso === "high" && creditGood && enganche !== "low") return "S";
+  if (ingreso === "mid_high" && creditOk) return "A";
+  if (ingreso === "mid_low" && creditOk) return "B";
   if (ingreso === "low") return "C";
-  if (historial === "bad") return ingreso === "high" ? "B" : "C";
-  if (ingreso === "high" && (historial === "clean") && enganche !== "low") return "S";
-  if (ingreso === "mid_high" && (historial === "clean" || historial === "ok")) return "A";
-  if (ingreso === "mid_low" && historial === "clean" && enganche !== "low") return "A";
-  if (ingreso === "mid_low") return "B";
-  if (historial === "zero") return ingreso === "high" ? "A" : "B";
+  if (historial === "bad") return (ingreso === "high" || ingreso === "mid_high") ? "B" : "C";
   return "B";
 }
-
 function getRecommendation(perfil, tipo, uso) {
   if (perfil === "S") {
-    if (tipo === "elec") return {main: models.ex5, also:[models.ex5emi, models.starray25, models.monjaro]};
-    if (tipo === "fam")  return {main: models.okavango, also:[models.monjaro, models.starray25, models.ex5]};
-    if (tipo === "prem") return {main: models.monjaro, also:[models.starray25, models.okavango, models.ex5]};
-    return {main: models.starray25, also:[models.monjaro, models.okavango, models.ex5emi]};
+    if (tipo === "elec") return { main: models.ex5, also: [models.starray26, models.monjaro, models.okavango] };
+    if (tipo === "fam")  return { main: models.okavango, also: [models.monjaro, models.starray26, models.ex5] };
+    if (tipo === "prem") return { main: models.monjaro, also: [models.starray26, models.okavango, models.ex5] };
+    return { main: models.starray26, also: [models.monjaro, models.okavango, models.cityray] };
   }
   if (perfil === "A") {
-    if (tipo === "elec") return {main: models.ex2, also:[models.ex5emi, models.new_coolray, models.cityray]};
-    if (tipo === "fam")  return {main: models.cityray, also:[models.new_coolray, models.okavango, models.starray26]};
-    if (tipo === "prem") return {main: models.starray26, also:[models.cityray, models.ex5emi, models.new_coolray]};
-    if (tipo === "sedan") return {main: models.emgrand, also:[models.gx3pro, models.coolray_l, models.ex2]};
-    return {main: models.new_coolray, also:[models.coolray_l, models.cityray, models.ex2]};
+    if (tipo === "elec") return { main: models.ex2, also: [models.ex5, models.coolray, models.cityray] };
+    if (tipo === "fam")  return { main: models.cityray, also: [models.coolray, models.okavango, models.new_coolray] };
+    if (tipo === "prem") return { main: models.cityray, also: [models.starray26, models.coolray, models.ex5] };
+    if (tipo === "eco")  return { main: models.coolray_l, also: [models.emgrand, models.new_coolray, models.ex2] };
+    return { main: models.coolray, also: [models.new_coolray, models.cityray, models.ex2] };
   }
   if (perfil === "B") {
-    if (tipo === "elec") return {main: models.ex2, also:[models.coolray_l, models.emgrand, models.gx3pro]};
-    if (tipo === "suv_c") return {main: models.coolray_l, also:[models.emgrand, models.gx3pro, models.ex2]};
-    return {main: models.emgrand, also:[models.coolray_l, models.gx3pro, models.ex2]};
+    if (tipo === "elec") return { main: models.ex2, also: [models.coolray_l, models.emgrand, models.new_coolray] };
+    if (tipo === "suv_c") return { main: models.coolray_l, also: [models.emgrand, models.new_coolray, models.ex2] };
+    return { main: models.emgrand, also: [models.coolray_l, models.ex2, models.new_coolray] };
   }
-  return {main: models.emgrand, also:[]};
+  return { main: models.emgrand, also: [] };
 }
-
-// ══════════════════════════════════════════════════════
-// STATE
-// ══════════════════════════════════════════════════════
-let qIdx=0, answers=new Array(questions.length).fill(null), selected=null;
-let prospecto={nombre:"",apellido:"",tel:"",estado:""};
-
-function go(id){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
-  document.getElementById(id).classList.add('on');
-  const floatWa = document.getElementById('float-wa');
-  if(id==='s-result'){ floatWa.classList.add('show'); document.body.classList.add('has-float'); }
-  else { floatWa.classList.remove('show'); document.body.classList.remove('has-float'); }
-  window.scrollTo(0,0);
+const labelIngreso  = { low:"Menos de $12,000", mid_low:"$12,000–$20,000", mid_high:"$20,000–$35,000", high:"Más de $35,000" };
+const labelEnganche = { none:"Sin enganche aún", low:"Menos de $30,000", mid:"$30,000–$60,000", high:"Más de $60,000" };
+const labelHistorial= { clean:"Limpio y al corriente", ok:"Deudas menores al corriente", bad:"Retrasos o deudas sin pagar", zero:"Sin historial previo" };
+const perfilData = {
+  S: { cls: "s", icon: "🏆", label: "Perfil S — Excelente calificación",
+    why: "Tu perfil financiero es sólido. Con tu nivel de ingreso, historial crediticio y enganche disponible, tienes alta probabilidad de aprobación para los modelos premium de Geely. Un asesor puede prepararte una cotización formal en menos de 24 horas.",
+    waMsg: (model, d, nombre) => `Hola! Soy ${nombre || 'un prospecto'} y acabo de hacer el test de AsesoresDigitalesG 🚗\n\n📋 *Perfil:* S — Excelente calificación\n🚘 *Modelo recomendado:* Geely ${model}\n\n💰 *Ingreso mensual:* ${d.ingreso}\n💵 *Enganche disponible:* ${d.enganche}\n📊 *Historial crediticio:* ${d.historial}\n📅 *Mensualidad estimada:* ${d.mensualidad} a 60 meses\n\nMe gustaría agendar un test drive y conocer mi cotización real. ¿Cuándo podemos hablar? #PerfilS`,
+    prob: "ALTA", probColor: "#00e59b" },
+  A: { cls: "a", icon: "✅", label: "Perfil A — Buen perfil, listo para avanzar",
+    why: "Tienes un buen perfil crediticio y financiero. Las opciones recomendadas son totalmente accesibles para tu situación actual. Solo necesitas presentar documentos básicos (comprobante de ingresos, INE, comprobante de domicilio) y podemos tramitar tu crédito.",
+    waMsg: (model, d, nombre) => `Hola! Soy ${nombre || 'un prospecto'} y acabo de hacer el test de AsesoresDigitalesG 🚗\n\n📋 *Perfil:* A — Buen perfil\n🚘 *Modelo recomendado:* Geely ${model}\n\n💰 *Ingreso mensual:* ${d.ingreso}\n💵 *Enganche disponible:* ${d.enganche}\n📊 *Historial crediticio:* ${d.historial}\n📅 *Mensualidad estimada:* ${d.mensualidad} a 60 meses\n\n¿Qué documentos necesito para iniciar mi trámite de crédito? #PerfilA`,
+    prob: "BUENA", probColor: "#00d4ff" },
+  B: { cls: "b", icon: "🟡", label: "Perfil B — Hay opciones, hay que revisar",
+    why: "Sí puedes tener tu Geely, pero depende de algunos factores que hay que revisar en persona. Hay opciones con financiera de respaldo que son más accesibles que el financiamiento bancario. Escríbeme y te explico exactamente qué necesitas para que te aprueben.",
+    waMsg: (model, d, nombre) => `Hola! Soy ${nombre || 'un prospecto'} y acabo de hacer el test de AsesoresDigitalesG 🚗\n\n📋 *Perfil:* B — En revisión\n🚘 *Modelo recomendado:* Geely ${model}\n\n💰 *Ingreso mensual:* ${d.ingreso}\n💵 *Enganche disponible:* ${d.enganche}\n📊 *Historial crediticio:* ${d.historial}\n📅 *Mensualidad estimada:* ${d.mensualidad} a 60 meses\n\n¿Qué opciones de financiamiento tengo disponibles para mi caso? #PerfilB`,
+    prob: "MEDIA", probColor: "#ff8c00" },
+  C: { cls: "c", icon: "⏳", label: "Perfil C — Preparación recomendada",
+    why: "Todavía no es el momento ideal, pero podemos prepararte para lograrlo. Escríbeme y te armo un plan de 3 a 6 meses para que llegues listo: qué enganche juntar, cómo mejorar tu historial y cuáles son las opciones más accesibles cuando estés listo.",
+    waMsg: (model, d, nombre) => `Hola! Soy ${nombre || 'un prospecto'} y acabo de hacer el test de AsesoresDigitalesG 🚗\n\n📋 *Perfil:* C — Preparándome\n🚘 *Modelo de interés:* Geely ${model}\n\n💰 *Ingreso mensual:* ${d.ingreso}\n💵 *Enganche disponible:* ${d.enganche}\n📊 *Historial crediticio:* ${d.historial}\n\nMe interesa prepararme para tener mi Geely. ¿Me pueden orientar? #PerfilC`,
+    prob: "EN PROCESO", probColor: "#ff4444" }
+};
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbxGUPnH0HUVq0KkmBwzWl6EAK064HqPomzo-_eZoddjDw9NaiOaMB3lNztSJp13YoKi/exec";
+let prospecto = { nombre: "", apellido: "", tel: "", estado: "" };
+function checkCapture() {
+  const n = document.getElementById('cap-nombre').value.trim();
+  const t = document.getElementById('cap-tel').value.trim();
+  const btn = document.getElementById('btn-capture');
+  if (n.length >= 2 && t.length >= 10) { btn.classList.add('on'); } else { btn.classList.remove('on'); }
 }
-
-function startQuiz(){ go('s-quiz'); renderQ(); }
-
-function renderQ(){
-  const q=questions[qIdx];
-  const pct=Math.round((qIdx+1)/questions.length*100);
-  document.getElementById('prog-label').textContent=`Pregunta ${qIdx+1} de ${questions.length}`;
-  document.getElementById('prog-pct').textContent=pct+'%';
-  document.getElementById('prog-fill').style.width=pct+'%';
-  document.getElementById('q-step').textContent=q.step;
-  document.getElementById('q-title').textContent=q.title;
-  document.getElementById('q-sub').textContent=q.sub;
-  const optsEl=document.getElementById('opts');
-  optsEl.innerHTML='';
-  const prevAnswer = answers[qIdx];
-  selected=null;
-  q.opts.forEach((o,i)=>{
-    const btn=document.createElement('button');
-    btn.className='opt';
-    btn.innerHTML=`<span class="opt-icon">${o.icon}</span><span class="opt-body"><strong>${o.text}</strong><small>${o.sub}</small></span><span class="opt-ring"></span>`;
-    btn.onclick=()=>pick(i,o.val,btn);
-    optsEl.appendChild(btn);
-    if(prevAnswer!==null && o.val===prevAnswer){ btn.classList.add('sel'); selected=o.val; }
-  });
-  document.getElementById('btn-next').classList.toggle('on', selected!==null);
-  document.getElementById('btn-back').style.visibility = qIdx===0 ? 'hidden' : 'visible';
-  const card=document.getElementById('q-card');
-  card.style.animation='none'; card.offsetHeight; card.style.animation='fadeUp .38s cubic-bezier(.4,0,.2,1)';
-}
-
-function pick(i,val,btn){
-  document.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));
-  btn.classList.add('sel'); selected=val;
-  document.getElementById('btn-next').classList.add('on');
-}
-
-function nextQ(){
-  if(!selected) return;
-  answers[qIdx]=selected; qIdx++;
-  if(qIdx<questions.length) renderQ();
-  else go('s-capture');
-}
-
-function prevQ(){
-  if(qIdx===0) return;
-  qIdx--; renderQ();
-}
-
-// ══════════════════════════════════════════════════════
-// CAPTURE
-// ══════════════════════════════════════════════════════
-function checkCap(){
-  // no-op — button always enabled, validation on submit
-}
-
-function submitCapture(){
+function checkPrivacy() {}
+function showPrivacy(e) { e.preventDefault(); document.getElementById('privacy-modal').style.display = 'flex'; }
+function closePrivacy() { document.getElementById('privacy-modal').style.display = 'none'; document.getElementById('privacy-check').checked = true; }
+function submitCapture() {
   prospecto.nombre   = document.getElementById('cap-nombre').value.trim();
   prospecto.apellido = document.getElementById('cap-apellido').value.trim();
-  prospecto.tel      = document.getElementById('cap-tel').value.replace(/\D/g,'');
+  prospecto.tel      = document.getElementById('cap-tel').value.trim();
   prospecto.estado   = document.getElementById('cap-estado').value;
-  const privOk        = document.getElementById('priv-check').checked;
-  let valid=true;
-  let errMsg = '⚠️ Por favor completa todos los campos correctamente';
-  if(prospecto.nombre.length<2){ document.getElementById('cap-nombre').style.borderColor='var(--red)'; valid=false; } else document.getElementById('cap-nombre').style.borderColor='var(--accent)';
-  if(prospecto.apellido.length<2){ document.getElementById('cap-apellido').style.borderColor='var(--red)'; valid=false; } else document.getElementById('cap-apellido').style.borderColor='var(--accent)';
-  if(!/^\d{10}$/.test(prospecto.tel)){ document.getElementById('cap-tel').style.borderColor='var(--red)'; valid=false; errMsg='⚠️ Escribe un WhatsApp válido a 10 dígitos'; } else document.getElementById('cap-tel').style.borderColor='var(--accent)';
-  if(!prospecto.estado){ document.getElementById('cap-estado').style.borderColor='var(--red)'; valid=false; } else document.getElementById('cap-estado').style.borderColor='var(--accent)';
-  const privLabel = document.querySelector('.privacy-row .privacy-text');
-  if(!privOk){ privLabel.style.color='var(--red)'; valid=false; errMsg='⚠️ Debes aceptar el aviso de privacidad para continuar'; } else privLabel.style.color='';
-  if(!valid){ document.getElementById('cap-error').textContent=errMsg; document.getElementById('cap-error').style.display='block'; return; }
-  document.getElementById('cap-error').style.display='none';
+  let valid = true;
+  if (!prospecto.nombre || prospecto.nombre.length < 2) { document.getElementById('cap-nombre').style.borderColor = 'var(--red)'; if (valid) { document.getElementById('cap-nombre').focus(); valid = false; } } else { document.getElementById('cap-nombre').style.borderColor = 'var(--accent)'; }
+  if (!prospecto.apellido || prospecto.apellido.length < 2) { document.getElementById('cap-apellido').style.borderColor = 'var(--red)'; if (valid) { document.getElementById('cap-apellido').focus(); valid = false; } } else { document.getElementById('cap-apellido').style.borderColor = 'var(--accent)'; }
+  if (prospecto.tel.length < 10) { document.getElementById('cap-tel').style.borderColor = 'var(--red)'; if (valid) { document.getElementById('cap-tel').focus(); valid = false; } } else { document.getElementById('cap-tel').style.borderColor = 'var(--accent)'; }
+  if (!prospecto.estado) { document.getElementById('cap-estado').style.borderColor = 'var(--red)'; if (valid) { document.getElementById('cap-estado').focus(); valid = false; } } else { document.getElementById('cap-estado').style.borderColor = 'var(--accent)'; }
+  if (!valid) { document.getElementById('cap-error').style.display = 'block'; return; }
+  document.getElementById('cap-error').style.display = 'none';
   showResult();
 }
-
-// ══════════════════════════════════════════════════════
-// RESULT
-// ══════════════════════════════════════════════════════
-function showResult(){
-  const perfil = calcPerfil(answers);
-  const tipo   = answers[3];
-  const uso    = answers[4];
-  const {main, also} = getRecommendation(perfil, tipo, uso);
-  const pd = perfiles[perfil];
+async function sendToSheet(data) {
+  try { await fetch(SHEET_URL, { method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) }); } catch(e) {}
+}
+let qIdx = 0; let answers = []; let selected = null;
+function go(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('on')); document.getElementById(id).classList.add('on'); window.scrollTo(0, 0); }
+function renderQ() {
+  const q = questions[qIdx];
+  const pct = Math.round((qIdx / questions.length) * 100);
+  document.getElementById('prog-label').textContent = `Pregunta ${qIdx + 1} de ${questions.length}`;
+  document.getElementById('prog-pct').textContent = pct + '%';
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('q-step').textContent = q.step;
+  document.getElementById('q-title').textContent = q.title;
+  document.getElementById('q-sub').textContent = q.sub;
+  const optsEl = document.getElementById('opts');
+  optsEl.innerHTML = '';
+  q.opts.forEach((o, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt';
+    btn.innerHTML = `<span class="opt-icon">${o.icon}</span><span class="opt-body"><strong>${o.text}</strong><small>${o.sub}</small></span><span class="opt-ring"></span>`;
+    btn.onclick = () => pick(i, o.val, btn);
+    optsEl.appendChild(btn);
+  });
+  selected = null;
+  document.getElementById('btn-next').classList.remove('on');
+  const card = document.getElementById('q-card');
+  card.style.animation = 'none'; card.offsetHeight; card.style.animation = 'fadeUp 0.38s cubic-bezier(0.4,0,0.2,1)';
+}
+function pick(i, val, btn) { document.querySelectorAll('.opt').forEach(o => o.classList.remove('sel')); btn.classList.add('sel'); selected = val; document.getElementById('btn-next').classList.add('on'); }
+function nextQ() { if (!selected) return; answers.push(selected); qIdx++; if (qIdx < questions.length) { renderQ(); } else { go('s-capture'); } }
+function showResult() {
+  const perfil = calcProfile(answers);
+  const tipo = answers[3];
+  const uso = answers[4];
+  const { main, also } = getRecommendation(perfil, tipo, uso);
+  const pd = perfilData[perfil];
   const baseVer = modelBase(main);
   const enganche = Math.round(baseVer.price * 0.10);
   const [mMin, mMax] = baseVer.m;
-
-  const datos = {
-    ingreso:    labelIngreso[answers[0]]   || answers[0],
-    enganche:   labelEnganche[answers[1]]  || answers[1],
-    historial:  labelHistorial[answers[2]] || answers[2],
-    mensualidad:`${fmt(mMin)}–${fmt(mMax)}`
-  };
-
-  // Score ring animation
-  document.getElementById('score-glow').style.background = pd.color;
-  const ring = document.getElementById('ring-fill');
-  ring.style.stroke = pd.color;
-  const circumference = 364.4;
-  const offset = circumference - (pd.score / 100) * circumference;
-
-  // Badge
-  const badge = document.getElementById('perfil-badge');
-  badge.className = `perfil-badge ${pd.badgeClass}`;
-  badge.textContent = pd.badgeText;
-
-  document.getElementById('score-perfil').textContent = pd.titulo;
-  document.getElementById('score-perfil').style.color = pd.color;
-  document.getElementById('score-desc').textContent = pd.desc;
-
-  // Animate score number
-  go('s-result');
-  setTimeout(()=>{
-    ring.style.strokeDashoffset = offset;
-    let count=0;
-    const target=pd.score;
-    const duration=1200;
-    const step=Math.ceil(target/(duration/16));
-    const interval=setInterval(()=>{
-      count=Math.min(count+step, target);
-      document.getElementById('score-num').textContent=count;
-      if(count>=target) clearInterval(interval);
-    },16);
-  },200);
-
-  // Model
+  const badge = document.getElementById('r-badge');
+  badge.className = `perfil-badge ${pd.cls}`;
+  badge.innerHTML = `<span style="font-size:18px">${pd.icon}</span> ${pd.label}`;
   document.getElementById('r-model').textContent = main.name;
-  document.getElementById('r-full').textContent  = main.full;
-
-  // Fin grid
-  document.getElementById('r-fin').innerHTML = `
-    <div class="fin-item"><div class="fin-label">Desde</div><div class="fin-val fv-gold">${fmt(baseVer.price)}</div><div class="fin-sub">Versión ${baseVer.ver} · Jul 2026</div></div>
-    <div class="fin-item"><div class="fin-label">Enganche mínimo</div><div class="fin-val fv-accent">${fmt(enganche)}</div><div class="fin-sub">10% del valor</div></div>
-    <div class="fin-item"><div class="fin-label">Mensualidad est.</div><div class="fin-val fv-green">${fmt(mMin)}–${fmt(mMax)}</div><div class="fin-sub">60 meses</div></div>
-    <div class="fin-item"><div class="fin-label">Probabilidad</div><div class="fin-val" style="font-size:18px;color:${pd.color}">${perfil==='S'?'ALTA':perfil==='A'?'BUENA':perfil==='B'?'MEDIA':'EN PREP.'}</div><div class="fin-sub">De aprobación</div></div>
-  `;
-
-  // Bono
+  document.getElementById('r-subtitle').textContent = main.full;
+  const fin = document.getElementById('r-fin');
+  fin.innerHTML = `
+    <div class="fin-item"><div class="fin-label">Desde</div><div class="fin-val gold">${fmt(baseVer.price)}</div><div class="fin-sub">Versión ${baseVer.ver} · Julio 2026</div></div>
+    <div class="fin-item"><div class="fin-label">Enganche mínimo</div><div class="fin-val">${fmt(enganche)}</div><div class="fin-sub">10% del valor</div></div>
+    <div class="fin-item"><div class="fin-label">Mensualidad est.</div><div class="fin-val green">${fmt(mMin)}–${fmt(mMax)}</div><div class="fin-sub">60 meses</div></div>
+    <div class="fin-item"><div class="fin-label">Probabilidad</div><div class="fin-val" style="color:${pd.probColor};font-size:18px">${pd.prob}</div><div class="fin-sub">De aprobación</div></div>`;
   const bonoEl = document.getElementById('r-bono');
-  if(main.bono && !main.bono.includes('Sin bono')){
-    bonoEl.style.display='flex';
-    bonoEl.innerHTML=`<span class="bono-icon">🎁</span><span class="bono-text"><strong>Promoción activa:</strong> ${main.bono}</span>`;
-  } else bonoEl.style.display='none';
-
-  // Versions table
-  const versEl = document.getElementById('r-versions');
-  if(main.versions.length>1){
-    versEl.style.display='block';
-    versEl.innerHTML=`<div class="versions-title">Versiones disponibles</div>
-    <table class="vtable">
-      ${main.versions.map((v,i)=>`
-        <tr>
-          <td class="${i===0?'star':''}">${i===0?'⭐ ':''}${v.ver}</td>
-          <td class="price">${fmt(v.price)}</td>
-          ${v.bono>0?`<td style="font-size:11px;color:var(--gold);text-align:right">-${fmt(v.bono)}</td>`:`<td></td>`}
-          <td class="mens">${fmt(v.m[0])}–${fmt(v.m[1])}/mes</td>
-        </tr>`).join('')}
-    </table>
-    <p style="font-size:10px;color:var(--muted);margin-top:8px">⭐ Versión recomendada · 60 meses · enganche 10%</p>`;
-  } else versEl.style.display='none';
-
-  // Also
+  if (bonoEl) { if (main.bono) { bonoEl.innerHTML = `<div class="also-label">🎁 Promoción activa</div><p style="font-size:13px;color:var(--accent);font-weight:500;">${main.bono}</p>`; bonoEl.style.display = 'block'; } else { bonoEl.style.display = 'none'; } }
+  const versionsEl = document.getElementById('r-versions');
+  if (versionsEl) {
+    if (main.versions.length > 1) {
+      versionsEl.innerHTML = `<div class="also-label">Versiones disponibles</div>
+        <table style="width:100%;border-collapse:collapse;font-size:13px;">
+          <tr style="color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:0.08em;"><td style="padding:6px 4px;">Versión</td><td style="padding:6px 4px;text-align:right;">Precio especial</td><td style="padding:6px 4px;text-align:right;">Mensualidad est.</td></tr>
+          ${main.versions.map((v,i) => `<tr style="border-top:1px solid var(--border);${i===0?'color:var(--accent);font-weight:500;':''}"><td style="padding:8px 4px;">${v.ver}${i===0?' ⭐':''}</td><td style="padding:8px 4px;text-align:right;">${fmt(v.price)}</td><td style="padding:8px 4px;text-align:right;">${fmt(v.m[0])}–${fmt(v.m[1])}</td></tr>`).join('')}
+        </table><p style="font-size:11px;color:var(--muted);margin-top:8px;">⭐ Versión recomendada según tu perfil · 60 meses · enganche 10%</p>`;
+      versionsEl.style.display = 'block';
+    } else { versionsEl.style.display = 'none'; }
+  }
   const alsoEl = document.getElementById('r-also');
-  if(also.length>0){
-    alsoEl.style.display='block';
-    alsoEl.innerHTML=`<div class="also-label">También podrías calificar para</div><div class="also-pills">${also.map(m=>`<span class="also-pill">${m.name} desde ${fmt(modelBase(m).price)}</span>`).join('')}</div>`;
-  } else alsoEl.style.display='none';
-
-  // Plan de acción
-  document.getElementById('plan-icon').textContent  = pd.planIcon;
-  document.getElementById('plan-title').textContent = pd.planTitle;
-  document.getElementById('plan-sub').textContent   = pd.planSub;
-  document.getElementById('plan-steps').innerHTML   = pd.steps.map(s=>`
-    <div class="plan-step">
-      <div class="step-num" style="background:${s.bgColor};color:${s.color}">${s.num}</div>
-      <div class="step-body">
-        <div class="step-title">${s.title}</div>
-        <div class="step-desc">${s.desc}</div>
-        <span class="step-tag" style="background:${s.tagColor};color:${s.tagTextColor}">${s.tag}</span>
-      </div>
-    </div>`).join('');
-
-  // WhatsApp
-  const nombreCompleto = prospecto.nombre + ' ' + prospecto.apellido;
-  const msg = encodeURIComponent(pd.waMsg(main.name, nombreCompleto, datos));
+  if (also.length > 0) {
+    alsoEl.innerHTML = `<div class="also-label">También podrías calificar para</div><div class="also-models">${also.map(m => `<span class="also-pill">${m.name} desde ${fmt(modelBase(m).price)}</span>`).join('')}</div>`;
+    alsoEl.style.display = 'block';
+  } else { alsoEl.style.display = 'none'; }
+  document.getElementById('r-why').textContent = pd.why;
+  const datos = { ingreso: labelIngreso[answers[0]] || answers[0], enganche: labelEnganche[answers[1]] || answers[1], historial: labelHistorial[answers[2]]|| answers[2], mensualidad: `${fmt(mMin)}–${fmt(mMax)}` };
+  const alsoNames = also.map(m => m.name).join(', ') || '—';
+  sendToSheet({ fecha: new Date().toLocaleString('es-MX', {timeZone:'America/Mexico_City'}), nombre: prospecto.nombre + ' ' + prospecto.apellido, telefono: prospecto.tel, estado: prospecto.estado || 'No indicado', perfil: perfil, modelo: main.name + ' ' + baseVer.ver, otros_modelos: alsoNames, ingreso: datos.ingreso, enganche: datos.enganche, historial: datos.historial, mensualidad: datos.mensualidad });
+  const msg = encodeURIComponent(pd.waMsg(main.name, datos, prospecto.nombre));
   document.getElementById('r-wa').href = `https://wa.me/${WHATSAPP}?text=${msg}`;
-  document.getElementById('float-wa').href = `https://wa.me/${WHATSAPP}?text=${msg}`;
-
-  // Send to Sheet
-  sendToSheet({
-    fecha:        new Date().toLocaleString('es-MX',{timeZone:'America/Mexico_City'}),
-    nombre:       nombreCompleto,
-    telefono:     prospecto.tel,
-    perfil:       perfil,
-    modelo:       main.name + ' ' + baseVer.ver,
-    otros_modelos:also.map(m=>m.name).join(', ') || '—',
-    ingreso:      datos.ingreso,
-    enganche:     datos.enganche,
-    historial:    datos.historial,
-    mensualidad:  datos.mensualidad,
-    acepto_privacidad:"Sí",
-    estado:       prospecto.estado || 'No indicado'
-  });
+  document.getElementById('prog-fill').style.width = '100%';
+  document.getElementById('prog-pct').textContent = '100%';
+  go('s-result');
 }
-
-async function sendToSheet(data){
-  try{
-    await fetch(SHEET_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
-  } catch(e){ console.warn('Sheet error',e); }
-}
-
-function restart(){
-  qIdx=0; answers=new Array(questions.length).fill(null); selected=null;
-  prospecto={nombre:"",apellido:"",tel:"",estado:""};
-  document.getElementById('cap-nombre').value='';
-  document.getElementById('cap-apellido').value='';
-  document.getElementById('cap-tel').value='';
-  document.getElementById('cap-estado').value='';
-  document.getElementById('cap-error').style.display='none';
-  document.getElementById('priv-check').checked=false;
-  document.querySelector('.privacy-row .privacy-text').style.color='';
+function restart() {
+  qIdx = 0; answers = []; selected = null; prospecto = { nombre: "", tel: "" };
+  document.getElementById('cap-error').style.display = 'none';
+  document.getElementById('cap-nombre').value = ''; document.getElementById('cap-apellido').value = ''; document.getElementById('cap-tel').value = ''; document.getElementById('cap-estado').value = '';
+  document.getElementById('btn-capture').classList.remove('on');
   go('s-quiz'); renderQ();
 }
-
-// Privacy
-function openPrivacy(e){ e.preventDefault(); document.getElementById('priv-modal').classList.add('open'); }
-function closePrivacy(e){ if(e.target===document.getElementById('priv-modal')) document.getElementById('priv-modal').classList.remove('open'); }
-function acceptPrivacy(){ document.getElementById('priv-check').checked=true; document.getElementById('priv-modal').classList.remove('open'); }
 </script>
+<div id="privacy-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:999;align-items:center;justify-content:center;padding:20px;">
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:20px;padding:32px 28px;max-width:480px;width:100%;max-height:80vh;overflow-y:auto;">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:0.04em;margin-bottom:16px;color:var(--text);">Aviso de Privacidad</div>
+    <p style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:12px;"><strong style="color:var(--text);">Responsable:</strong> AsesoresDigitalesG by Abel Zarate, asesor comercial autorizado de Geely Serdán, Puebla, México.</p>
+    <p style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:12px;"><strong style="color:var(--text);">Datos que recopilamos:</strong> Nombre, número de WhatsApp y las respuestas que proporcionas en este cuestionario (ingreso estimado, enganche disponible, historial crediticio, preferencias de vehículo).</p>
+    <p style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:12px;"><strong style="color:var(--text);">Finalidad:</strong> Contactarte para brindarte información personalizada sobre vehículos Geely, promociones vigentes, opciones de financiamiento y agendar una cita o test drive. Tus datos no serán vendidos ni compartidos con terceros ajenos a Geely Serdán.</p>
+    <p style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:12px;"><strong style="color:var(--text);">Almacenamiento:</strong> Tu información se guarda de forma segura y únicamente es accesible por el asesor responsable de tu caso.</p>
+    <p style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:20px;"><strong style="color:var(--text);">Derechos ARCO:</strong> Puedes solicitar acceso, rectificación, cancelación u oposición al uso de tus datos en cualquier momento escribiéndonos por WhatsApp al número de contacto de la agencia.</p>
+    <button onclick="closePrivacy()" style="width:100%;background:linear-gradient(135deg,var(--accent2),var(--accent));color:#000;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;border:none;border-radius:13px;padding:16px;cursor:pointer;">Entendido, acepto ✓</button>
+  </div>
+</div>
 </body>
 </html>
