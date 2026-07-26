@@ -230,7 +230,7 @@
   </div>
 </div>
 <script>
-const WHATSAPP = "522217729210";
+const WHATSAPP = "522222003265";
 const questions = [
   { step: "01 / 05", title: "¿Cuánto ganas al mes?", sub: "Ingreso neto aproximado (lo que recibes después de impuestos)",
     opts: [
@@ -338,22 +338,23 @@ const labelHistorial= { clean:"Limpio y al corriente", ok:"Deudas menores al cor
 const perfilData = {
   S: { cls: "s", icon: "🏆", label: "Perfil S — Excelente calificación",
     why: "Tu perfil financiero es sólido. Con tu nivel de ingreso, historial crediticio y enganche disponible, tienes alta probabilidad de aprobación para los modelos premium de Geely. Un asesor puede prepararte una cotización formal en menos de 24 horas.",
-    waMsg: (model, d, nombre) => `Hola! Soy ${nombre || 'un prospecto'} y acabo de hacer el test de AsesoresDigitalesG 🚗\n\n📋 *Perfil:* S — Excelente calificación\n🚘 *Modelo recomendado:* Geely ${model}\n\n💰 *Ingreso mensual:* ${d.ingreso}\n💵 *Enganche disponible:* ${d.enganche}\n📊 *Historial crediticio:* ${d.historial}\n📅 *Mensualidad estimada:* ${d.mensualidad} a 60 meses\n\nMe gustaría agendar un test drive y conocer mi cotización real. ¿Cuándo podemos hablar? #PerfilS`,
+    waMsg: (model, d, nombre) => `Soy ${nombre || 'un prospecto'} y acabo de hacer el test de AsesoresDigitalesG 🚗\n\n📋 *Perfil:* S — Excelente calificación\n🚘 *Modelo recomendado:* Geely ${model}\n\n💰 *Ingreso mensual:* ${d.ingreso}\n💵 *Enganche disponible:* ${d.enganche}\n📊 *Historial crediticio:* ${d.historial}\n📅 *Mensualidad estimada:* ${d.mensualidad} a 60 meses\n\nMe gustaría agendar un test drive y conocer mi cotización real. ¿Cuándo podemos hablar? #PerfilS`,
     prob: "ALTA", probColor: "#00e59b" },
   A: { cls: "a", icon: "✅", label: "Perfil A — Buen perfil, listo para avanzar",
     why: "Tienes un buen perfil crediticio y financiero. Las opciones recomendadas son totalmente accesibles para tu situación actual. Solo necesitas presentar documentos básicos (comprobante de ingresos, INE, comprobante de domicilio) y podemos tramitar tu crédito.",
-    waMsg: (model, d, nombre) => `Hola! Soy ${nombre || 'un prospecto'} y acabo de hacer el test de AsesoresDigitalesG 🚗\n\n📋 *Perfil:* A — Buen perfil\n🚘 *Modelo recomendado:* Geely ${model}\n\n💰 *Ingreso mensual:* ${d.ingreso}\n💵 *Enganche disponible:* ${d.enganche}\n📊 *Historial crediticio:* ${d.historial}\n📅 *Mensualidad estimada:* ${d.mensualidad} a 60 meses\n\n¿Qué documentos necesito para iniciar mi trámite de crédito? #PerfilA`,
+    waMsg: (model, d, nombre) => `Soy ${nombre || 'un prospecto'} y acabo de hacer el test de AsesoresDigitalesG 🚗\n\n📋 *Perfil:* A — Buen perfil\n🚘 *Modelo recomendado:* Geely ${model}\n\n💰 *Ingreso mensual:* ${d.ingreso}\n💵 *Enganche disponible:* ${d.enganche}\n📊 *Historial crediticio:* ${d.historial}\n📅 *Mensualidad estimada:* ${d.mensualidad} a 60 meses\n\n¿Qué documentos necesito para iniciar mi trámite de crédito? #PerfilA`,
     prob: "BUENA", probColor: "#00d4ff" },
   B: { cls: "b", icon: "🟡", label: "Perfil B — Hay opciones, hay que revisar",
     why: "Sí puedes tener tu Geely, pero depende de algunos factores que hay que revisar en persona. Hay opciones con financiera de respaldo que son más accesibles que el financiamiento bancario. Escríbeme y te explico exactamente qué necesitas para que te aprueben.",
-    waMsg: (model, d, nombre) => `Hola! Soy ${nombre || 'un prospecto'} y acabo de hacer el test de AsesoresDigitalesG 🚗\n\n📋 *Perfil:* B — En revisión\n🚘 *Modelo recomendado:* Geely ${model}\n\n💰 *Ingreso mensual:* ${d.ingreso}\n💵 *Enganche disponible:* ${d.enganche}\n📊 *Historial crediticio:* ${d.historial}\n📅 *Mensualidad estimada:* ${d.mensualidad} a 60 meses\n\n¿Qué opciones de financiamiento tengo disponibles para mi caso? #PerfilB`,
+    waMsg: (model, d, nombre) => `Soy ${nombre || 'un prospecto'} y acabo de hacer el test de AsesoresDigitalesG 🚗\n\n📋 *Perfil:* B — En revisión\n🚘 *Modelo recomendado:* Geely ${model}\n\n💰 *Ingreso mensual:* ${d.ingreso}\n💵 *Enganche disponible:* ${d.enganche}\n📊 *Historial crediticio:* ${d.historial}\n📅 *Mensualidad estimada:* ${d.mensualidad} a 60 meses\n\n¿Qué opciones de financiamiento tengo disponibles para mi caso? #PerfilB`,
     prob: "MEDIA", probColor: "#ff8c00" },
   C: { cls: "c", icon: "⏳", label: "Perfil C — Preparación recomendada",
     why: "Todavía no es el momento ideal, pero podemos prepararte para lograrlo. Escríbeme y te armo un plan de 3 a 6 meses para que llegues listo: qué enganche juntar, cómo mejorar tu historial y cuáles son las opciones más accesibles cuando estés listo.",
-    waMsg: (model, d, nombre) => `Hola! Soy ${nombre || 'un prospecto'} y acabo de hacer el test de AsesoresDigitalesG 🚗\n\n📋 *Perfil:* C — Preparándome\n🚘 *Modelo de interés:* Geely ${model}\n\n💰 *Ingreso mensual:* ${d.ingreso}\n💵 *Enganche disponible:* ${d.enganche}\n📊 *Historial crediticio:* ${d.historial}\n\nMe interesa prepararme para tener mi Geely. ¿Me pueden orientar? #PerfilC`,
+    waMsg: (model, d, nombre) => `Soy ${nombre || 'un prospecto'} y acabo de hacer el test de AsesoresDigitalesG 🚗\n\n📋 *Perfil:* C — Preparándome\n🚘 *Modelo de interés:* Geely ${model}\n\n💰 *Ingreso mensual:* ${d.ingreso}\n💵 *Enganche disponible:* ${d.enganche}\n📊 *Historial crediticio:* ${d.historial}\n\nMe interesa prepararme para tener mi Geely. ¿Me pueden orientar? #PerfilC`,
     prob: "EN PROCESO", probColor: "#ff4444" }
 };
 const SHEET_URL = "https://script.google.com/macros/s/AKfycbxGUPnH0HUVq0KkmBwzWl6EAK064HqPomzo-_eZoddjDw9NaiOaMB3lNztSJp13YoKi/exec";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzxL73A2NM7YjyiI_IMHtUyT2NvIJFjbbPVpRL8EfI8g3a8dlqs5r481ZFjBKQkXz08Zw/exec";
 let prospecto = { nombre: "", apellido: "", tel: "", estado: "" };
 function checkCapture() {
   const n = document.getElementById('cap-nombre').value.trim();
@@ -380,6 +381,12 @@ function submitCapture() {
 }
 async function sendToSheet(data) {
   try { await fetch(SHEET_URL, { method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) }); } catch(e) {}
+}
+
+function avisarAbelPorCorreo(data) {
+  try {
+    navigator.sendBeacon(APPS_SCRIPT_URL, new Blob([JSON.stringify({ tipo: 'quiz_completado', ...data })], {type:'text/plain'}));
+  } catch(e) {}
 }
 let qIdx = 0; let answers = []; let selected = null;
 function go(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('on')); document.getElementById(id).classList.add('on'); window.scrollTo(0, 0); }
@@ -450,6 +457,7 @@ function showResult() {
   const datos = { ingreso: labelIngreso[answers[0]] || answers[0], enganche: labelEnganche[answers[1]] || answers[1], historial: labelHistorial[answers[2]]|| answers[2], mensualidad: `${fmt(mMin)}–${fmt(mMax)}` };
   const alsoNames = also.map(m => m.name).join(', ') || '—';
   sendToSheet({ fecha: new Date().toLocaleString('es-MX', {timeZone:'America/Mexico_City'}), nombre: prospecto.nombre + ' ' + prospecto.apellido, telefono: prospecto.tel, estado: prospecto.estado || 'No indicado', perfil: perfil, modelo: main.name + ' ' + baseVer.ver, otros_modelos: alsoNames, ingreso: datos.ingreso, enganche: datos.enganche, historial: datos.historial, mensualidad: datos.mensualidad });
+  avisarAbelPorCorreo({ nombre: prospecto.nombre + ' ' + prospecto.apellido, telefono: prospecto.tel, estado: prospecto.estado || 'No indicado', perfil: perfil, modelo: main.name + ' ' + baseVer.ver, ingreso: datos.ingreso, enganche: datos.enganche, historial: datos.historial, mensualidad: datos.mensualidad });
   const msg = encodeURIComponent(pd.waMsg(main.name, datos, prospecto.nombre));
   document.getElementById('r-wa').href = `https://wa.me/${WHATSAPP}?text=${msg}`;
   document.getElementById('prog-fill').style.width = '100%';
