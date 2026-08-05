@@ -132,6 +132,11 @@ td{padding:10px 14px;font-size:12px;vertical-align:middle}
 .pipe-opt:hover{border-color:var(--border2);color:var(--text)}
 .pipe-opt.sel{color:#000}
 
+.track-btn{display:flex;align-items:center;justify-content:space-between;background:var(--s2);border:1px solid var(--border);border-radius:9px;padding:9px 11px;cursor:pointer;transition:all 0.15s;font-family:'DM Sans',sans-serif}
+.track-btn:hover{border-color:var(--accent)}
+.track-btn-label{font-size:11px;color:var(--text)}
+.track-btn-count{font-size:13px;font-weight:700;color:var(--accent);font-family:'DM Mono',monospace;background:var(--s3);border-radius:100px;padding:1px 8px;min-width:20px;text-align:center}
+
 .task-row{display:flex;gap:8px;margin-bottom:12px}
 .task-input{flex:1;background:var(--s2);border:1px solid var(--border);border-radius:9px;padding:9px 12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:12px;outline:none}
 .task-input:focus{border-color:var(--gold)}
@@ -190,9 +195,10 @@ td{padding:10px 14px;font-size:12px;vertical-align:middle}
   <div class="login-card">
     <div class="login-logo">ADG CRM</div>
     <div class="login-sub">AsesoresDigitalesG · Sistema Privado</div>
+    <input class="login-input" type="text" id="user-input" placeholder="Usuario" style="letter-spacing:0.05em" onkeydown="if(event.key==='Enter')document.getElementById('pw-input').focus()">
     <input class="login-input" type="password" id="pw-input" placeholder="••••••••" onkeydown="if(event.key==='Enter')tryLogin()">
     <button class="login-btn" onclick="tryLogin()">Entrar →</button>
-    <div class="login-err" id="login-err">Contraseña incorrecta</div>
+    <div class="login-err" id="login-err">Usuario o contraseña incorrectos</div>
   </div>
 </div>
 
@@ -202,6 +208,13 @@ td{padding:10px 14px;font-size:12px;vertical-align:middle}
     <div class="sb-logo">
       <div class="sb-logo-name">ADG CRM</div>
       <div class="sb-logo-sub">AsesoresDigitalesG</div>
+    </div>
+    <div style="padding:12px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:9px">
+      <div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--accent2),var(--accent));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#000;flex-shrink:0" id="sb-user-avatar">·</div>
+      <div style="overflow:hidden">
+        <div style="font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="sb-user-name">–</div>
+        <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em" id="sb-user-role">–</div>
+      </div>
     </div>
     <div class="sb-nav">
       <div class="sb-section">Principal</div>
@@ -215,6 +228,11 @@ td{padding:10px 14px;font-size:12px;vertical-align:middle}
       <button class="nav-btn" id="nav-dashboard" onclick="showScreen('dashboard')">
         <span class="nav-icon">📊</span><span>Dashboard</span>
       </button>
+      <div id="nav-equipo-wrap" style="display:none">
+        <button class="nav-btn" id="nav-equipo" onclick="showScreen('equipo')">
+          <span class="nav-icon">👥</span><span>Dashboard de Equipo</span>
+        </button>
+      </div>
       <div class="sb-section">Filtros rápidos</div>
       <button class="nav-btn" onclick="quickFilter('hot')" id="nav-hot"><span class="nav-icon">🔴</span><span>Urgentes</span></button>
       <button class="nav-btn" onclick="quickFilter('new')" id="nav-new"><span class="nav-icon">✨</span><span>Hoy nuevos</span></button>
@@ -270,7 +288,7 @@ td{padding:10px 14px;font-size:12px;vertical-align:middle}
           <table>
             <thead><tr>
               <th></th><th>Score</th><th>Nombre</th><th>Modelo</th><th>Perfil</th>
-              <th>Ingreso</th><th>Estado</th><th>Etapa</th><th>Próxima acción</th><th>Días</th><th>WA</th>
+              <th>Ingreso</th><th>Estado</th><th>Etapa</th><th id="th-asignado" style="display:none">Asignado</th><th>Próxima acción</th><th>Días</th><th>WA</th>
             </tr></thead>
             <tbody id="lista-tbody"></tbody>
           </table>
@@ -289,6 +307,24 @@ td{padding:10px 14px;font-size:12px;vertical-align:middle}
           <div class="chart-card"><div class="chart-title">Leads por día (últimos 14)</div><div id="diario-chart"></div></div>
         </div>
       </div>
+
+      <div class="screen" id="screen-equipo">
+        <div class="kpi-strip" id="equipo-kpis" style="grid-template-columns:repeat(5,1fr)"></div>
+
+        <div class="chart-card" style="margin-bottom:16px">
+          <div class="chart-title">Etapa del pipeline por asesor</div>
+          <div id="eq-matrix" style="overflow-x:auto"></div>
+        </div>
+
+        <div class="charts-row3" style="margin-bottom:16px">
+          <div class="chart-card"><div class="chart-title">Leads asignados por asesor</div><div id="eq-bar-asignados"></div></div>
+          <div class="chart-card"><div class="chart-title">Acciones de seguimiento totales</div><div id="eq-bar-acciones"></div></div>
+          <div class="chart-card"><div class="chart-title">Ventas cerradas por asesor</div><div id="eq-bar-cerrados"></div></div>
+        </div>
+
+        <div class="d-section" style="margin:4px 0 10px">Detalle por asesor</div>
+        <div id="equipo-cards" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px"></div>
+      </div>
     </div>
   </div>
 </div>
@@ -299,10 +335,14 @@ td{padding:10px 14px;font-size:12px;vertical-align:middle}
     <button class="drawer-close" onclick="closeDrawer()">✕</button>
     <div class="d-name" id="d-name"></div>
     <div class="d-sub" id="d-sub"></div>
+    <div class="d-section" id="d-asignado-section" style="display:none">Asignado a</div>
+    <select class="fi" id="d-asignado" style="width:100%;display:none" onchange="setAsignado(this.value)"></select>
     <div class="d-section">Etapa del pipeline</div>
     <div class="pipe-selector" id="pipe-selector"></div>
     <div class="d-section">Datos del prospecto</div>
     <div class="d-grid" id="d-grid"></div>
+    <div class="d-section">Seguimiento del equipo</div>
+    <div id="d-tracking" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:6px"></div>
     <div class="d-section">Próxima acción</div>
     <div class="task-row">
       <input class="task-input" id="task-text" placeholder="Ej: Llamar para agendar test drive">
@@ -329,11 +369,25 @@ td{padding:10px 14px;font-size:12px;vertical-align:middle}
 // ══════════════════════════════════════════════════════
 // CONFIG
 // ══════════════════════════════════════════════════════
-const PASSWORD   = "Geely2026";
 const SHEET_ID   = "1KoUs2mBRY45y3endT8Tx6QnI1iHSvdGL4JTHQd1M96c";
 const SHEET_NAME = "Hoja 1";
 const WA_NUM     = "522217729210";
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwB-ylsX33ZGE918Ty3s7YK0ZLXHv0en4aFbg_X4d7ac9iZ2C7s6JD6lTtRyi_yc1Po/exec";
+
+// ══════════════════════════════════════════════════════
+// USUARIOS — cambia nombres/contraseñas aquí cuando quieras
+// isAdmin: ve todos los leads, puede asignar, ve Dashboard de Equipo
+// ══════════════════════════════════════════════════════
+const USERS = [
+  {user:'admin',   pass:'Geely2026', nombre:'Raúl',    isAdmin:true},
+  {user:'asesor1', pass:'geely1',    nombre:'Asesor 1', isAdmin:false},
+  {user:'asesor2', pass:'geely2',    nombre:'Asesor 2', isAdmin:false},
+  {user:'asesor3', pass:'geely3',    nombre:'Asesor 3', isAdmin:false},
+  {user:'asesor4', pass:'geely4',    nombre:'Asesor 4', isAdmin:false},
+  {user:'asesor5', pass:'geely5',    nombre:'Asesor 5', isAdmin:false},
+  {user:'asesor6', pass:'geely6',    nombre:'Asesor 6', isAdmin:false},
+];
+let currentUser = null;
 
 const ETAPAS = [
   {id:'nuevo',     label:'Nuevo',         color:'var(--accent)'},
@@ -365,10 +419,17 @@ function toggleDebug() {
 // LOGIN
 // ══════════════════════════════════════════════════════
 function tryLogin() {
-  const val = document.getElementById('pw-input').value;
-  if (val === PASSWORD) {
+  const u = document.getElementById('user-input').value.trim().toLowerCase();
+  const p = document.getElementById('pw-input').value;
+  const match = USERS.find(x => x.user === u && x.pass === p);
+  if (match) {
+    currentUser = match;
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('app').classList.remove('hidden');
+    document.getElementById('sb-user-name').textContent = match.nombre;
+    document.getElementById('sb-user-role').textContent = match.isAdmin ? 'Administrador' : 'Asesor';
+    document.getElementById('sb-user-avatar').textContent = match.nombre.charAt(0).toUpperCase();
+    if (match.isAdmin) document.getElementById('nav-equipo-wrap').style.display = 'block';
     syncData();
   } else {
     document.getElementById('login-err').style.display = 'block';
@@ -385,6 +446,11 @@ let activeId = null;
 let sortMode = 'score';
 let sortDir  = -1;
 let quickFilterMode = null;
+
+function getVisibleLeads() {
+  if (!currentUser || currentUser.isAdmin) return allLeads;
+  return allLeads.filter(l => (getLocal(l.id).asignado || '') === currentUser.user);
+}
 
 function getLocal(id) {
   try { return JSON.parse(localStorage.getItem('crm_' + id) || 'null') || {}; } catch { return {}; }
@@ -514,6 +580,12 @@ function mergeSheetData(leads) {
     if (l.ultimoContactoSheet)local.ultimoContacto = l.ultimoContactoSheet;
     if (l.fuenteContactoSheet)local.fuenteContacto = l.fuenteContactoSheet;
     if (l.intentosSheet)      local.intentos       = l.intentosSheet;
+    if (l.asignadoSheet)                  local.asignado                = l.asignadoSheet;
+    if (l.llamadasAgendadasSheet)         local.llamadasAgendadas       = parseInt(l.llamadasAgendadasSheet)||0;
+    if (l.llamadasRealizadasSheet)        local.llamadasRealizadas      = parseInt(l.llamadasRealizadasSheet)||0;
+    if (l.videollamadasAgendadasSheet)    local.videollamadasAgendadas  = parseInt(l.videollamadasAgendadasSheet)||0;
+    if (l.videollamadasRealizadasSheet)   local.videollamadasRealizadas = parseInt(l.videollamadasRealizadasSheet)||0;
+    if (l.mensajesSeguimientoSheet)       local.mensajesSeguimiento     = parseInt(l.mensajesSeguimientoSheet)||0;
     if (Object.keys(local).length) {
       try { localStorage.setItem('crm_' + l.id, JSON.stringify(local)); } catch {}
     }
@@ -603,6 +675,12 @@ async function syncData() {
         ultimoContactoSheet: val(c[16]),
         fuenteContactoSheet: val(c[17]),
         intentosSheet:       val(c[18]),
+        asignadoSheet:              val(c[19]),
+        llamadasAgendadasSheet:     val(c[20]),
+        llamadasRealizadasSheet:    val(c[21]),
+        videollamadasAgendadasSheet:val(c[22]),
+        videollamadasRealizadasSheet:val(c[23]),
+        mensajesSeguimientoSheet:  val(c[24]),
       };
     }).filter(l => {
       // ✅ FIX: filtro más tolerante — excluir filas donde nombre es vacío O es el encabezado
@@ -745,11 +823,13 @@ function renderAll() {
   renderKanban();
   renderLista();
   renderDashboard();
+  if (currentUser && currentUser.isAdmin) renderEquipo();
   updateAlerts();
   updateBadges();
 }
 
 function renderKPIs() {
+  const allLeads = getVisibleLeads();
   const total = allLeads.length;
   let vendidos=0, interesados=0, nuevos=0;
   allLeads.forEach(l => {
@@ -774,6 +854,7 @@ function renderKPIs() {
 }
 
 function renderKanban() {
+  const allLeads = getVisibleLeads();
   const container = document.getElementById('kanban');
   const cols = {};
   ETAPAS.forEach(e => cols[e.id] = []);
@@ -837,6 +918,9 @@ function toggleSort(mode) {
 }
 
 function renderLista() {
+  const allLeads = getVisibleLeads();
+  const isAdmin = currentUser && currentUser.isAdmin;
+  document.getElementById('th-asignado').style.display = isAdmin ? '' : 'none';
   const q   = (document.getElementById('s-search').value||'').toLowerCase();
   const fp  = document.getElementById('s-perfil').value;
   const fe  = document.getElementById('s-etapa').value;
@@ -900,7 +984,7 @@ function renderLista() {
     const em = quickFilterMode && msgs[quickFilterMode]
       ? msgs[quickFilterMode]
       : {icon:'🔍',msg:'Sin resultados',sub:'Intenta cambiar los filtros de búsqueda'};
-    tbody.innerHTML = `<tr><td colspan="11" style="text-align:center;padding:48px;color:var(--muted)">
+    tbody.innerHTML = `<tr><td colspan="12" style="text-align:center;padding:48px;color:var(--muted)">
       <div style="font-size:36px;margin-bottom:12px">${em.icon}</div>
       <div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px">${em.msg}</div>
       <div style="font-size:12px;color:var(--muted);max-width:300px;margin:0 auto;line-height:1.5">${em.sub}</div>
@@ -931,6 +1015,7 @@ function renderLista() {
       <td style="font-size:11px;color:var(--muted)">${l.ingreso}</td>
       <td style="font-size:11px;font-weight:600;color:${esPoblano(l)?'var(--green)':l.estado&&l.estado!=='—'?'var(--red)':'var(--muted)'}">${l.estado||'—'}</td>
       <td><span style="font-size:10px;font-weight:600;color:${etapa?.color||'var(--muted)'}">${etapa?.label||'Nuevo'}</span></td>
+      <td class="td-asignado" style="display:${isAdmin?'':'none'};font-size:10px;color:var(--muted)">${(() => { const u = USERS.find(x=>x.user===local.asignado); return u ? u.nombre : '— Sin asignar —'; })()}</td>
       <td style="font-size:10px;color:${taskOverdue?'var(--red)':'var(--gold)'}">${local.taskText||'—'}</td>
       <td style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace">${formatRelative(l.fecha)}</td>
       <td onclick="event.stopPropagation()"><a href="https://wa.me/${waNum}?text=${waMsg}" target="_blank" style="text-decoration:none"><button class="btn-wa" style="padding:5px 10px;font-size:11px;border-radius:7px">💬</button></a></td>
@@ -939,6 +1024,7 @@ function renderLista() {
 }
 
 function renderDashboard() {
+  const allLeads = getVisibleLeads();
   const counts = {};
   ETAPAS.forEach(e => counts[e.id] = 0);
   allLeads.forEach(l => {
@@ -1008,7 +1094,110 @@ function renderDashboard() {
     </div>`).join('') || '<div style="color:var(--muted);font-size:12px">Sin datos recientes</div>';
 }
 
+function renderEquipo() {
+  const container = document.getElementById('equipo-cards');
+  if (!container) return;
+  const asesores = USERS.filter(u => !u.isAdmin);
+
+  // ── Stats por asesor (una sola pasada, se reutiliza en todas las secciones) ──
+  const stats = asesores.map(u => {
+    const mine = allLeads.filter(l => (getLocal(l.id).asignado||'') === u.user);
+    const etapaCounts = {}; ETAPAS.forEach(e => etapaCounts[e.id] = 0);
+    let llA=0, llR=0, viA=0, viR=0, msj=0;
+    mine.forEach(l => {
+      const local = getLocal(l.id);
+      const etapa = local.etapa || 'nuevo';
+      if (etapaCounts[etapa] !== undefined) etapaCounts[etapa]++;
+      llA += local.llamadasAgendadas||0;
+      llR += local.llamadasRealizadas||0;
+      viA += local.videollamadasAgendadas||0;
+      viR += local.videollamadasRealizadas||0;
+      msj += local.mensajesSeguimiento||0;
+    });
+    const acciones = llA+llR+viA+viR+msj;
+    const cerrados = etapaCounts['cerrado']||0;
+    const perdidos = etapaCounts['perdido']||0;
+    const enProceso = mine.length - cerrados - perdidos;
+    const tasa = mine.length ? ((cerrados/mine.length)*100).toFixed(0) : 0;
+    return {u, total:mine.length, etapaCounts, llA,llR,viA,viR,msj,acciones,cerrados,perdidos,enProceso,tasa};
+  });
+
+  // ── KPIs generales del equipo ──
+  const total       = allLeads.length;
+  const sinAsignar  = allLeads.filter(l => !getLocal(l.id).asignado).length;
+  const asignados   = total - sinAsignar;
+  const accionesTot = stats.reduce((s,x) => s+x.acciones, 0);
+  const cerradosTot = stats.reduce((s,x) => s+x.cerrados, 0);
+  const tasaGlobal  = asignados ? ((cerradosTot/asignados)*100).toFixed(0) : 0;
+  document.getElementById('equipo-kpis').innerHTML = `
+    <div class="kpi"><div class="kpi-label">Total leads</div><div class="kpi-val kv-blue">${total}</div><div class="kpi-sub">En el sistema</div></div>
+    <div class="kpi" style="border-color:rgba(255,140,0,0.3)"><div class="kpi-label">Sin asignar</div><div class="kpi-val kv-orange">${sinAsignar}</div><div class="kpi-sub">Necesitan asesor</div></div>
+    <div class="kpi"><div class="kpi-label">Asignados</div><div class="kpi-val kv-gold">${asignados}</div><div class="kpi-sub">En seguimiento</div></div>
+    <div class="kpi"><div class="kpi-label">Acciones totales</div><div class="kpi-val" style="color:var(--purple)">${accionesTot}</div><div class="kpi-sub">Llamadas + videoll. + mensajes</div></div>
+    <div class="kpi" style="border-color:rgba(0,229,155,0.3)"><div class="kpi-label">Ventas cerradas</div><div class="kpi-val kv-green">${cerradosTot}</div><div class="kpi-sub">${tasaGlobal}% de conversión</div></div>
+  `;
+
+  // ── Matriz: asesor × etapa ──
+  document.getElementById('eq-matrix').innerHTML = `
+    <table style="width:100%;border-collapse:collapse;min-width:560px">
+      <thead><tr style="background:var(--s2)">
+        <th style="padding:9px 12px;text-align:left;font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em">Asesor</th>
+        ${ETAPAS.map(e=>`<th style="padding:9px 8px;text-align:center;font-size:9px;color:${e.color};text-transform:uppercase;letter-spacing:0.06em;white-space:nowrap">${e.label}</th>`).join('')}
+        <th style="padding:9px 12px;text-align:center;font-size:9px;color:var(--text);text-transform:uppercase;letter-spacing:0.08em">Total</th>
+      </tr></thead>
+      <tbody>
+        ${stats.map(s => `
+          <tr style="border-top:1px solid var(--border)">
+            <td style="padding:9px 12px;font-size:12px;font-weight:600">${s.u.nombre}</td>
+            ${ETAPAS.map(e => `<td style="padding:9px 8px;text-align:center;font-size:12px;font-family:'DM Mono',monospace;color:${s.etapaCounts[e.id]?'var(--text)':'var(--muted2)'}">${s.etapaCounts[e.id]||0}</td>`).join('')}
+            <td style="padding:9px 12px;text-align:center;font-size:12px;font-weight:700;font-family:'DM Mono',monospace">${s.total}</td>
+          </tr>`).join('') || `<tr><td colspan="${ETAPAS.length+2}" style="padding:24px;text-align:center;color:var(--muted);font-size:12px">Sin asesores configurados</td></tr>`}
+      </tbody>
+    </table>`;
+
+  // ── Barras comparativas ──
+  function bars(elId, getVal, color) {
+    const max = Math.max(...stats.map(getVal), 1);
+    document.getElementById(elId).innerHTML = stats.map(s => `
+      <div class="pbar-row">
+        <span class="pbar-label" style="width:76px">${s.u.nombre}</span>
+        <div class="pbar-track"><div class="pbar-fill" style="width:${(getVal(s)/max*100).toFixed(0)}%;background:${color}"></div></div>
+        <span class="pbar-count">${getVal(s)}</span>
+      </div>`).join('') || '<div style="color:var(--muted);font-size:12px">Sin datos</div>';
+  }
+  bars('eq-bar-asignados', s => s.total,     'var(--accent)');
+  bars('eq-bar-acciones',  s => s.acciones,  'var(--gold)');
+  bars('eq-bar-cerrados',  s => s.cerrados,  'var(--green)');
+
+  // ── Tarjetas de detalle por asesor ──
+  container.innerHTML = stats.map(s => `
+      <div class="chart-card">
+        <div style="display:flex;align-items:center;gap:9px;margin-bottom:14px">
+          <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--accent2),var(--accent));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#000">${s.u.nombre.charAt(0)}</div>
+          <div>
+            <div style="font-size:14px;font-weight:700">${s.u.nombre}</div>
+            <div style="font-size:10px;color:var(--muted)">${s.total} leads asignados</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+          <div class="d-item"><div class="d-label">Cerrados</div><div class="d-val" style="color:var(--green)">${s.cerrados}</div></div>
+          <div class="d-item"><div class="d-label">Tasa conv.</div><div class="d-val" style="color:var(--gold)">${s.tasa}%</div></div>
+          <div class="d-item"><div class="d-label">En proceso</div><div class="d-val">${s.enProceso}</div></div>
+          <div class="d-item"><div class="d-label">Perdidos</div><div class="d-val" style="color:var(--red)">${s.perdidos}</div></div>
+        </div>
+        <div class="d-section" style="margin:10px 0 8px">Seguimiento</div>
+        <div style="font-size:11px;line-height:2">
+          <div style="display:flex;justify-content:space-between"><span>📞 Llamadas agendadas</span><b>${s.llA}</b></div>
+          <div style="display:flex;justify-content:space-between"><span>✅ Llamadas realizadas</span><b>${s.llR}</b></div>
+          <div style="display:flex;justify-content:space-between"><span>🎥 Videollamadas agendadas</span><b>${s.viA}</b></div>
+          <div style="display:flex;justify-content:space-between"><span>✅ Videollamadas realizadas</span><b>${s.viR}</b></div>
+          <div style="display:flex;justify-content:space-between"><span>💬 Mensajes de seguimiento</span><b>${s.msj}</b></div>
+        </div>
+      </div>`).join('') || '<div style="color:var(--muted);font-size:12px">Sin asesores configurados</div>';
+}
+
 function updateAlerts() {
+  const allLeads = getVisibleLeads();
   const urgentes = allLeads.filter(l => {
     const etapa = getLocal(l.id).etapa || 'nuevo';
     return getHeat(l)==='hot' && etapa!=='cerrado' && etapa!=='perdido';
@@ -1021,6 +1210,7 @@ function updateAlerts() {
 }
 
 function updateBadges() {
+  const allLeads = getVisibleLeads();
   const urgentes = allLeads.filter(l => {
     const etapa = getLocal(l.id).etapa || 'nuevo';
     return getHeat(l)==='hot' && etapa!=='cerrado' && etapa!=='perdido';
@@ -1031,6 +1221,7 @@ function updateBadges() {
 }
 
 function getQuickFiltered() {
+  const allLeads = getVisibleLeads();
   const set = new Set();
   const todayISO = new Date().toISOString().split('T')[0];
   allLeads.forEach(l => {
@@ -1065,7 +1256,7 @@ function getQuickFiltered() {
 function quickFilter(mode) {
   quickFilterMode = quickFilterMode === mode ? null : mode;
   document.querySelectorAll('.nav-btn').forEach(b => {
-    if (!['nav-pipeline','nav-lista','nav-dashboard'].includes(b.id)) b.classList.remove('active');
+    if (!['nav-pipeline','nav-lista','nav-dashboard','nav-equipo'].includes(b.id)) b.classList.remove('active');
   });
   if (quickFilterMode) {
     const m = {hot:'nav-hot',new:'nav-new',S:'nav-s',task:'nav-task',puebla:'nav-puebla',fuera:'nav-fuera',test:'nav-test'};
@@ -1091,6 +1282,32 @@ function openLead(id) {
       style="${(local.etapa||'nuevo')===e.id?`background:${e.color};border-color:${e.color}`:'color:var(--muted)'}"
       onclick="setEtapa('${e.id}', this, '${e.color}')">
       ${e.label}
+    </div>`).join('');
+
+  const asigSection = document.getElementById('d-asignado-section');
+  const asigSelect  = document.getElementById('d-asignado');
+  if (currentUser && currentUser.isAdmin) {
+    asigSection.style.display = 'block';
+    asigSelect.style.display  = 'block';
+    const asesores = USERS.filter(u => !u.isAdmin);
+    asigSelect.innerHTML = '<option value="">— Sin asignar —</option>' +
+      asesores.map(u => `<option value="${u.user}" ${local.asignado===u.user?'selected':''}>${u.nombre}</option>`).join('');
+  } else {
+    asigSection.style.display = 'none';
+    asigSelect.style.display  = 'none';
+  }
+
+  const tracks = [
+    {key:'llamadasAgendadas',      icon:'📞', label:'Llamada agendada'},
+    {key:'llamadasRealizadas',     icon:'✅', label:'Llamada realizada'},
+    {key:'videollamadasAgendadas', icon:'🎥', label:'Videoll. agendada'},
+    {key:'videollamadasRealizadas',icon:'✅', label:'Videoll. realizada'},
+    {key:'mensajesSeguimiento',    icon:'💬', label:'Mensaje enviado'},
+  ];
+  document.getElementById('d-tracking').innerHTML = tracks.map(t => `
+    <div class="track-btn" onclick="bumpTracking('${t.key}')">
+      <span class="track-btn-label">${t.icon} ${t.label}</span>
+      <span class="track-btn-count" id="tk-${t.key}">${local[t.key]||0}</span>
     </div>`).join('');
 
   const items = [
@@ -1139,6 +1356,33 @@ function setEtapa(id, el, color) {
   setLocal(activeId, local);
 }
 
+function setAsignado(user) {
+  if (!currentUser || !currentUser.isAdmin) return;
+  const local = getLocal(activeId);
+  local.asignado = user || '';
+  setLocal(activeId, local);
+  saveToSheet(activeId, {asignado: local.asignado});
+  dbg(`Asignado a: ${local.asignado || 'nadie'}`, 'ok');
+}
+
+function bumpTracking(key) {
+  const local = getLocal(activeId);
+  local[key] = (local[key] || 0) + 1;
+  const hist = local.history || [];
+  const labels = {
+    llamadasAgendadas:'Llamada agendada', llamadasRealizadas:'Llamada realizada',
+    videollamadasAgendadas:'Videollamada agendada', videollamadasRealizadas:'Videollamada realizada',
+    mensajesSeguimiento:'Mensaje de seguimiento enviado'
+  };
+  hist.unshift({time: new Date().toLocaleString('es-MX'), text: `${labels[key]} (${currentUser?.nombre||'—'})`});
+  local.history = hist.slice(0, 20);
+  setLocal(activeId, local);
+  saveToSheet(activeId, {[key]: local[key]});
+  document.getElementById('tk-'+key).textContent = local[key];
+  const histEl = document.getElementById('d-history');
+  if (histEl) histEl.innerHTML = local.history.map(h => `<div class="hist-item"><div class="hist-time">${h.time}</div><div class="hist-text">${h.text}</div></div>`).join('');
+}
+
 function saveLead() {
   if (activeId === null) return;
   const local = getLocal(activeId) || {};
@@ -1183,11 +1427,11 @@ function showScreen(name, keepFilter) {
   if (!keepFilter) quickFilterMode = null;
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('on'));
   document.querySelectorAll('.nav-btn').forEach(b => {
-    if (['nav-pipeline','nav-lista','nav-dashboard'].includes(b.id)) b.classList.remove('active');
+    if (['nav-pipeline','nav-lista','nav-dashboard','nav-equipo'].includes(b.id)) b.classList.remove('active');
   });
   document.getElementById('screen-' + name).classList.add('on');
   document.getElementById('nav-' + name)?.classList.add('active');
-  const titles = {pipeline:'Pipeline',lista:'Todos los leads',dashboard:'Dashboard'};
+  const titles = {pipeline:'Pipeline',lista:'Todos los leads',dashboard:'Dashboard',equipo:'Dashboard de Equipo'};
   document.getElementById('page-title').textContent = titles[name]||name;
   renderAll();
 }
