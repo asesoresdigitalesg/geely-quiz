@@ -137,6 +137,18 @@ td{padding:10px 14px;font-size:12px;vertical-align:middle}
 .track-btn-label{font-size:11px;color:var(--text)}
 .track-btn-count{font-size:13px;font-weight:700;color:var(--accent);font-family:'DM Mono',monospace;background:var(--s3);border-radius:100px;padding:1px 8px;min-width:20px;text-align:center}
 
+.doc-toggle{display:flex;align-items:center;justify-content:space-between;background:var(--s2);border:1px solid var(--border);border-radius:9px;padding:9px 11px;cursor:pointer;transition:all 0.15s;margin-bottom:8px}
+.doc-toggle:hover{border-color:var(--border2)}
+.doc-toggle.done{border-color:var(--green);background:rgba(0,229,155,0.06)}
+.doc-toggle-label{font-size:11px;color:var(--text)}
+.doc-toggle-check{width:18px;height:18px;border-radius:6px;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:11px;color:transparent;flex-shrink:0}
+.doc-toggle.done .doc-toggle-check{background:var(--green);border-color:var(--green);color:#000}
+
+.credito-selector{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.credito-opt{padding:6px 11px;border-radius:8px;font-size:10px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--s2);color:var(--muted);transition:all 0.15s}
+.credito-opt:hover{border-color:var(--border2);color:var(--text)}
+.credito-opt.sel{color:#000}
+
 .task-row{display:flex;gap:8px;margin-bottom:12px}
 .task-input{flex:1;background:var(--s2);border:1px solid var(--border);border-radius:9px;padding:9px 12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:12px;outline:none}
 .task-input:focus{border-color:var(--gold)}
@@ -341,8 +353,19 @@ td{padding:10px 14px;font-size:12px;vertical-align:middle}
     <div class="pipe-selector" id="pipe-selector"></div>
     <div class="d-section">Datos del prospecto</div>
     <div class="d-grid" id="d-grid"></div>
+
+    <div class="d-section">Documentos y expediente</div>
+    <div id="d-docs"></div>
+
+    <div class="d-section">Solicitud de crédito</div>
+    <div class="credito-selector" id="credito-selector"></div>
+
     <div class="d-section">Seguimiento del equipo</div>
     <div id="d-tracking" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:6px"></div>
+    <div class="fg" style="margin-top:10px">
+      <label style="display:block;font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px">Fecha de cita en agencia</label>
+      <input class="task-date" type="date" id="cita-agencia-fecha" onchange="setCitaAgenciaFecha(this.value)" style="width:100%">
+    </div>
     <div class="d-section">Próxima acción</div>
     <div class="task-row">
       <input class="task-input" id="task-text" placeholder="Ej: Llamar para agendar test drive">
@@ -586,6 +609,14 @@ function mergeSheetData(leads) {
     if (l.videollamadasAgendadasSheet)    local.videollamadasAgendadas  = parseInt(l.videollamadasAgendadasSheet)||0;
     if (l.videollamadasRealizadasSheet)   local.videollamadasRealizadas = parseInt(l.videollamadasRealizadasSheet)||0;
     if (l.mensajesSeguimientoSheet)       local.mensajesSeguimiento     = parseInt(l.mensajesSeguimientoSheet)||0;
+    if (l.docINESheet)                    local.docINE                 = l.docINESheet === '1' || l.docINESheet.toLowerCase()==='sí' || l.docINESheet.toLowerCase()==='si';
+    if (l.docIngresosSheet)               local.docIngresos            = l.docIngresosSheet === '1' || l.docIngresosSheet.toLowerCase()==='sí' || l.docIngresosSheet.toLowerCase()==='si';
+    if (l.docDomicilioSheet)              local.docDomicilio           = l.docDomicilioSheet === '1' || l.docDomicilioSheet.toLowerCase()==='sí' || l.docDomicilioSheet.toLowerCase()==='si';
+    if (l.expedienteSheet)                local.expediente             = l.expedienteSheet === '1' || l.expedienteSheet.toLowerCase()==='sí' || l.expedienteSheet.toLowerCase()==='si';
+    if (l.creditoEstadoSheet)             local.creditoEstado          = l.creditoEstadoSheet;
+    if (l.citaAgenciaAgendadaSheet)       local.citaAgenciaAgendada    = parseInt(l.citaAgenciaAgendadaSheet)||0;
+    if (l.citaAgenciaFechaSheet)          local.citaAgenciaFecha       = l.citaAgenciaFechaSheet;
+    if (l.confirmacionesSheet)            local.confirmaciones         = parseInt(l.confirmacionesSheet)||0;
     if (Object.keys(local).length) {
       try { localStorage.setItem('crm_' + l.id, JSON.stringify(local)); } catch {}
     }
@@ -681,6 +712,14 @@ async function syncData() {
         videollamadasAgendadasSheet:val(c[22]),
         videollamadasRealizadasSheet:val(c[23]),
         mensajesSeguimientoSheet:  val(c[24]),
+        docINESheet:               val(c[25]),
+        docIngresosSheet:          val(c[26]),
+        docDomicilioSheet:         val(c[27]),
+        expedienteSheet:           val(c[28]),
+        creditoEstadoSheet:        val(c[29]),
+        citaAgenciaAgendadaSheet:  val(c[30]),
+        citaAgenciaFechaSheet:     val(c[31]),
+        confirmacionesSheet:       val(c[32]),
       };
     }).filter(l => {
       // ✅ FIX: filtro más tolerante — excluir filas donde nombre es vacío O es el encabezado
@@ -1297,18 +1336,46 @@ function openLead(id) {
     asigSelect.style.display  = 'none';
   }
 
+  const docs = [
+    {key:'docINE',        icon:'🪪', label:'INE (copia)'},
+    {key:'docIngresos',   icon:'💰', label:'Comprobante de ingresos (3 meses)'},
+    {key:'docDomicilio',  icon:'🏠', label:'Comprobante de domicilio'},
+    {key:'expediente',    icon:'📁', label:'Expediente realizado'},
+  ];
+  document.getElementById('d-docs').innerHTML = docs.map(d => `
+    <div class="doc-toggle ${local[d.key]?'done':''}" onclick="toggleDoc('${d.key}')">
+      <span class="doc-toggle-label">${d.icon} ${d.label}</span>
+      <span class="doc-toggle-check">✓</span>
+    </div>`).join('');
+
+  const CREDITO_ESTADOS = [
+    {id:'no_iniciada', label:'No iniciada', color:'var(--muted2)'},
+    {id:'en_proceso',  label:'En proceso',  color:'var(--gold)'},
+    {id:'aprobada',    label:'Aprobada',    color:'var(--green)'},
+    {id:'rechazada',   label:'Rechazada',   color:'var(--red)'},
+  ];
+  document.getElementById('credito-selector').innerHTML = CREDITO_ESTADOS.map(c => `
+    <div class="credito-opt ${(local.creditoEstado||'no_iniciada')===c.id?'sel':''}"
+      style="${(local.creditoEstado||'no_iniciada')===c.id?`background:${c.color};border-color:${c.color}`:'color:var(--muted)'}"
+      onclick="setCreditoEstado('${c.id}', this, '${c.color}')">
+      ${c.label}
+    </div>`).join('');
+
   const tracks = [
     {key:'llamadasAgendadas',      icon:'📞', label:'Llamada agendada'},
     {key:'llamadasRealizadas',     icon:'✅', label:'Llamada realizada'},
     {key:'videollamadasAgendadas', icon:'🎥', label:'Videoll. agendada'},
     {key:'videollamadasRealizadas',icon:'✅', label:'Videoll. realizada'},
     {key:'mensajesSeguimiento',    icon:'💬', label:'Mensaje enviado'},
+    {key:'citaAgenciaAgendada',    icon:'🏢', label:'Cita en agencia'},
+    {key:'confirmaciones',         icon:'☎️', label:'Llamada confirmación'},
   ];
   document.getElementById('d-tracking').innerHTML = tracks.map(t => `
     <div class="track-btn" onclick="bumpTracking('${t.key}')">
       <span class="track-btn-label">${t.icon} ${t.label}</span>
       <span class="track-btn-count" id="tk-${t.key}">${local[t.key]||0}</span>
     </div>`).join('');
+  document.getElementById('cita-agencia-fecha').value = local.citaAgenciaFecha || '';
 
   const items = [
     {label:'Perfil',val:`<span class="lcard-perfil p-${l.perfil||'C'}">${l.perfil||'C'}</span>`},
@@ -1365,6 +1432,42 @@ function setAsignado(user) {
   dbg(`Asignado a: ${local.asignado || 'nadie'}`, 'ok');
 }
 
+function toggleDoc(key) {
+  const local = getLocal(activeId);
+  local[key] = !local[key];
+  const hist = local.history || [];
+  const labels = {docINE:'INE', docIngresos:'Comprobante de ingresos', docDomicilio:'Comprobante de domicilio', expediente:'Expediente'};
+  hist.unshift({time: new Date().toLocaleString('es-MX'), text: `${labels[key]}: ${local[key]?'✓ entregado':'pendiente'} (${currentUser?.nombre||'—'})`});
+  local.history = hist.slice(0, 20);
+  setLocal(activeId, local);
+  saveToSheet(activeId, {[key]: local[key] ? 1 : ''});
+  openLead(activeId);
+}
+
+function setCreditoEstado(id, el, color) {
+  document.querySelectorAll('.credito-opt').forEach(o => {
+    o.classList.remove('sel');
+    o.style.background=''; o.style.borderColor=''; o.style.color='var(--muted)';
+  });
+  el.classList.add('sel');
+  el.style.background=color; el.style.borderColor=color; el.style.color='#000';
+  const local = getLocal(activeId);
+  local.creditoEstado = id;
+  const hist = local.history || [];
+  const labels = {no_iniciada:'No iniciada', en_proceso:'En proceso', aprobada:'Aprobada', rechazada:'Rechazada'};
+  hist.unshift({time: new Date().toLocaleString('es-MX'), text: `Solicitud de crédito: ${labels[id]} (${currentUser?.nombre||'—'})`});
+  local.history = hist.slice(0, 20);
+  setLocal(activeId, local);
+  saveToSheet(activeId, {creditoEstado: id});
+}
+
+function setCitaAgenciaFecha(fecha) {
+  const local = getLocal(activeId);
+  local.citaAgenciaFecha = fecha;
+  setLocal(activeId, local);
+  saveToSheet(activeId, {citaAgenciaFecha: fecha});
+}
+
 function bumpTracking(key) {
   const local = getLocal(activeId);
   local[key] = (local[key] || 0) + 1;
@@ -1372,7 +1475,8 @@ function bumpTracking(key) {
   const labels = {
     llamadasAgendadas:'Llamada agendada', llamadasRealizadas:'Llamada realizada',
     videollamadasAgendadas:'Videollamada agendada', videollamadasRealizadas:'Videollamada realizada',
-    mensajesSeguimiento:'Mensaje de seguimiento enviado'
+    mensajesSeguimiento:'Mensaje de seguimiento enviado',
+    citaAgenciaAgendada:'Cita en agencia agendada', confirmaciones:'Llamada de confirmación realizada'
   };
   hist.unshift({time: new Date().toLocaleString('es-MX'), text: `${labels[key]} (${currentUser?.nombre||'—'})`});
   local.history = hist.slice(0, 20);
