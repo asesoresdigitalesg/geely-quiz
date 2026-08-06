@@ -223,10 +223,11 @@ td{padding:10px 14px;font-size:12px;vertical-align:middle}
     </div>
     <div style="padding:12px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:9px">
       <div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--accent2),var(--accent));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#000;flex-shrink:0" id="sb-user-avatar">·</div>
-      <div style="overflow:hidden">
+      <div style="overflow:hidden;flex:1">
         <div style="font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="sb-user-name">–</div>
         <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em" id="sb-user-role">–</div>
       </div>
+      <button onclick="cerrarSesion()" title="Cerrar sesión" style="background:none;border:1px solid var(--border);color:var(--muted);border-radius:6px;width:26px;height:26px;cursor:pointer;font-size:12px;flex-shrink:0">⏻</button>
     </div>
     <div class="sb-nav">
       <div class="sb-section">Principal</div>
@@ -447,19 +448,41 @@ function tryLogin() {
   const match = USERS.find(x => x.user === u && x.pass === p);
   if (match) {
     currentUser = match;
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('app').classList.remove('hidden');
-    document.getElementById('sb-user-name').textContent = match.nombre;
-    document.getElementById('sb-user-role').textContent = match.isAdmin ? 'Administrador' : 'Asesor';
-    document.getElementById('sb-user-avatar').textContent = match.nombre.charAt(0).toUpperCase();
-    if (match.isAdmin) document.getElementById('nav-equipo-wrap').style.display = 'block';
-    syncData();
+    localStorage.setItem('crm_session_user', match.user);
+    entrarComo(match);
   } else {
     document.getElementById('login-err').style.display = 'block';
     document.getElementById('pw-input').value = '';
     document.getElementById('pw-input').focus();
   }
 }
+
+function entrarComo(match) {
+  currentUser = match;
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').classList.remove('hidden');
+  document.getElementById('sb-user-name').textContent = match.nombre;
+  document.getElementById('sb-user-role').textContent = match.isAdmin ? 'Administrador' : 'Asesor';
+  document.getElementById('sb-user-avatar').textContent = match.nombre.charAt(0).toUpperCase();
+  if (match.isAdmin) document.getElementById('nav-equipo-wrap').style.display = 'block';
+  syncData();
+}
+
+function cerrarSesion() {
+  localStorage.removeItem('crm_session_user');
+  currentUser = null;
+  location.reload();
+}
+
+(function restoreSession() {
+  const savedUser = localStorage.getItem('crm_session_user');
+  if (savedUser) {
+    const match = USERS.find(x => x.user === savedUser);
+    if (match) {
+      window.addEventListener('DOMContentLoaded', () => entrarComo(match));
+    }
+  }
+})();
 
 // ══════════════════════════════════════════════════════
 // STATE
