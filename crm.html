@@ -294,6 +294,10 @@ td{padding:10px 14px;font-size:12px;vertical-align:middle}
           <select class="fi" id="s-estado" onchange="renderLista()">
             <option value="">Todos los estados</option>
           </select>
+          <select class="fi" id="s-asesor" onchange="renderLista()" style="display:none">
+            <option value="">Todos los asesores</option>
+            <option value="__sin_asignar__">— Sin asignar —</option>
+          </select>
           <button class="sort-btn" id="sort-score" onclick="toggleSort('score')">↓ Score</button>
           <button class="sort-btn" id="sort-fecha" onclick="toggleSort('fecha')">Fecha</button>
         </div>
@@ -981,22 +985,34 @@ function renderLista() {
   const allLeads = getVisibleLeads();
   const isAdmin = currentUser && currentUser.isAdmin;
   document.getElementById('th-asignado').style.display = isAdmin ? '' : 'none';
+  const asesorSelect = document.getElementById('s-asesor');
+  asesorSelect.style.display = isAdmin ? '' : 'none';
+  if (isAdmin && asesorSelect.options.length <= 2) {
+    USERS.filter(u => !u.isAdmin).forEach(u => {
+      const o = document.createElement('option');
+      o.value = u.user; o.textContent = u.nombre;
+      asesorSelect.appendChild(o);
+    });
+  }
   const q   = (document.getElementById('s-search').value||'').toLowerCase();
   const fp  = document.getElementById('s-perfil').value;
   const fe  = document.getElementById('s-etapa').value;
   const fm  = document.getElementById('s-modelo').value;
   const fes = document.getElementById('s-estado')?.value || '';
+  const fa  = isAdmin ? (document.getElementById('s-asesor')?.value || '') : '';
   let filtered = quickFilterMode ? getQuickFiltered() : new Set(allLeads.map(l=>l.id));
 
   let leads = allLeads.filter(l => {
     if (!filtered.has(l.id)) return false;
     const etapa  = getLocal(l.id).etapa || 'nuevo';
+    const asignado = getLocal(l.id).asignado || '';
     const matchQ  = !q  || l.nombre.toLowerCase().includes(q) || l.telefono.includes(q);
     const matchP  = !fp || l.perfil === fp;
     const matchE  = !fe || etapa === fe;
     const matchM  = !fm || l.modelo.includes(fm);
     const matchEs = !fes || l.estado === fes;
-    return matchQ && matchP && matchE && matchM && matchEs;
+    const matchA  = !fa || (fa === '__sin_asignar__' ? !asignado : asignado === fa);
+    return matchQ && matchP && matchE && matchM && matchEs && matchA;
   });
 
   leads.sort((a,b) => {
