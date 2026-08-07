@@ -523,18 +523,15 @@ function setLocal(id, data) {
   saveToSheet(id, data);
 }
 
-async function saveToSheet(id, data) {
+function saveToSheet(id, data) {
   try {
     const payload = { rowIndex: id, ...data };
     if (data.notes !== undefined) { payload.notas = data.notes; }
     delete payload.notes;
     if (payload.fuenteContacto === undefined) payload.fuenteContacto = 'Manual';
-    await fetch(SCRIPT_URL, {
-      method: 'POST', mode: 'no-cors',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(payload)
-    });
-    dbg(`Guardado en Sheet (row ${id})`, 'ok');
+    const blob = new Blob([JSON.stringify(payload)], {type: 'text/plain'});
+    const sent = navigator.sendBeacon(SCRIPT_URL, blob);
+    dbg(`Guardado en Sheet (row ${id}) — enviado: ${sent}`, sent ? 'ok' : 'err');
   } catch(e) { dbg(`Error guardando Sheet: ${e.message}`, 'err'); }
 }
 
