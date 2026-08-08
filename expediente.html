@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Expediente de Prospecto · AsesoresDigitalesG</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#05050c;--s1:#0d0d18;--s2:#13131f;--s3:#1a1a2a;
+  --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);
+  --accent:#00d4ff;--accent2:#0055ff;
+  --green:#00e59b;--gold:#f5c518;--orange:#ff8c00;--red:#ff4455;--purple:#a855f7;
+  --text:#eeeef8;--muted:#8a8aa8;--muted2:#4a4a68;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh}
+.wrap{max-width:760px;margin:0 auto;padding:0 18px 120px}
+
+/* ── TOPBAR ── */
+.topbar{position:sticky;top:0;z-index:50;background:rgba(5,5,12,0.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:14px 18px}
+.topbar-inner{max-width:760px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:0.08em;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.brand-sub{font-size:9px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-top:1px}
+.progress-chip{font-family:'DM Mono',monospace;font-size:11px;color:var(--accent);background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.2);border-radius:100px;padding:5px 12px;white-space:nowrap}
+
+/* ── START SCREEN ── */
+.screen{display:none}.screen.on{display:block}
+.hero{padding:52px 0 28px;text-align:center}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:44px;letter-spacing:0.02em;line-height:1}
+.hero-sub{color:var(--muted);font-size:13px;margin-top:10px;max-width:440px;margin-left:auto;margin-right:auto;line-height:1.6}
+
+.card{background:var(--s1);border:1px solid var(--border);border-radius:18px;padding:22px}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:7px;font-weight:600}
+.input,select,textarea{width:100%;background:var(--s2);border:1px solid var(--border2);border-radius:10px;padding:12px 14px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none}
+.input:focus,select:focus,textarea:focus{border-color:var(--accent)}
+textarea{resize:vertical;min-height:64px}
+select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238a8aa8'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;border-radius:12px;padding:14px 22px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:opacity 0.15s}
+.btn:hover{opacity:0.88}
+.btn-primary{background:linear-gradient(135deg,var(--accent2),var(--accent));color:#000}
+.btn-ghost{background:var(--s2);border:1px solid var(--border2);color:var(--text)}
+.btn-full{width:100%}
+
+.draft-item{display:flex;align-items:center;justify-content:space-between;background:var(--s2);border:1px solid var(--border);border-radius:12px;padding:13px 16px;margin-bottom:8px;cursor:pointer;transition:border-color 0.15s}
+.draft-item:hover{border-color:var(--accent)}
+.draft-name{font-size:13px;font-weight:600}
+.draft-meta{font-size:10px;color:var(--muted);margin-top:2px;font-family:'DM Mono',monospace}
+.draft-del{background:none;border:none;color:var(--muted);font-size:16px;cursor:pointer;padding:4px 8px}
+.draft-del:hover{color:var(--red)}
+.section-label{font-size:10px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.12em;margin:24px 0 10px}
+
+/* ── FORM SCREEN: section nav ── */
+.sec-nav{display:flex;gap:6px;overflow-x:auto;padding:12px 0 4px;margin-bottom:6px}
+.sec-nav::-webkit-scrollbar{display:none}
+.sec-pill{flex-shrink:0;font-size:11px;font-weight:600;color:var(--muted);background:var(--s2);border:1px solid var(--border);border-radius:100px;padding:7px 13px;cursor:pointer;white-space:nowrap;transition:all 0.15s}
+.sec-pill.active{color:var(--accent);border-color:rgba(0,212,255,0.35);background:rgba(0,212,255,0.08)}
+.sec-pill.done::before{content:'✓ ';color:var(--green)}
+
+.section-card{background:var(--s1);border:1px solid var(--border);border-radius:18px;padding:24px 22px;margin-bottom:16px;scroll-margin-top:80px}
+.section-eyebrow{display:flex;align-items:baseline;gap:10px;margin-bottom:18px}
+.section-num{font-family:'DM Mono',monospace;font-size:12px;color:var(--accent);font-weight:600}
+.section-title{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:0.03em}
+.section-hint{font-size:11px;color:var(--muted);margin-top:-12px;margin-bottom:18px;line-height:1.5}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:520px){.row2{grid-template-columns:1fr}}
+
+.doc-check{display:flex;align-items:center;gap:10px;background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:11px 14px;margin-bottom:8px;cursor:pointer}
+.doc-check input{width:18px;height:18px;accent-color:var(--accent);cursor:pointer}
+.doc-check span{font-size:13px}
+
+.obj-row{display:grid;grid-template-columns:120px 1fr 110px 34px;gap:8px;margin-bottom:8px;align-items:center}
+@media (max-width:560px){.obj-row{grid-template-columns:1fr 1fr;grid-template-areas:"date resp" "text text" "del del"}
+  .obj-row input[type=date]{grid-area:date}.obj-row select{grid-area:resp}.obj-row input[type=text]{grid-area:text}.obj-row button{grid-area:del;width:100%}}
+.obj-del{background:var(--s3);border:1px solid var(--border2);color:var(--muted);border-radius:8px;width:34px;height:38px;cursor:pointer;font-size:15px}
+.obj-del:hover{color:var(--red);border-color:var(--red)}
+.add-obj-btn{background:none;border:1px dashed var(--border2);color:var(--accent);border-radius:10px;padding:10px;width:100%;font-size:12px;font-weight:600;cursor:pointer;margin-top:4px}
+
+/* ── BOTTOM ACTION BAR ── */
+.action-bar{position:fixed;left:0;right:0;bottom:0;z-index:60;background:rgba(5,5,12,0.95);backdrop-filter:blur(10px);border-top:1px solid var(--border);padding:12px 18px}
+.action-bar-inner{max-width:760px;margin:0 auto;display:flex;gap:10px;align-items:center}
+.save-status{font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;flex-shrink:0;display:none}
+.save-status.show{display:block}
+
+/* ── RESULT SCREEN ── */
+.tabs{display:flex;gap:8px;margin:20px 0 16px}
+.tab-btn{flex:1;background:var(--s2);border:1px solid var(--border);color:var(--muted);border-radius:12px;padding:12px;font-size:12px;font-weight:700;cursor:pointer;text-align:center}
+.tab-btn.active{background:rgba(0,212,255,0.08);border-color:rgba(0,212,255,0.3);color:var(--accent)}
+.tab-view{display:none}.tab-view.on{display:block}
+
+.doc-preview{background:#fff;color:#1a1a2a;border-radius:16px;padding:0;overflow:hidden;font-family:'DM Sans',sans-serif}
+.doc-inner{padding:36px 32px}
+.doc-header{border-bottom:3px solid #0055ff;padding-bottom:16px;margin-bottom:22px}
+.doc-brand{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:0.05em;color:#0055ff}
+.doc-brand-sub{font-size:10px;color:#888;text-transform:uppercase;letter-spacing:0.1em;margin-top:2px}
+.doc-title{font-family:'Bebas Neue',sans-serif;font-size:30px;margin-top:14px;letter-spacing:0.02em}
+.doc-meta{font-size:11px;color:#777;margin-top:4px}
+.doc-sec{margin-bottom:22px}
+.doc-sec-title{font-size:10px;color:#0055ff;text-transform:uppercase;letter-spacing:0.1em;font-weight:700;margin-bottom:10px;border-bottom:1px solid #eee;padding-bottom:6px}
+.doc-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 20px}
+.doc-item-label{font-size:9px;color:#999;text-transform:uppercase;letter-spacing:0.06em}
+.doc-item-val{font-size:13px;font-weight:600;margin-top:1px}
+.doc-full{grid-column:1/-1}
+.doc-chip{display:inline-block;font-size:11px;font-weight:700;padding:4px 12px;border-radius:100px}
+.chip-S{background:#e0fbf0;color:#00a875}.chip-A{background:#e0f7ff;color:#0088c2}.chip-B{background:#fff3e0;color:#c26e00}.chip-C{background:#ffe5e8;color:#c2293a}
+.doc-timeline-row{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid #f0f0f0}
+.doc-timeline-date{font-family:'DM Mono',monospace;font-size:11px;color:#0055ff;font-weight:600;width:78px;flex-shrink:0}
+.doc-timeline-text{font-size:13px}
+.doc-timeline-resp{font-size:10px;color:#999;margin-top:2px}
+.doc-checklist-item{font-size:13px;padding:5px 0;display:flex;align-items:center;gap:8px}
+.doc-foot{margin-top:26px;padding-top:16px;border-top:1px solid #eee;font-size:10px;color:#999;text-align:center}
+.doc-note{font-size:10px;color:#aaa;font-style:italic;margin-top:6px}
+
+@media print{
+  body *{visibility:hidden}
+  html.print-plan #print-plan,html.print-plan #print-plan *,
+  html.print-expediente #print-expediente,html.print-expediente #print-expediente *{visibility:visible}
+  #print-plan,#print-expediente{position:absolute;left:0;top:0;width:100%}
+  .doc-preview{border-radius:0}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div>
+      <div class="brand">ADG · EXPEDIENTE</div>
+      <div class="brand-sub">AsesoresDigitalesG</div>
+    </div>
+    <div class="progress-chip" id="progress-chip" style="display:none">0/10 secciones</div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- ═══════════════════ START SCREEN ═══════════════════ -->
+  <div class="screen on" id="screen-start">
+    <div class="hero">
+      <div class="hero-title">Expediente de Prospecto</div>
+      <div class="hero-sub">Captura los datos durante la llamada 1 a 1 y al final genera automáticamente el plan de acción para el prospecto y tu expediente interno de seguimiento.</div>
+    </div>
+    <div class="card">
+      <div class="field">
+        <label>Nombre del prospecto</label>
+        <input class="input" id="start-nombre" placeholder="Ej: Fernanda Duarte">
+      </div>
+      <div class="field">
+        <label>Tu nombre (asesor)</label>
+        <input class="input" id="start-asesor" placeholder="Ej: Asesor 3">
+      </div>
+      <button class="btn btn-primary btn-full" onclick="iniciarExpediente()">Iniciar expediente →</button>
+    </div>
+
+    <div id="drafts-wrap" style="display:none">
+      <div class="section-label">Expedientes en curso en este dispositivo</div>
+      <div id="drafts-list"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ FORM SCREEN ═══════════════════ -->
+  <div class="screen" id="screen-form">
+    <div class="sec-nav" id="sec-nav"></div>
+
+    <!-- 1 -->
+    <div class="section-card" id="sec-1" data-sec="1">
+      <div class="section-eyebrow"><span class="section-num">01</span><span class="section-title">Datos personales</span></div>
+      <div class="row2">
+        <div class="field"><label>Nombre completo</label><input class="input" id="p-nombre"></div>
+        <div class="field"><label>Edad</label><input class="input" type="number" id="p-edad"></div>
+      </div>
+      <div class="row2">
+        <div class="field"><label>Estado civil</label><select id="p-estadocivil"><option value="">Selecciona</option><option>Soltero/a</option><option>Casado/a</option><option>Unión libre</option><option>Divorciado/a</option><option>Viudo/a</option></select></div>
+        <div class="field"><label>Dependientes económicos</label><input class="input" type="number" id="p-dependientes"></div>
+      </div>
+      <div class="field"><label>Colonia / ciudad de residencia</label><input class="input" id="p-residencia"></div>
+      <div class="row2">
+        <div class="field"><label>Tipo de vivienda</label><select id="p-vivienda"><option value="">Selecciona</option><option>Casa propia</option><option>Renta</option><option>Vive con familia</option></select></div>
+        <div class="field"><label>Tiempo viviendo ahí</label><input class="input" id="p-tiempoviviendo" placeholder="Ej: 3 años"></div>
+      </div>
+    </div>
+
+    <!-- 2 -->
+    <div class="section-card" id="sec-2" data-sec="2">
+      <div class="section-eyebrow"><span class="section-num">02</span><span class="section-title">Contacto</span></div>
+      <div class="row2">
+        <div class="field"><label>Teléfono</label><input class="input" id="c-telefono"></div>
+        <div class="field"><label>WhatsApp</label><input class="input" id="c-whatsapp"></div>
+      </div>
+      <div class="field"><label>Correo</label><input class="input" type="email" id="c-correo"></div>
+      <div class="row2">
+        <div class="field"><label>Horario preferido de contacto</label><select id="c-horario"><option value="">Selecciona</option><option>Mañana</option><option>Tarde</option><option>Noche</option><option>Cualquier hora</option></select></div>
+        <div class="field"><label>Cómo prefiere el seguimiento</label><select id="c-preferencia"><option value="">Selecciona</option><option>Llamada</option><option>WhatsApp</option><option>Ambos</option></select></div>
+      </div>
+    </div>
+
+    <!-- 3 -->
+    <div class="section-card" id="sec-3" data-sec="3">
+      <div class="section-eyebrow"><span class="section-num">03</span><span class="section-title">Situación laboral</span></div>
+      <div class="row2">
+        <div class="field"><label>Ocupación</label><input class="input" id="l-ocupacion"></div>
+        <div class="field"><label>Empresa / negocio</label><input class="input" id="l-empresa"></div>
+      </div>
+      <div class="row2">
+        <div class="field"><label>Antigüedad en el empleo</label><input class="input" id="l-antiguedad" placeholder="Ej: 2 años"></div>
+        <div class="field"><label>Tipo de ingreso</label><select id="l-tipoingreso"><option value="">Selecciona</option><option>Nómina</option><option>Honorarios</option><option>Negocio propio</option><option>Mixto</option></select></div>
+      </div>
+      <div class="row2">
+        <div class="field"><label>¿Es el sustento principal del hogar?</label><select id="l-sustento"><option value="">Selecciona</option><option>Sí, es el principal</option><option>No, es ingreso complementario</option></select></div>
+        <div class="field"><label>Estabilidad laboral</label><select id="l-estabilidad"><option value="">Selecciona</option><option>Muy estable</option><option>Estable</option><option>Con incertidumbre</option></select></div>
+      </div>
+    </div>
+
+    <!-- 4 -->
+    <div class="section-card" id="sec-4" data-sec="4">
+      <div class="section-eyebrow"><span class="section-num">04</span><span class="section-title">Situación financiera</span></div>
+      <div class="row2">
+        <div class="field"><label>Ingreso mensual neto</label><select id="f-ingreso"><option value="">Selecciona</option><option>Menos de $12,000</option><option>$12,000–$20,000</option><option>$20,000–$35,000</option><option>Más de $35,000</option></select></div>
+        <div class="field"><label>Ingresos adicionales</label><input class="input" id="f-ingresoadicional" placeholder="Si aplica"></div>
+      </div>
+      <div class="field"><label>Gastos fijos mensuales aproximados</label><input class="input" id="f-gastos"></div>
+      <div class="field"><label>Otros créditos activos (hipoteca, tarjetas, otro auto)</label><textarea id="f-otroscreditos"></textarea></div>
+      <div class="row2">
+        <div class="field"><label>Enganche disponible ahora</label><select id="f-enganche"><option value="">Selecciona</option><option>Sin enganche aún</option><option>Menos de $30,000</option><option>$30,000–$60,000</option><option>Más de $60,000</option></select></div>
+        <div class="field"><label>¿De dónde saldría el enganche?</label><select id="f-origenenganche"><option value="">Selecciona</option><option>Ahorro</option><option>Venta de auto actual</option><option>Préstamo familiar</option><option>Otro</option></select></div>
+      </div>
+    </div>
+
+    <!-- 5 -->
+    <div class="section-card" id="sec-5" data-sec="5">
+      <div class="section-eyebrow"><span class="section-num">05</span><span class="section-title">Historial crediticio</span></div>
+      <div class="row2">
+        <div class="field"><label>¿Ha tenido crédito automotriz antes?</label><select id="h-creditoprevio"><option value="">Selecciona</option><option>Sí</option><option>No</option></select></div>
+        <div class="field"><label>¿Está al corriente con créditos actuales?</label><select id="h-alcorriente"><option value="">Selecciona</option><option>Sí, al corriente</option><option>Con atrasos menores</option><option>Con atrasos importantes</option><option>No aplica</option></select></div>
+      </div>
+      <div class="row2">
+        <div class="field"><label>¿Conoce su buró de crédito?</label><select id="h-buro"><option value="">Selecciona</option><option>Lo conoce y es bueno</option><option>Lo conoce y es regular/malo</option><option>No lo conoce</option></select></div>
+        <div class="field"><label>Historial crediticio general</label><select id="h-historial"><option value="">Selecciona</option><option>Limpio y al corriente</option><option>Deudas menores al corriente</option><option>Retrasos o deudas sin pagar</option><option>Sin historial previo</option></select></div>
+      </div>
+    </div>
+
+    <!-- 6 -->
+    <div class="section-card" id="sec-6" data-sec="6">
+      <div class="section-eyebrow"><span class="section-num">06</span><span class="section-title">Motivación y necesidad</span></div>
+      <div class="field"><label>¿Por qué busca un auto ahora?</label><textarea id="m-razon"></textarea></div>
+      <div class="row2">
+        <div class="field"><label>Uso que le dará</label><select id="m-uso"><option value="">Selecciona</option><option>Diario / personal</option><option>Trabajo</option><option>Familiar</option><option>Uber / Didi</option><option>Viajes</option></select></div>
+        <div class="field"><label>Urgencia de compra</label><select id="m-urgencia"><option value="">Selecciona</option><option>Ya lo necesita</option><option>En 1 mes</option><option>En 2–3 meses</option><option>Solo cotizando</option></select></div>
+      </div>
+      <div class="field"><label>¿Qué pasará con su auto actual? (si tiene)</label><textarea id="m-autoactual"></textarea></div>
+    </div>
+
+    <!-- 7 -->
+    <div class="section-card" id="sec-7" data-sec="7">
+      <div class="section-eyebrow"><span class="section-num">07</span><span class="section-title">Preferencias del vehículo</span></div>
+      <div class="field"><label>Modelo(s) de interés</label><input class="input" id="v-modelo"></div>
+      <div class="row2">
+        <div class="field"><label>¿Ya lo probó o vio en persona?</label><select id="v-probado"><option value="">Selecciona</option><option>Sí</option><option>No aún</option></select></div>
+        <div class="field"><label>Prioridad principal</label><select id="v-prioridad"><option value="">Selecciona</option><option>Precio</option><option>Tecnología</option><option>Espacio</option><option>Rendimiento</option><option>Diseño</option></select></div>
+      </div>
+      <div class="row2">
+        <div class="field"><label>Mensualidad máxima cómoda</label><input class="input" id="v-mensualidad" placeholder="Ej: $6,500"></div>
+        <div class="field"><label>Forma de pago</label><select id="v-formapago"><option value="">Selecciona</option><option>Financiado</option><option>Contado</option><option>Aún decidiendo</option></select></div>
+      </div>
+    </div>
+
+    <!-- 8 -->
+    <div class="section-card" id="sec-8" data-sec="8">
+      <div class="section-eyebrow"><span class="section-num">08</span><span class="section-title">Objeciones y barreras</span></div>
+      <div class="field"><label>¿Qué es lo que más le preocupa de decidir?</label><textarea id="o-preocupacion"></textarea></div>
+      <div class="field"><label>¿Quién participa en la decisión?</label><select id="o-decisor"><option value="">Selecciona</option><option>Decide solo/a</option><option>Decide en pareja</option><option>Decide con familia/socio</option></select></div>
+      <div class="field"><label>¿Con qué otras marcas comparó?</label><textarea id="o-comparado"></textarea></div>
+      <div class="field"><label>¿Qué necesitaría ver/saber para decidirse?</label><textarea id="o-necesita"></textarea></div>
+    </div>
+
+    <!-- 9 -->
+    <div class="section-card" id="sec-9" data-sec="9">
+      <div class="section-eyebrow"><span class="section-num">09</span><span class="section-title">Logística</span></div>
+      <div class="field"><label>Disponibilidad para visitar agencia</label><textarea id="g-disponibilidad"></textarea></div>
+      <div class="field"><label>¿Puede hacer prueba de manejo esta semana?</label><select id="g-pruebamanejo"><option value="">Selecciona</option><option>Sí, esta semana</option><option>Necesita agendar</option><option>No por ahora</option></select></div>
+      <div class="field"><label>Documentos que ya tiene listos</label>
+        <div class="doc-check"><input type="checkbox" id="g-doc-ine"><span>INE (copia)</span></div>
+        <div class="doc-check"><input type="checkbox" id="g-doc-ingresos"><span>Comprobante de ingresos</span></div>
+        <div class="doc-check"><input type="checkbox" id="g-doc-domicilio"><span>Comprobante de domicilio</span></div>
+      </div>
+      <div class="field"><label>Zona desde donde se trasladaría</label><input class="input" id="g-zona"></div>
+    </div>
+
+    <!-- 10 -->
+    <div class="section-card" id="sec-10" data-sec="10">
+      <div class="section-eyebrow"><span class="section-num">10</span><span class="section-title">Cierre y acuerdos</span></div>
+      <div class="row2">
+        <div class="field"><label>Nivel de interés percibido (uso interno)</label><select id="z-interes"><option value="">Selecciona</option><option>Alto</option><option>Medio</option><option>Bajo</option></select></div>
+        <div class="field"><label>Plan de financiamiento sugerido</label><select id="z-plan"><option value="">Selecciona</option><option>BASE</option><option>CAMP</option><option>SOSTENIBLE</option><option>LAN</option><option>Contado</option><option>Por definir</option></select></div>
+      </div>
+      <div class="field"><label>Compromiso del prospecto</label><textarea id="z-compromisoprospecto" placeholder="Ej: Traer comprobante de ingresos el jueves"></textarea></div>
+      <div class="field"><label>Compromiso del asesor</label><textarea id="z-compromisoasesor" placeholder="Ej: Enviar cotización formal hoy mismo"></textarea></div>
+      <div class="field"><label>Fecha objetivo para tener su auto (firma/cierre)</label><input class="input" type="date" id="z-fechaobjetivo"></div>
+
+      <div class="field">
+        <label>Próximos pasos (objetivos con fecha)</label>
+        <div id="obj-list"></div>
+        <button class="add-obj-btn" onclick="addObjetivo()">+ Agregar paso</button>
+      </div>
+    </div>
+
+    <div style="height:20px"></div>
+    <button class="btn btn-primary btn-full" onclick="generarPlan()">Generar Plan de Acción →</button>
+  </div>
+
+  <!-- ═══════════════════ RESULT SCREEN ═══════════════════ -->
+  <div class="screen" id="screen-result">
+    <div class="hero" style="padding:36px 0 8px">
+      <div class="hero-title" style="font-size:34px">Plan generado</div>
+      <div class="hero-sub">Descarga o imprime cada documento por separado.</div>
+    </div>
+    <div class="tabs">
+      <button class="tab-btn active" id="tab-btn-plan" onclick="switchTab('plan')">📋 Plan de Acción (cliente)</button>
+      <button class="tab-btn" id="tab-btn-exp" onclick="switchTab('exp')">🗂 Expediente completo (interno)</button>
+    </div>
+
+    <div class="tab-view on" id="tab-plan">
+      <div class="doc-preview" id="print-plan"></div>
+      <button class="btn btn-primary btn-full" style="margin-top:14px" onclick="imprimir('plan')">⬇️ Descargar / Imprimir Plan de Acción</button>
+    </div>
+    <div class="tab-view" id="tab-exp">
+      <div class="doc-preview" id="print-expediente"></div>
+      <button class="btn btn-primary btn-full" style="margin-top:14px" onclick="imprimir('expediente')">⬇️ Descargar / Imprimir Expediente</button>
+    </div>
+
+    <button class="btn btn-ghost btn-full" style="margin-top:14px" onclick="volverAlFormulario()">← Volver a editar</button>
+    <button class="btn btn-ghost btn-full" style="margin-top:10px" onclick="nuevoExpediente()">+ Nuevo expediente</button>
+  </div>
+
+</div>
+
+<div class="action-bar" id="action-bar" style="display:none">
+  <div class="action-bar-inner">
+    <button class="btn btn-ghost" onclick="goStart()">← Salir</button>
+    <span class="save-status" id="save-status">Guardado ✓</span>
+    <div style="flex:1"></div>
+    <button class="btn btn-primary" onclick="generarPlan()">Generar plan →</button>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════
+// CONFIG
+// ══════════════════════════════════════════════════════
+const SECTIONS = [
+  {n:1,label:'Personales'},{n:2,label:'Contacto'},{n:3,label:'Laboral'},
+  {n:4,label:'Financiera'},{n:5,label:'Crediticio'},{n:6,label:'Motivación'},
+  {n:7,label:'Vehículo'},{n:8,label:'Objeciones'},{n:9,label:'Logística'},{n:10,label:'Cierre'}
+];
+const FIELD_IDS = [
+  'p-nombre','p-edad','p-estadocivil','p-dependientes','p-residencia','p-vivienda','p-tiempoviviendo',
+  'c-telefono','c-whatsapp','c-correo','c-horario','c-preferencia',
+  'l-ocupacion','l-empresa','l-antiguedad','l-tipoingreso','l-sustento','l-estabilidad',
+  'f-ingreso','f-ingresoadicional','f-gastos','f-otroscreditos','f-enganche','f-origenenganche',
+  'h-creditoprevio','h-alcorriente','h-buro','h-historial',
+  'm-razon','m-uso','m-urgencia','m-autoactual',
+  'v-modelo','v-probado','v-prioridad','v-mensualidad','v-formapago',
+  'o-preocupacion','o-decisor','o-comparado','o-necesita',
+  'g-disponibilidad','g-pruebamanejo','g-doc-ine','g-doc-ingresos','g-doc-domicilio','g-zona',
+  'z-interes','z-plan','z-compromisoprospecto','z-compromisoasesor','z-fechaobjetivo'
+];
+
+let currentId = null;
+let objetivos = [];
+let startTime = null;
+
+// ══════════════════════════════════════════════════════
+// DRAFTS STORAGE
+// ══════════════════════════════════════════════════════
+function loadDrafts(){ try{return JSON.parse(localStorage.getItem('exp_drafts')||'{}')}catch{return{}} }
+function saveDrafts(d){ try{localStorage.setItem('exp_drafts', JSON.stringify(d))}catch{} }
+
+function getFieldValue(id){
+  const el = document.getElementById(id);
+  if (!el) return '';
+  if (el.type === 'checkbox') return el.checked;
+  return el.value;
+}
+function setFieldValue(id, val){
+  const el = document.getElementById(id);
+  if (!el) return;
+  if (el.type === 'checkbox') el.checked = !!val;
+  else el.value = val || '';
+}
+
+function saveDraft(){
+  if (!currentId) return;
+  const drafts = loadDrafts();
+  const data = {};
+  FIELD_IDS.forEach(id => data[id] = getFieldValue(id));
+  data.objetivos = objetivos;
+  data.startTime = startTime;
+  drafts[currentId] = {
+    nombre: data['p-nombre'] || drafts[currentId]?.nombre || 'Sin nombre',
+    asesor: drafts[currentId]?.asesor || '',
+    updated: Date.now(),
+    data
+  };
+  saveDrafts(drafts);
+  const st = document.getElementById('save-status');
+  st.textContent = 'Guardado ✓ ' + new Date().toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'});
+  st.classList.add('show');
+}
+
+function renderDraftsList(){
+  const drafts = loadDrafts();
+  const ids = Object.keys(drafts).sort((a,b) => drafts[b].updated - drafts[a].updated);
+  const wrap = document.getElementById('drafts-wrap');
+  const list = document.getElementById('drafts-list');
+  if (!ids.length) { wrap.style.display='none'; return; }
+  wrap.style.display = 'block';
+  list.innerHTML = ids.map(id => {
+    const d = drafts[id];
+    const fecha = new Date(d.updated).toLocaleDateString('es-MX',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
+    return `<div class="draft-item">
+      <div onclick="continuarDraft('${id}')" style="flex:1">
+        <div class="draft-name">${d.nombre}</div>
+        <div class="draft-meta">${d.asesor ? d.asesor+' · ' : ''}${fecha}</div>
+      </div>
+      <button class="draft-del" onclick="event.stopPropagation();borrarDraft('${id}')">🗑</button>
+    </div>`;
+  }).join('');
+}
+
+function borrarDraft(id){
+  const drafts = loadDrafts();
+  delete drafts[id];
+  saveDrafts(drafts);
+  renderDraftsList();
+}
+
+function continuarDraft(id){
+  const drafts = loadDrafts();
+  const d = drafts[id];
+  if (!d) return;
+  currentId = id;
+  FIELD_IDS.forEach(fid => setFieldValue(fid, d.data[fid]));
+  objetivos = d.data.objetivos || [];
+  startTime = d.data.startTime || Date.now();
+  renderObjetivos();
+  showScreen('form');
+  document.getElementById('action-bar').style.display = 'block';
+  updateProgress();
+}
+
+// ══════════════════════════════════════════════════════
+// FLOW
+// ══════════════════════════════════════════════════════
+function iniciarExpediente(){
+  const nombre = document.getElementById('start-nombre').value.trim();
+  const asesor = document.getElementById('start-asesor').value.trim();
+  if (!nombre) { document.getElementById('start-nombre').focus(); return; }
+  currentId = 'exp_' + Date.now() + '_' + Math.random().toString(36).slice(2,7);
+  startTime = Date.now();
+  const drafts = loadDrafts();
+  drafts[currentId] = {nombre, asesor, updated: Date.now(), data:{}};
+  saveDrafts(drafts);
+  FIELD_IDS.forEach(fid => setFieldValue(fid, ''));
+  setFieldValue('p-nombre', nombre);
+  objetivos = [
+    {fecha:addDays(3), texto:'Entrega de documentos pendientes', resp:'Prospecto'},
+    {fecha:addDays(2), texto:'Llamada de seguimiento', resp:'Asesor'}
+  ];
+  renderObjetivos();
+  showScreen('form');
+  document.getElementById('action-bar').style.display = 'block';
+  updateProgress();
+}
+
+function addDays(n){
+  const d = new Date(); d.setDate(d.getDate()+n);
+  return d.toISOString().split('T')[0];
+}
+
+function goStart(){
+  showScreen('start');
+  document.getElementById('action-bar').style.display = 'none';
+  renderDraftsList();
+}
+
+function nuevoExpediente(){
+  document.getElementById('start-nombre').value = '';
+  document.getElementById('start-asesor').value = '';
+  goStart();
+}
+
+function volverAlFormulario(){
+  showScreen('form');
+  document.getElementById('action-bar').style.display = 'block';
+}
+
+function showScreen(name){
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('on'));
+  document.getElementById('screen-'+name).classList.add('on');
+  document.getElementById('progress-chip').style.display = name==='form' ? 'block' : 'none';
+  window.scrollTo(0,0);
+}
+
+// ══════════════════════════════════════════════════════
+// SECTION NAV + PROGRESS
+// ══════════════════════════════════════════════════════
+function buildSecNav(){
+  document.getElementById('sec-nav').innerHTML = SECTIONS.map(s =>
+    `<div class="sec-pill" id="pill-${s.n}" onclick="jumpTo(${s.n})">${s.n}. ${s.label}</div>`
+  ).join('');
+}
+function jumpTo(n){
+  document.getElementById('sec-'+n).scrollIntoView({behavior:'smooth', block:'start'});
+}
+function sectionIsFilled(n){
+  const card = document.getElementById('sec-'+n);
+  const inputs = card.querySelectorAll('input, select, textarea');
+  let filled = 0, total = 0;
+  inputs.forEach(el => { total++; if (el.type==='checkbox' ? el.checked : el.value.trim()) filled++; });
+  return total>0 && filled >= Math.ceil(total*0.4);
+}
+function updateProgress(){
+  let done = 0;
+  SECTIONS.forEach(s => {
+    const ok = sectionIsFilled(s.n);
+    if (ok) done++;
+    const pill = document.getElementById('pill-'+s.n);
+    if (pill) pill.classList.toggle('done', ok);
+  });
+  document.getElementById('progress-chip').textContent = `${done}/10 secciones`;
+}
+
+// ══════════════════════════════════════════════════════
+// OBJETIVOS DINÁMICOS
+// ══════════════════════════════════════════════════════
+function addObjetivo(){
+  objetivos.push({fecha:addDays(5), texto:'', resp:'Asesor'});
+  renderObjetivos();
+}
+function removeObjetivo(i){
+  objetivos.splice(i,1);
+  renderObjetivos();
+}
+function updateObjetivo(i, field, val){
+  objetivos[i][field] = val;
+  saveDraft();
+}
+function renderObjetivos(){
+  document.getElementById('obj-list').innerHTML = objetivos.map((o,i) => `
+    <div class="obj-row">
+      <input class="input" type="date" value="${o.fecha}" onchange="updateObjetivo(${i},'fecha',this.value)">
+      <input class="input" type="text" placeholder="Descripción del paso" value="${(o.texto||'').replace(/"/g,'&quot;')}" onchange="updateObjetivo(${i},'texto',this.value)">
+      <select onchange="updateObjetivo(${i},'resp',this.value)">
+        <option ${o.resp==='Asesor'?'selected':''}>Asesor</option>
+        <option ${o.resp==='Prospecto'?'selected':''}>Prospecto</option>
+      </select>
+      <button class="obj-del" onclick="removeObjetivo(${i})">✕</button>
+    </div>`).join('');
+}
+
+// ══════════════════════════════════════════════════════
+// AUTOSAVE
+// ══════════════════════════════════════════════════════
+let saveTimer = null;
+document.addEventListener('input', e => {
+  if (!currentId) return;
+  if (!FIELD_IDS.includes(e.target.id)) return;
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => { saveDraft(); updateProgress(); }, 500);
+});
+document.addEventListener('change', e => {
+  if (!currentId) return;
+  if (!FIELD_IDS.includes(e.target.id)) return;
+  saveDraft(); updateProgress();
+});
+
+// ══════════════════════════════════════════════════════
+// SCORING
+// ══════════════════════════════════════════════════════
+function calcPerfil(){
+  const ingresoMap = {'Menos de $12,000':1,'$12,000–$20,000':2,'$20,000–$35,000':3,'Más de $35,000':4};
+  const enganeMap  = {'Sin enganche aún':1,'Menos de $30,000':2,'$30,000–$60,000':3,'Más de $60,000':4};
+  const histMap    = {'Retrasos o deudas sin pagar':1,'Sin historial previo':2,'Deudas menores al corriente':3,'Limpio y al corriente':4};
+  const total = (ingresoMap[getFieldValue('f-ingreso')]||2) + (enganeMap[getFieldValue('f-enganche')]||2) + (histMap[getFieldValue('h-historial')]||2);
+  if (total>=11) return 'S';
+  if (total>=8)  return 'A';
+  if (total>=5)  return 'B';
+  return 'C';
+}
+
+// ══════════════════════════════════════════════════════
+// GENERAR DOCUMENTOS
+// ══════════════════════════════════════════════════════
+function val(id){ return getFieldValue(id) || '—'; }
+function esc(s){ return (s||'').toString().replace(/</g,'&lt;'); }
+
+function generarPlan(){
+  saveDraft();
+  const perfil = calcPerfil();
+  const nombre = getFieldValue('p-nombre') || 'Prospecto';
+  const ahora = new Date();
+  const fechaHoy = ahora.toLocaleDateString('es-MX',{day:'2-digit',month:'long',year:'numeric'});
+  const horaHoy = ahora.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'});
+  const drafts = loadDrafts();
+  const asesor = drafts[currentId]?.asesor || '';
+
+  const duracionMin = startTime ? Math.max(1, Math.round((Date.now() - startTime) / 60000)) : null;
+  const pasosCount = objetivos.filter(o=>o.texto).length;
+  const pasosOk = pasosCount >= 3 && pasosCount <= 5;
+  const fechaObjetivoRaw = getFieldValue('z-fechaobjetivo');
+  const fechaObjetivoStr = fechaObjetivoRaw ? new Date(fechaObjetivoRaw+'T00:00').toLocaleDateString('es-MX',{day:'2-digit',month:'long',year:'numeric'}) : null;
+
+  const docsListo = [
+    {ok:getFieldValue('g-doc-ine'), label:'INE (copia)'},
+    {ok:getFieldValue('g-doc-ingresos'), label:'Comprobante de ingresos'},
+    {ok:getFieldValue('g-doc-domicilio'), label:'Comprobante de domicilio'},
+  ];
+
+  const timelineHtml = objetivos.filter(o=>o.texto).sort((a,b)=>a.fecha.localeCompare(b.fecha)).map(o => {
+    const f = o.fecha ? new Date(o.fecha+'T00:00').toLocaleDateString('es-MX',{day:'2-digit',month:'short'}) : '—';
+    return `<div class="doc-timeline-row">
+      <div class="doc-timeline-date">${f}</div>
+      <div><div class="doc-timeline-text">${esc(o.texto)}</div><div class="doc-timeline-resp">Responsable: ${esc(o.resp)}</div></div>
+    </div>`;
+  }).join('') || '<div style="color:#aaa;font-size:12px">Sin pasos definidos</div>';
+
+  // ── PLAN DE ACCIÓN (cliente) ──
+  document.getElementById('print-plan').innerHTML = `
+    <div class="doc-inner">
+      <div class="doc-header">
+        <div class="doc-brand">ASESORESDIGITALESG</div>
+        <div class="doc-brand-sub">Distribuidor autorizado Geely</div>
+        <div class="doc-title">Plan de Acción</div>
+        <div class="doc-meta">Preparado para ${esc(nombre)} · ${fechaHoy}${asesor?' · Asesor: '+esc(asesor):''}</div>
+      </div>
+
+      ${fechaObjetivoStr ? `<div class="doc-sec" style="background:#EEF6FF;border-radius:10px;padding:14px 16px;margin-bottom:22px">
+        <div style="font-size:10px;color:#0055ff;text-transform:uppercase;letter-spacing:0.08em;font-weight:700;margin-bottom:4px">Tu meta</div>
+        <div style="font-size:15px;font-weight:600">Tener tu ${esc(val('v-modelo'))} antes del ${fechaObjetivoStr}</div>
+      </div>` : ''}
+
+      <div class="doc-sec">
+        <div class="doc-sec-title">Resumen de tu situación</div>
+        <div class="doc-grid">
+          <div><div class="doc-item-label">Modelo de interés</div><div class="doc-item-val">${esc(val('v-modelo'))}</div></div>
+          <div><div class="doc-item-label">Uso principal</div><div class="doc-item-val">${esc(val('m-uso'))}</div></div>
+          <div><div class="doc-item-label">Forma de pago</div><div class="doc-item-val">${esc(val('v-formapago'))}</div></div>
+          <div><div class="doc-item-label">Mensualidad cómoda</div><div class="doc-item-val">${esc(val('v-mensualidad'))}</div></div>
+        </div>
+      </div>
+
+      <div class="doc-sec">
+        <div class="doc-sec-title">Perfil y plan sugerido</div>
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:10px">
+          <span class="doc-chip chip-${perfil}">Perfil ${perfil}</span>
+          <span style="font-size:12px;color:#777">Plan sugerido: <b>${esc(val('z-plan'))}</b></span>
+        </div>
+        <div class="doc-note">Perfil estimado con base en la información proporcionada. Sujeto a validación final por la financiera.</div>
+      </div>
+
+      <div class="doc-sec">
+        <div class="doc-sec-title">Próximos pasos</div>
+        ${timelineHtml}
+      </div>
+
+      <div class="doc-sec">
+        <div class="doc-sec-title">Documentos</div>
+        ${docsListo.map(d=>`<div class="doc-checklist-item">${d.ok?'✅':'⬜️'} ${d.label}</div>`).join('')}
+      </div>
+
+      <div class="doc-sec">
+        <div class="doc-sec-title">Acuerdos</div>
+        <div class="doc-grid">
+          <div class="doc-full"><div class="doc-item-label">Tu compromiso</div><div class="doc-item-val" style="font-weight:500">${esc(val('z-compromisoprospecto'))}</div></div>
+          <div class="doc-full" style="margin-top:8px"><div class="doc-item-label">Nuestro compromiso</div><div class="doc-item-val" style="font-weight:500">${esc(val('z-compromisoasesor'))}</div></div>
+        </div>
+      </div>
+
+      <div class="doc-foot">AsesoresDigitalesG · Geely Serdán · Puebla, México</div>
+    </div>`;
+
+  // ── EXPEDIENTE COMPLETO (interno) ──
+  document.getElementById('print-expediente').innerHTML = `
+    <div class="doc-inner">
+      <div class="doc-header">
+        <div class="doc-brand">ADG · EXPEDIENTE INTERNO</div>
+        <div class="doc-brand-sub">Uso exclusivo del equipo de asesores</div>
+        <div class="doc-title">${esc(nombre)}</div>
+        <div class="doc-meta">${fechaHoy} · ${horaHoy}${asesor?' · Asesor: '+esc(asesor):''} · Perfil estimado: ${perfil}</div>
+      </div>
+
+      <div class="doc-sec" style="background:#F7F7FB;border-radius:10px;padding:16px 18px;margin-bottom:22px">
+        <div style="font-size:10px;color:#0055ff;text-transform:uppercase;letter-spacing:0.08em;font-weight:700;margin-bottom:10px">Ficha de control · para revisión del supervisor</div>
+        <div class="doc-grid">
+          <div><div class="doc-item-label">Asesor</div><div class="doc-item-val">${esc(asesor) || '—'}</div></div>
+          <div><div class="doc-item-label">Fecha y hora de la reunión</div><div class="doc-item-val">${fechaHoy} · ${horaHoy}</div></div>
+          <div><div class="doc-item-label">Duración registrada</div><div class="doc-item-val">${duracionMin ? duracionMin + ' min' : 'No disponible'}</div></div>
+          <div><div class="doc-item-label">Plan entregado en la misma sesión</div><div class="doc-item-val" style="color:#00a875">Sí</div></div>
+          <div><div class="doc-item-label">Próximos pasos agendados</div><div class="doc-item-val" style="color:${pasosOk?'#00a875':'#c26e00'}">${pasosCount} de 3–5 recomendados ${pasosOk?'✓':'⚠'}</div></div>
+          <div><div class="doc-item-label">Fecha objetivo de cierre</div><div class="doc-item-val">${fechaObjetivoStr || 'No definida'}</div></div>
+        </div>
+      </div>
+
+      ${expSection('1. Datos personales', [
+        ['Nombre completo', val('p-nombre')], ['Edad', val('p-edad')], ['Estado civil', val('p-estadocivil')],
+        ['Dependientes económicos', val('p-dependientes')], ['Residencia', val('p-residencia')],
+        ['Vivienda', val('p-vivienda')], ['Tiempo viviendo ahí', val('p-tiempoviviendo')]
+      ])}
+      ${expSection('2. Contacto', [
+        ['Teléfono', val('c-telefono')], ['WhatsApp', val('c-whatsapp')], ['Correo', val('c-correo')],
+        ['Horario preferido', val('c-horario')], ['Preferencia de seguimiento', val('c-preferencia')]
+      ])}
+      ${expSection('3. Situación laboral', [
+        ['Ocupación', val('l-ocupacion')], ['Empresa / negocio', val('l-empresa')], ['Antigüedad', val('l-antiguedad')],
+        ['Tipo de ingreso', val('l-tipoingreso')], ['Sustento del hogar', val('l-sustento')], ['Estabilidad', val('l-estabilidad')]
+      ])}
+      ${expSection('4. Situación financiera', [
+        ['Ingreso mensual', val('f-ingreso')], ['Ingresos adicionales', val('f-ingresoadicional')],
+        ['Gastos fijos', val('f-gastos')], ['Otros créditos', val('f-otroscreditos')],
+        ['Enganche disponible', val('f-enganche')], ['Origen del enganche', val('f-origenenganche')]
+      ])}
+      ${expSection('5. Historial crediticio', [
+        ['Crédito automotriz previo', val('h-creditoprevio')], ['Al corriente', val('h-alcorriente')],
+        ['Conoce su buró', val('h-buro')], ['Historial general', val('h-historial')]
+      ])}
+      ${expSection('6. Motivación y necesidad', [
+        ['Razón de compra', val('m-razon')], ['Uso', val('m-uso')], ['Urgencia', val('m-urgencia')], ['Auto actual', val('m-autoactual')]
+      ])}
+      ${expSection('7. Preferencias del vehículo', [
+        ['Modelo(s)', val('v-modelo')], ['Ya probado', val('v-probado')], ['Prioridad', val('v-prioridad')],
+        ['Mensualidad máx.', val('v-mensualidad')], ['Forma de pago', val('v-formapago')]
+      ])}
+      ${expSection('8. Objeciones y barreras', [
+        ['Preocupación principal', val('o-preocupacion')], ['Quién decide', val('o-decisor')],
+        ['Comparó con', val('o-comparado')], ['Qué necesita ver', val('o-necesita')]
+      ])}
+      ${expSection('9. Logística', [
+        ['Disponibilidad', val('g-disponibilidad')], ['Prueba de manejo', val('g-pruebamanejo')],
+        ['Zona', val('g-zona')],
+        ['Documentos listos', docsListo.filter(d=>d.ok).map(d=>d.label).join(', ') || 'Ninguno aún']
+      ])}
+      ${expSection('10. Cierre', [
+        ['Interés percibido', val('z-interes')], ['Plan sugerido', val('z-plan')],
+        ['Compromiso prospecto', val('z-compromisoprospecto')], ['Compromiso asesor', val('z-compromisoasesor')],
+        ['Fecha objetivo de cierre', fechaObjetivoStr || 'No definida']
+      ])}
+
+      <div class="doc-sec">
+        <div class="doc-sec-title">Próximos pasos</div>
+        ${timelineHtml}
+      </div>
+
+      <div class="doc-foot">Expediente interno · No compartir con el prospecto</div>
+    </div>`;
+
+  showScreen('result');
+  document.getElementById('action-bar').style.display = 'none';
+  switchTab('plan');
+}
+
+function expSection(title, pairs){
+  return `<div class="doc-sec">
+    <div class="doc-sec-title">${title}</div>
+    <div class="doc-grid">
+      ${pairs.map(([label,v]) => `<div><div class="doc-item-label">${label}</div><div class="doc-item-val" style="font-weight:500">${esc(v)}</div></div>`).join('')}
+    </div>
+  </div>`;
+}
+
+function switchTab(name){
+  document.getElementById('tab-plan').classList.toggle('on', name==='plan');
+  document.getElementById('tab-exp').classList.toggle('on', name==='exp');
+  document.getElementById('tab-btn-plan').classList.toggle('active', name==='plan');
+  document.getElementById('tab-btn-exp').classList.toggle('active', name==='exp');
+}
+
+function imprimir(which){
+  document.documentElement.classList.remove('print-plan','print-expediente');
+  document.documentElement.classList.add(which==='plan' ? 'print-plan' : 'print-expediente');
+  setTimeout(() => window.print(), 50);
+}
+
+// ══════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════
+buildSecNav();
+renderDraftsList();
+</script>
+</body>
+</html>
