@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Asesoría Personalizada para tu Geely — Sin ir a la agencia | AsesoresDigitalesG</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080810;
+    --surface: #0f0f1a;
+    --card: #13131f;
+    --border: #1c1c2e;
+    --accent: #00d4ff;
+    --accent2: #0055ff;
+    --gold: #f5c518;
+    --green: #00e59b;
+    --orange: #ff8c00;
+    --red: #ff4444;
+    --text: #eeeef8;
+    --muted: #5a5a7a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; overflow-x: hidden; }
+  .bg-grid { position: fixed; inset: 0; background-image: linear-gradient(rgba(0,212,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(0,212,255,0.025) 1px, transparent 1px); background-size: 44px 44px; pointer-events: none; z-index: 0; }
+  .bg-glow { position: fixed; top: -40vh; left: 50%; transform: translateX(-50%); width: 90vw; height: 70vh; background: radial-gradient(ellipse, rgba(0,60,200,0.13) 0%, transparent 70%); pointer-events: none; z-index: 0; }
+  .wrapper { position: relative; z-index: 1; max-width: 600px; margin: 0 auto; padding: 0 18px 80px; }
+  .topbar { display: flex; align-items: center; justify-content: center; padding: 22px 0 0; gap: 10px; }
+  .topbar-logo { font-size: 11px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+  .topbar-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--muted); opacity: 0.4; }
+  .intro { text-align: center; padding: 34px 0 30px; }
+  .badge { display: inline-flex; align-items: center; gap: 7px; background: rgba(0,212,255,0.07); border: 1px solid rgba(0,212,255,0.18); border-radius: 100px; padding: 7px 18px; font-size: 11px; font-weight: 600; letter-spacing: 0.13em; text-transform: uppercase; color: var(--accent); margin-bottom: 30px; }
+  .badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: blink 2s infinite; }
+  @keyframes blink { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.3;transform:scale(1.5)} }
+
+  /* ── Pieza de firma: ventana de videollamada simulada ── */
+  .call-window { background: linear-gradient(180deg, #10101c, #0b0b14); border: 1px solid var(--border); border-radius: 20px; padding: 0; margin-bottom: 34px; overflow: hidden; box-shadow: 0 24px 60px rgba(0,20,60,0.35); }
+  .call-chrome { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid var(--border); }
+  .call-dots { display: flex; gap: 6px; }
+  .call-dots span { width: 8px; height: 8px; border-radius: 50%; background: #2a2a3e; }
+  .call-live { display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #ff5566; }
+  .live-dot { width: 6px; height: 6px; border-radius: 50%; background: #ff5566; animation: livepulse 1.4s infinite; }
+  @keyframes livepulse { 0%,100%{opacity:1} 50%{opacity:.25} }
+  .call-body { display: flex; align-items: center; justify-content: center; gap: 0; padding: 30px 20px 22px; position: relative; }
+  .call-avatar { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 108px; z-index: 2; }
+  .avatar-circle { width: 58px; height: 58px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; }
+  .call-avatar.you .avatar-circle { background: var(--surface); border: 1.5px solid var(--border); }
+  .call-avatar.advisor .avatar-circle { background: linear-gradient(135deg, var(--accent2), var(--accent)); box-shadow: 0 0 0 4px rgba(0,212,255,0.1); }
+  .call-avatar span { font-size: 11px; color: var(--muted); font-weight: 500; }
+  .call-avatar.advisor span { color: var(--text); font-weight: 600; }
+  .call-pulse-line { flex: 1; max-width: 90px; height: 1px; background: repeating-linear-gradient(90deg, var(--accent) 0, var(--accent) 5px, transparent 5px, transparent 11px); position: relative; opacity: 0.5; }
+  .call-pulse-line::after { content: ''; position: absolute; top: -3px; left: 0; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 12px var(--accent); animation: travel 2.2s infinite; }
+  @keyframes travel { 0%{left:0;opacity:0} 10%{opacity:1} 90%{opacity:1} 100%{left:calc(100% - 7px);opacity:0} }
+  .call-caption { text-align: center; font-size: 12px; color: var(--muted); font-weight: 300; padding: 0 24px 22px; line-height: 1.5; }
+  .call-caption strong { color: var(--text); font-weight: 500; }
+
+  .headline { font-family: 'Bebas Neue', sans-serif; font-size: clamp(36px, 9.8vw, 58px); line-height: 0.98; letter-spacing: 0.015em; margin-bottom: 14px; }
+  .headline .hl { background: linear-gradient(90deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .sub { color: var(--muted); font-size: 15.5px; font-weight: 300; line-height: 1.65; margin-top: 4px; max-width: 460px; margin-left: auto; margin-right: auto; }
+  .perks { display: flex; justify-content: center; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
+  .perk { display: flex; align-items: center; gap: 7px; font-size: 12px; color: var(--text); font-weight: 500; background: var(--card); border: 1px solid var(--border); border-radius: 100px; padding: 8px 15px; }
+  .perk span { font-size: 14px; }
+  .steps-preview { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 22px 20px; margin: 30px 0 8px; text-align: left; }
+  .steps-preview-title { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 16px; text-align: center; }
+  .step-row { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 14px; }
+  .step-row:last-child { margin-bottom: 0; }
+  .step-num { width: 24px; height: 24px; border-radius: 50%; background: rgba(0,212,255,0.1); border: 1px solid rgba(0,212,255,0.3); color: var(--accent); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .step-text strong { display: block; font-size: 13px; font-weight: 500; }
+  .step-text small { font-size: 11.5px; color: var(--muted); font-weight: 300; line-height: 1.4; }
+
+  /* ── Comparativo: agencia tradicional vs. asesoría en línea ── */
+  .compare-title { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); text-align: center; margin: 34px 0 14px; }
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; text-align: left; }
+  .compare-col { border-radius: 16px; padding: 18px 16px; }
+  .compare-col.old { background: var(--surface); border: 1px solid var(--border); opacity: 0.75; }
+  .compare-col.new { background: linear-gradient(160deg, rgba(0,212,255,0.09), rgba(0,85,255,0.04)); border: 1px solid rgba(0,212,255,0.3); box-shadow: 0 14px 34px rgba(0,60,200,0.14); }
+  .compare-head { font-size: 11px; font-weight: 700; letter-spacing: 0.04em; margin-bottom: 13px; display: flex; align-items: center; gap: 6px; }
+  .compare-col.old .compare-head { color: var(--muted); }
+  .compare-col.new .compare-head { color: var(--accent); }
+  .compare-row { display: flex; align-items: flex-start; gap: 8px; font-size: 12px; line-height: 1.4; margin-bottom: 10px; }
+  .compare-row:last-child { margin-bottom: 0; }
+  .compare-col.old .compare-row { color: var(--muted); }
+  .compare-col.new .compare-row { color: var(--text); font-weight: 500; }
+  .compare-icon { flex-shrink: 0; font-size: 12px; margin-top: 1px; }
+  .progress-wrap { margin-bottom: 28px; }
+  .progress-meta { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 9px; }
+  .progress-bar { height: 2px; background: var(--border); border-radius: 10px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent2), var(--accent)); border-radius: 10px; transition: width 0.55s cubic-bezier(0.4,0,0.2,1); }
+  .q-card { background: var(--card); border: 1px solid var(--border); border-radius: 22px; padding: 30px 28px 28px; margin-bottom: 16px; animation: fadeUp 0.38s cubic-bezier(0.4,0,0.2,1); }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
+  .q-step { font-size: 10px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; }
+  .q-title { font-size: 21px; font-weight: 500; line-height: 1.3; margin-bottom: 6px; }
+  .q-sub { font-size: 13px; color: var(--muted); font-weight: 300; margin-bottom: 26px; line-height: 1.5; }
+  .options { display: grid; gap: 11px; }
+  .opt { display: flex; align-items: center; gap: 14px; background: var(--surface); border: 1.5px solid var(--border); border-radius: 13px; padding: 15px 18px; cursor: pointer; transition: border-color 0.18s, background 0.18s, transform 0.15s; text-align: left; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 400; position: relative; overflow: hidden; }
+  .opt:hover { border-color: rgba(0,212,255,0.35); transform: translateY(-1px); }
+  .opt.sel { border-color: var(--accent); background: rgba(0,212,255,0.05); }
+  .opt-icon { font-size: 22px; flex-shrink: 0; width: 32px; text-align: center; }
+  .opt-body { flex: 1; }
+  .opt-body strong { display: block; font-weight: 500; font-size: 14px; }
+  .opt-body small { font-size: 12px; color: var(--muted); font-weight: 300; }
+  .opt-tag { font-size: 9px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--green); background: rgba(0,229,155,0.1); border: 1px solid rgba(0,229,155,0.25); border-radius: 100px; padding: 2px 8px; margin-left: 8px; }
+  .opt-ring { width: 19px; height: 19px; border-radius: 50%; border: 1.5px solid var(--border); flex-shrink: 0; transition: all 0.18s; display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--bg); }
+  .opt.sel .opt-ring { background: var(--accent); border-color: var(--accent); }
+  .opt.sel .opt-ring::after { content: '✓'; font-weight: 800; }
+  .btn-next { width: 100%; background: linear-gradient(135deg, var(--accent2), var(--accent)); color: #000; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 700; letter-spacing: 0.04em; border: none; border-radius: 13px; padding: 17px 24px; cursor: pointer; transition: all 0.2s; opacity: 0.35; pointer-events: none; }
+  .btn-next.on { opacity: 1; pointer-events: all; }
+  .btn-next.on:hover { transform: translateY(-2px); box-shadow: 0 14px 40px rgba(0,85,255,0.35); }
+  .result-wrap { animation: fadeUp 0.45s cubic-bezier(0.4,0,0.2,1); }
+  .result-icon { font-size: 46px; text-align: center; margin-bottom: 10px; }
+  .result-card { background: var(--card); border: 1px solid var(--border); border-radius: 22px; padding: 32px 28px; margin-bottom: 14px; text-align: center; }
+  .result-tag { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+  .result-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(30px, 8vw, 42px); line-height: 1; letter-spacing: 0.02em; margin-bottom: 10px; }
+  .result-sub { font-size: 13.5px; color: var(--muted); font-weight: 300; line-height: 1.6; margin-bottom: 26px; }
+  .itinerary { text-align: left; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 20px 18px; margin-bottom: 22px; }
+  .cta-wa { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; background: #22c55e; color: #fff; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 700; border: none; border-radius: 13px; padding: 18px 24px; cursor: pointer; text-decoration: none; margin-bottom: 10px; transition: all 0.2s; }
+  .cta-wa:hover { transform: translateY(-2px); box-shadow: 0 12px 36px rgba(34,197,94,0.35); background: #16a34a; }
+  .legal { text-align: center; font-size: 11px; color: var(--muted); margin-top: 18px; line-height: 1.5; }
+  .screen { display: none; }
+  .screen.on { display: block; }
+  @media(max-width:380px){ .q-card, .result-card { padding: 22px 16px; } .compare { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<div class="bg-glow"></div>
+<div class="wrapper">
+  <div class="topbar">
+    <span class="topbar-logo">AsesoresDigitalesG</span>
+    <div class="topbar-dot"></div>
+    <span class="topbar-logo">Asesoría en línea</span>
+  </div>
+
+  <!-- INTRO -->
+  <div class="screen on" id="s-intro">
+    <div class="intro">
+      <div class="badge"><div class="badge-dot"></div>Aplicación abierta · Cupo limitado esta semana</div>
+
+      <div class="call-window">
+        <div class="call-chrome">
+          <div class="call-dots"><span></span><span></span><span></span></div>
+          <div class="call-live"><span class="live-dot"></span>En vivo</div>
+        </div>
+        <div class="call-body">
+          <div class="call-avatar you">
+            <div class="avatar-circle">🙋</div>
+            <span>Tú, desde donde estés</span>
+          </div>
+          <div class="call-pulse-line"></div>
+          <div class="call-avatar advisor">
+            <div class="avatar-circle">🎧</div>
+            <span>Tu asesor</span>
+          </div>
+        </div>
+        <div class="call-caption">Así se ve tu asesoría: <strong>una persona real</strong>, 1 a 1, escuchando tu situación — no un formulario ni un chatbot.</div>
+      </div>
+
+      <div class="headline">Tu Geely, sin<br><span class="hl">salir de casa</span></div>
+      <p class="sub">Una asesoría real, personalizada y paso a paso — para que consigas tu auto aunque no puedas ir físicamente a la agencia.</p>
+      <div class="perks">
+        <div class="perk"><span>📹</span> Por videollamada</div>
+        <div class="perk"><span>📋</span> Plan de acción propio</div>
+        <div class="perk"><span>🚗</span> Sin pisar la agencia</div>
+      </div>
+      <div class="steps-preview">
+        <div class="steps-preview-title">Así de simple es el proceso</div>
+        <div class="step-row"><div class="step-num">1</div><div class="step-text"><strong>Aplicas en menos de 2 minutos</strong><small>Así tu asesor conoce tu situación antes de hablar contigo</small></div></div>
+        <div class="step-row"><div class="step-num">2</div><div class="step-text"><strong>Agendamos tu videollamada</strong><small>Un asesor te contacta el mismo día</small></div></div>
+        <div class="step-row"><div class="step-num">3</div><div class="step-text"><strong>Sales con tu plan de acción</strong><small>Paso a paso, sabiendo exactamente qué sigue</small></div></div>
+      </div>
+
+      <div class="compare-title">Lo que cambia de verdad</div>
+      <div class="compare">
+        <div class="compare-col old">
+          <div class="compare-head">🏢 Ir a la agencia</div>
+          <div class="compare-row"><span class="compare-icon">✕</span><span>Manejar hasta Puebla, pedir permiso en el trabajo</span></div>
+          <div class="compare-row"><span class="compare-icon">✕</span><span>Un vendedor distinto cada vez que vuelves</span></div>
+          <div class="compare-row"><span class="compare-icon">✕</span><span>Presión de cerrar en la misma visita</span></div>
+          <div class="compare-row"><span class="compare-icon">✕</span><span>Sales sin saber qué sigue exactamente</span></div>
+        </div>
+        <div class="compare-col new">
+          <div class="compare-head">📹 Tu asesoría en línea</div>
+          <div class="compare-row"><span class="compare-icon">✓</span><span>Desde donde estés, en el horario que a ti te acomode</span></div>
+          <div class="compare-row"><span class="compare-icon">✓</span><span>Un asesor propio que ya conoce tu situación</span></div>
+          <div class="compare-row"><span class="compare-icon">✓</span><span>Cero presión — vas a tu ritmo, no al de una visita</span></div>
+          <div class="compare-row"><span class="compare-icon">✓</span><span>Sales con un plan de acción concreto, paso a paso</span></div>
+        </div>
+      </div>
+    </div>
+    <button class="btn-next on" onclick="go('s-quiz'); renderQ()">Aplicar a mi asesoría gratuita →</button>
+    <p class="legal" style="margin-top:16px">AsesoresDigitalesG · Distribuidor autorizado Geely · Puebla</p>
+  </div>
+
+  <!-- QUIZ (3 preguntas) -->
+  <div class="screen" id="s-quiz">
+    <div style="height:28px"></div>
+    <div class="progress-wrap">
+      <div class="progress-meta"><span id="prog-label">Pregunta 1 de 3</span><span id="prog-pct">0%</span></div>
+      <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+    </div>
+    <div class="q-card" id="q-card">
+      <div id="q-section-intro" style="display:none;background:rgba(0,212,255,0.06);border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:12px 14px;margin-bottom:20px;font-size:12px;color:var(--accent);font-weight:500;line-height:1.5;"></div>
+      <div class="q-step" id="q-step"></div>
+      <div class="q-title" id="q-title"></div>
+      <div class="q-sub" id="q-sub"></div>
+      <div class="options" id="opts"></div>
+    </div>
+    <button class="btn-next" id="btn-next" onclick="nextQ()">Siguiente →</button>
+  </div>
+
+  <!-- CAPTURA -->
+  <div class="screen" id="s-capture">
+    <div style="height:28px"></div>
+    <div class="progress-wrap">
+      <div class="progress-meta"><span>¡Ya casi!</span><span>90%</span></div>
+      <div class="progress-bar"><div class="progress-fill" style="width:90%"></div></div>
+    </div>
+    <div class="q-card" style="text-align:center; padding: 36px 28px;">
+      <div style="font-size:44px; margin-bottom:14px;">🙋</div>
+      <div class="q-title" style="font-size:20px; margin-bottom:8px;">¿A dónde te contactamos?</div>
+      <div class="q-sub" style="margin-bottom:26px;">Un asesor te escribe hoy mismo para agendar tu videollamada personalizada.</div>
+      <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:20px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <input id="cap-nombre" type="text" placeholder="Nombre" autocomplete="given-name" style="width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:13px;padding:15px 14px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border-color 0.2s;" oninput="checkCapture()" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
+          <input id="cap-apellido" type="text" placeholder="Apellido" autocomplete="family-name" style="width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:13px;padding:15px 14px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border-color 0.2s;" oninput="checkCapture()" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
+        </div>
+        <div style="position:relative;">
+          <span style="position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:16px;">📱</span>
+          <input id="cap-tel" type="tel" placeholder="Tu WhatsApp (10 dígitos)" autocomplete="tel" style="width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:13px;padding:16px 16px 16px 46px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;outline:none;transition:border-color 0.2s;" oninput="checkCapture()" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
+        </div>
+        <div style="position:relative;">
+          <span style="position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:16px;">📍</span>
+          <select id="cap-estado" style="width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:13px;padding:16px 16px 16px 46px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;outline:none;transition:border-color 0.2s;appearance:none;cursor:pointer;" onchange="checkCapture()" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
+            <option value="" disabled selected>¿Desde dónde te conectas?</option>
+            <option value="Puebla">Puebla</option>
+            <option value="CDMX">Ciudad de México</option>
+            <option value="Estado de México">Estado de México</option>
+            <option value="Jalisco">Jalisco</option>
+            <option value="Nuevo León">Nuevo León</option>
+            <option value="Veracruz">Veracruz</option>
+            <option value="Tlaxcala">Tlaxcala</option>
+            <option value="Hidalgo">Hidalgo</option>
+            <option value="Morelos">Morelos</option>
+            <option value="Guerrero">Guerrero</option>
+            <option value="Oaxaca">Oaxaca</option>
+            <option value="Chiapas">Chiapas</option>
+            <option value="Michoacán">Michoacán</option>
+            <option value="Guanajuato">Guanajuato</option>
+            <option value="Querétaro">Querétaro</option>
+            <option value="San Luis Potosí">San Luis Potosí</option>
+            <option value="Aguascalientes">Aguascalientes</option>
+            <option value="Zacatecas">Zacatecas</option>
+            <option value="Durango">Durango</option>
+            <option value="Chihuahua">Chihuahua</option>
+            <option value="Sonora">Sonora</option>
+            <option value="Baja California">Baja California</option>
+            <option value="Baja California Sur">Baja California Sur</option>
+            <option value="Sinaloa">Sinaloa</option>
+            <option value="Nayarit">Nayarit</option>
+            <option value="Colima">Colima</option>
+            <option value="Tabasco">Tabasco</option>
+            <option value="Campeche">Campeche</option>
+            <option value="Yucatán">Yucatán</option>
+            <option value="Quintana Roo">Quintana Roo</option>
+            <option value="Tamaulipas">Tamaulipas</option>
+            <option value="Coahuila">Coahuila</option>
+            <option value="Otro">Otro / Extranjero</option>
+          </select>
+        </div>
+      </div>
+      <div id="cap-error" style="display:none;background:rgba(255,68,68,0.1);border:1px solid rgba(255,68,68,0.3);border-radius:10px;padding:10px 14px;font-size:12px;color:#ff6b6b;text-align:center;margin-bottom:4px;">⚠️ Por favor completa todos los campos correctamente</div>
+      <label id="privacy-wrap" style="display:flex;align-items:flex-start;gap:10px;margin-bottom:16px;cursor:pointer;">
+        <input type="checkbox" id="privacy-check" onchange="checkCapture()" style="margin-top:3px;width:16px;height:16px;accent-color:var(--accent);flex-shrink:0;">
+        <span style="font-size:12px;color:var(--muted);line-height:1.5;">Acepto que mis datos sean usados para contactarme sobre esta asesoría. <a href="#" onclick="showPrivacy(event)" style="color:var(--accent);text-decoration:none;">Ver aviso de privacidad</a></span>
+      </label>
+      <button class="btn-next on" id="btn-capture" onclick="submitCapture()" style="margin-top:0">Agendar mi asesoría →</button>
+      <p style="font-size:11px;color:var(--muted);margin-top:14px;line-height:1.5;">Sin spam. Sin llamadas no deseadas. Solo tu asesor.</p>
+    </div>
+  </div>
+
+  <!-- RESULTADO -->
+  <div class="screen" id="s-result">
+    <div style="height:28px"></div>
+    <div class="result-wrap">
+      <div class="result-icon">🎉</div>
+      <div class="result-card">
+        <div class="result-tag">Aplicación recibida</div>
+        <div class="result-title" id="r-title">¡Listo!</div>
+        <p class="result-sub" id="r-sub">Tu asesoría personalizada ya quedó agendada. Esto es lo que sigue:</p>
+        <div class="itinerary" id="r-itinerary"></div>
+      </div>
+      <a class="cta-wa" id="r-wa" href="#" target="_blank">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Hablar ahora con un asesor
+      </a>
+      <p class="legal">AsesoresDigitalesG · Distribuidor autorizado Geely · Puebla</p>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL PRIVACIDAD -->
+<div id="privacy-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:999;align-items:center;justify-content:center;padding:20px;">
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:20px;padding:32px 28px;max-width:480px;width:100%;max-height:80vh;overflow-y:auto;">
+    <h3 style="font-family:'Bebas Neue',sans-serif;font-size:22px;margin-bottom:14px;">Aviso de privacidad</h3>
+    <p style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:20px;">Tus datos (nombre, teléfono, estado) se usan únicamente para que un asesor de AsesoresDigitalesG te contacte y te dé seguimiento a tu solicitud de asesoría personalizada. No se comparten con terceros ni se usan para otro fin.</p>
+    <button onclick="closePrivacy()" style="width:100%;background:linear-gradient(135deg,var(--accent2),var(--accent));color:#000;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;border:none;border-radius:13px;padding:16px;cursor:pointer;">Entendido, acepto ✓</button>
+  </div>
+</div>
+
+<script>
+const WHATSAPP = "522222003265";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwB-ylsX33ZGE918Ty3s7YK0ZLXHv0en4aFbg_X4d7ac9iZ2C7s6JD6lTtRyi_yc1Po/exec";
+
+// Bloquea el botón "atrás" del navegador — el flujo es solo hacia adelante.
+history.pushState(null, '', location.href);
+window.addEventListener('popstate', function() {
+  history.pushState(null, '', location.href);
+});
+
+const questions = [
+  { step: "01 / 06", title: "¿Qué tan pronto quieres tu auto?", sub: "Así priorizamos tu asesoría",
+    opts: [
+      { icon: "🔥", text: "Lo necesito ya", sub: "Quiero avanzar esta semana", val: "ya" },
+      { icon: "🗓️", text: "En las próximas semanas", sub: "Ya estoy decidido, viendo tiempos", val: "semanas" },
+      { icon: "🔎", text: "Todavía estoy informándome", sub: "Sin prisa, pero en serio", val: "informandome" },
+    ] },
+  { step: "02 / 06", title: "¿Ya tienes un modelo Geely en mente?", sub: "No hay problema si aún no sabes",
+    opts: [
+      { icon: "🚙", text: "Sí, ya sé cuál quiero", sub: "Te preguntamos cuál en la asesoría", val: "definido" },
+      { icon: "🤔", text: "Tengo 1 o 2 opciones", sub: "Quiero que me ayuden a decidir", val: "dudando" },
+      { icon: "✨", text: "Aún no sé, ayúdenme a elegir", sub: "Que el asesor me recomiende", val: "sin_definir" },
+    ] },
+  { step: "03 / 06", title: "¿Cómo prefieres tu asesoría?", sub: "Ambas son 100% personalizadas y gratuitas",
+    opts: [
+      { icon: "📹", text: "Videollamada", sub: "La más completa — compartimos pantalla", val: "videollamada" },
+      { icon: "📞", text: "Llamada telefónica", sub: "Si no puedes por video ahorita", val: "llamada" },
+    ] },
+  { step: "04 / 06", title: "¿Cuánto ganas al mes?", sub: "Así tu asesor llega con opciones reales para ti — no genéricas",
+    sectionIntro: "🗂️ Arma tu perfil — así tu asesor no llega a ciegas a tu asesoría",
+    opts: [
+      { icon: "💼", text: "Menos de $12,000", sub: "Ingreso básico", val: "low" },
+      { icon: "📈", text: "$12,000 – $20,000", sub: "Ingreso medio-bajo", val: "mid_low" },
+      { icon: "💰", text: "$20,000 – $35,000", sub: "Ingreso medio-alto", val: "mid_high" },
+      { icon: "🏆", text: "Más de $35,000", sub: "Ingreso alto", val: "high" },
+    ] },
+  { step: "05 / 06", title: "¿Tienes enganche disponible?", sub: "El enganche mínimo suele ser 10% del valor del auto",
+    opts: [
+      { icon: "❌", text: "No tengo enganche aún", sub: "Estoy ahorrando", val: "none" },
+      { icon: "💵", text: "Tengo menos de $30,000", sub: "Enganche básico", val: "low" },
+      { icon: "💵💵", text: "Tengo $30,000 – $60,000", sub: "Buen enganche", val: "mid" },
+      { icon: "💎", text: "Tengo más de $60,000", sub: "Enganche fuerte", val: "high" },
+    ] },
+  { step: "06 / 06", title: "¿Cómo está tu historial crediticio?", sub: "Nos ayuda a preparar opciones reales de financiamiento — no es para descalificarte",
+    opts: [
+      { icon: "✅", text: "Limpio y al corriente", sub: "Sin deudas pendientes", val: "clean" },
+      { icon: "🟡", text: "Tengo deudas menores pero al corriente", sub: "Tarjetas o créditos pequeños", val: "ok" },
+      { icon: "🔴", text: "He tenido retrasos o deudas sin pagar", sub: "Historial irregular", val: "bad" },
+      { icon: "⚪", text: "Nunca he tenido crédito", sub: "Sin historial previo", val: "zero" },
+      { icon: "🤝", text: "Prefiero platicarlo directo con mi asesor", sub: "Sin problema, lo vemos en la asesoría", val: "skip" },
+    ] },
+];
+
+let prospecto = { nombre: "", apellido: "", tel: "", estado: "" };
+let qIdx = 0; let answers = []; let selected = null;
+
+function go(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('on')); document.getElementById(id).classList.add('on'); window.scrollTo(0, 0); }
+
+function renderQ() {
+  const q = questions[qIdx];
+  const pct = Math.round((qIdx / questions.length) * 100);
+  document.getElementById('prog-label').textContent = `Tu aplicación · Paso ${qIdx + 1} de ${questions.length}`;
+  document.getElementById('prog-pct').textContent = pct + '%';
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('q-step').textContent = q.step;
+  document.getElementById('q-title').textContent = q.title;
+  document.getElementById('q-sub').textContent = q.sub;
+  const introEl = document.getElementById('q-section-intro');
+  if (q.sectionIntro) { introEl.textContent = q.sectionIntro; introEl.style.display = 'block'; } else { introEl.style.display = 'none'; }
+  const optsEl = document.getElementById('opts');
+  optsEl.innerHTML = '';
+  q.opts.forEach((o, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt';
+    btn.innerHTML = `<span class="opt-icon">${o.icon}</span><span class="opt-body"><strong>${o.text}</strong><small>${o.sub}</small></span><span class="opt-ring"></span>`;
+    btn.onclick = () => pick(i, o.val, btn);
+    optsEl.appendChild(btn);
+  });
+  selected = null;
+  document.getElementById('btn-next').classList.remove('on');
+  const card = document.getElementById('q-card');
+  card.style.animation = 'none'; card.offsetHeight; card.style.animation = 'fadeUp 0.38s cubic-bezier(0.4,0,0.2,1)';
+}
+function pick(i, val, btn) { document.querySelectorAll('.opt').forEach(o => o.classList.remove('sel')); btn.classList.add('sel'); selected = val; document.getElementById('btn-next').classList.add('on'); }
+function nextQ() { if (!selected) return; answers.push(selected); qIdx++; if (qIdx < questions.length) { renderQ(); } else { go('s-capture'); } }
+
+function checkCapture() {
+  const n = document.getElementById('cap-nombre').value.trim();
+  const a = document.getElementById('cap-apellido').value.trim();
+  const t = document.getElementById('cap-tel').value.replace(/\D/g,'');
+  const e = document.getElementById('cap-estado').value;
+  const p = document.getElementById('privacy-check').checked;
+  const btn = document.getElementById('btn-capture');
+  const ok = n.length >= 2 && a.length >= 2 && t.length === 10 && !!e && p;
+  if (ok) { btn.classList.add('on'); } else { btn.classList.remove('on'); }
+}
+function showPrivacy(e) { e.preventDefault(); document.getElementById('privacy-modal').style.display = 'flex'; }
+function closePrivacy() { document.getElementById('privacy-modal').style.display = 'none'; document.getElementById('privacy-check').checked = true; checkCapture(); }
+
+const URGENCIA_LABEL = { ya: "Lo necesita ya", semanas: "En las próximas semanas", informandome: "Aún se está informando" };
+const MODELO_LABEL   = { definido: "Ya tiene modelo definido", dudando: "Dudando entre 1-2 opciones", sin_definir: "Sin definir, pide ayuda a elegir" };
+const PREF_LABEL     = { videollamada: "Videollamada", llamada: "Llamada telefónica" };
+const INGRESO_LABEL  = { low: "Menos de $12,000", mid_low: "$12,000–$20,000", mid_high: "$20,000–$35,000", high: "Más de $35,000" };
+const ENGANCHE_LABEL = { none: "Sin enganche aún", low: "Menos de $30,000", mid: "$30,000–$60,000", high: "Más de $60,000" };
+const HISTORIAL_LABEL= { clean: "Limpio y al corriente", ok: "Deudas menores al corriente", bad: "Retrasos o deudas sin pagar", zero: "Sin historial previo", skip: "Prefiere platicarlo en la asesoría" };
+
+// Misma lógica que usa el quiz — así el perfil se califica igual en ambas herramientas.
+function calcProfile(ingreso, enganche, historial) {
+  if (historial === 'skip') {
+    // Sin historial declarado — heurística conservadora, el perfil se termina de precisar en la asesoría.
+    if (enganche === 'none') return 'C';
+    if (ingreso === 'high') return 'A';
+    if (ingreso === 'mid_high') return 'B';
+    return 'C';
+  }
+  const creditOk = (historial === "clean" || historial === "ok" || historial === "zero");
+  const creditGood = (historial === "clean");
+  if (enganche === "none") return "C";
+  if (ingreso === "high" && creditGood && enganche !== "low") return "S";
+  if (ingreso === "mid_high" && creditOk) return "A";
+  if (ingreso === "mid_low" && creditOk) return "B";
+  if (ingreso === "low") return "C";
+  if (historial === "bad") return (ingreso === "high" || ingreso === "mid_high") ? "B" : "C";
+  return "B";
+}
+
+function submitCapture() {
+  prospecto.nombre   = document.getElementById('cap-nombre').value.trim();
+  prospecto.apellido = document.getElementById('cap-apellido').value.trim();
+  prospecto.tel      = document.getElementById('cap-tel').value.trim();
+  prospecto.estado   = document.getElementById('cap-estado').value;
+  const aceptaPrivacidad = document.getElementById('privacy-check').checked;
+  let valid = true;
+  if (!prospecto.nombre || prospecto.nombre.length < 2) { document.getElementById('cap-nombre').style.borderColor = 'var(--red)'; if (valid) { document.getElementById('cap-nombre').focus(); valid = false; } } else { document.getElementById('cap-nombre').style.borderColor = 'var(--accent)'; }
+  if (!prospecto.apellido || prospecto.apellido.length < 2) { document.getElementById('cap-apellido').style.borderColor = 'var(--red)'; if (valid) { document.getElementById('cap-apellido').focus(); valid = false; } } else { document.getElementById('cap-apellido').style.borderColor = 'var(--accent)'; }
+  if (prospecto.tel.replace(/\D/g,'').length !== 10) { document.getElementById('cap-tel').style.borderColor = 'var(--red)'; if (valid) { document.getElementById('cap-tel').focus(); valid = false; } } else { document.getElementById('cap-tel').style.borderColor = 'var(--accent)'; }
+  if (!prospecto.estado) { document.getElementById('cap-estado').style.borderColor = 'var(--red)'; if (valid) { document.getElementById('cap-estado').focus(); valid = false; } } else { document.getElementById('cap-estado').style.borderColor = 'var(--accent)'; }
+  if (!aceptaPrivacidad) { document.getElementById('privacy-wrap').style.color = 'var(--red)'; valid = false; } else { document.getElementById('privacy-wrap').style.color = ''; }
+  if (!valid) { document.getElementById('cap-error').style.display = 'block'; return; }
+  document.getElementById('cap-error').style.display = 'none';
+  showResult();
+}
+
+async function sendToSheet(data) {
+  try {
+    const blob = new Blob([JSON.stringify(data)], {type: 'text/plain'});
+    navigator.sendBeacon(SCRIPT_URL, blob);
+  } catch(e) {}
+}
+
+function showResult() {
+  const urgencia = answers[0], modelo = answers[1], preferencia = answers[2];
+  const ingreso = answers[3], enganche = answers[4], historial = answers[5];
+  const perfil = calcProfile(ingreso, enganche, historial);
+  const prioridad = urgencia === 'ya' ? '⚡ Prioridad alta — te contactamos en menos de 2 horas hábiles' : 'Te contactamos hoy mismo';
+
+  sendToSheet({
+    fecha: new Date().toLocaleString('es-MX', {timeZone:'America/Mexico_City'}),
+    nombre: prospecto.nombre + ' ' + prospecto.apellido,
+    telefono: prospecto.tel,
+    perfil: perfil,
+    modelo: modelo === 'definido' ? 'Por confirmar en asesoría' : 'Aún sin definir',
+    otros_modelos: `Urgencia: ${URGENCIA_LABEL[urgencia]} · Modelo: ${MODELO_LABEL[modelo]} · Prefiere: ${PREF_LABEL[preferencia]}`,
+    ingreso: INGRESO_LABEL[ingreso] || '',
+    enganche: ENGANCHE_LABEL[enganche] || '',
+    historial: HISTORIAL_LABEL[historial] || '',
+    mensualidad: '',
+    acepto_privacidad: 'Sí',
+    estado: prospecto.estado || 'No indicado',
+    fuenteContacto: 'Asesoría Personalizada'
+  });
+
+  document.getElementById('r-title').textContent = `¡Listo, ${prospecto.nombre}!`;
+  document.getElementById('r-itinerary').innerHTML = `
+    <div class="step-row"><div class="step-num">1</div><div class="step-text"><strong>${prioridad}</strong><small>Por WhatsApp, de parte de tu asesor</small></div></div>
+    <div class="step-row"><div class="step-num">2</div><div class="step-text"><strong>Agendamos tu ${PREF_LABEL[preferencia].toLowerCase()}</strong><small>En el horario que a ti te acomode</small></div></div>
+    <div class="step-row" style="margin-bottom:0"><div class="step-num">3</div><div class="step-text"><strong>Tu asesor ya tiene tu perfil listo</strong><small>No vas a tener que repetir nada — llega preparado, no a improvisar</small></div></div>
+  `;
+
+  const msg = encodeURIComponent(`Hola, acabo de aplicar a mi asesoría personalizada 📋 Mi nombre es ${prospecto.nombre} y prefiero ${PREF_LABEL[preferencia].toLowerCase()}. Perfil: ${perfil}. #AsesoriaPersonalizada`);
+  document.getElementById('r-wa').href = `https://wa.me/${WHATSAPP}?text=${msg}`;
+  go('s-result');
+}
+</script>
+</body>
+</html>
