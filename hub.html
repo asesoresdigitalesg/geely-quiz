@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AsesoresDigitalesG · Geely Serdán</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080810; --surface: #0f0f1a; --card: #13131f; --border: #1c1c2e;
+    --accent: #00d4ff; --accent2: #0055ff; --gold: #f5c518; --green: #00e59b;
+    --text: #eeeef8; --muted: #5a5a7a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; overflow-x: hidden; display: flex; flex-direction: column; }
+  .bg-grid { position: fixed; inset: 0; background-image: linear-gradient(rgba(0,212,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(0,212,255,0.025) 1px, transparent 1px); background-size: 44px 44px; pointer-events: none; z-index: 0; }
+  .bg-glow { position: fixed; top: -40vh; left: 50%; transform: translateX(-50%); width: 90vw; height: 70vh; background: radial-gradient(ellipse, rgba(0,60,200,0.13) 0%, transparent 70%); pointer-events: none; z-index: 0; }
+  .wrapper { position: relative; z-index: 1; max-width: 620px; margin: 0 auto; padding: 0 20px; flex: 1; display: flex; flex-direction: column; justify-content: center; }
+  .topbar { display: flex; align-items: center; justify-content: center; padding: 26px 0 0; gap: 10px; position: relative; z-index: 1; }
+  .topbar-logo { font-size: 11px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+  .topbar-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--muted); opacity: 0.4; }
+  .hub-head { text-align: center; padding: 40px 0 8px; }
+  .headline { font-family: 'Bebas Neue', sans-serif; font-size: clamp(32px, 8.5vw, 46px); line-height: 1; letter-spacing: 0.02em; margin-bottom: 10px; }
+  .headline .hl { background: linear-gradient(90deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .sub { color: var(--muted); font-size: 14.5px; font-weight: 300; line-height: 1.6; max-width: 420px; margin: 0 auto; }
+  .cards { display: grid; gap: 16px; padding: 34px 0 44px; }
+  .card {
+    display: block; text-decoration: none; color: var(--text);
+    background: var(--card); border: 1.5px solid var(--border); border-radius: 22px;
+    padding: 26px 24px; position: relative; overflow: hidden; transition: all 0.22s cubic-bezier(0.4,0,0.2,1);
+  }
+  .card:hover { transform: translateY(-3px); border-color: rgba(0,212,255,0.4); box-shadow: 0 20px 50px rgba(0,60,200,0.2); }
+  .card-tag { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; border-radius: 100px; padding: 5px 13px; margin-bottom: 16px; }
+  .card.quiz .card-tag { color: var(--gold); background: rgba(245,197,24,0.09); border: 1px solid rgba(245,197,24,0.25); }
+  .card.asesoria .card-tag { color: var(--accent); background: rgba(0,212,255,0.09); border: 1px solid rgba(0,212,255,0.25); }
+  .card-row { display: flex; align-items: center; gap: 18px; }
+  .card-icon { font-size: 38px; flex-shrink: 0; width: 56px; height: 56px; border-radius: 16px; display: flex; align-items: center; justify-content: center; }
+  .card.quiz .card-icon { background: rgba(245,197,24,0.08); }
+  .card.asesoria .card-icon { background: rgba(0,212,255,0.08); }
+  .card-body { flex: 1; }
+  .card-title { font-size: 19px; font-weight: 700; margin-bottom: 5px; }
+  .card-desc { font-size: 12.5px; color: var(--muted); font-weight: 300; line-height: 1.5; }
+  .card-arrow { font-size: 20px; color: var(--muted); flex-shrink: 0; transition: transform 0.2s, color 0.2s; }
+  .card:hover .card-arrow { transform: translateX(4px); color: var(--accent); }
+  .card-perks { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
+  .card-perk { font-size: 10.5px; color: var(--muted); background: var(--surface); border: 1px solid var(--border); border-radius: 100px; padding: 4px 10px; }
+  .legal { text-align: center; font-size: 11px; color: var(--muted); padding: 0 0 28px; line-height: 1.5; }
+  @media(max-width:400px){ .card-row { gap: 14px; } .card-icon { width: 46px; height: 46px; font-size: 30px; border-radius: 13px; } }
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<div class="bg-glow"></div>
+
+<div class="topbar">
+  <span class="topbar-logo">AsesoresDigitalesG</span>
+  <div class="topbar-dot"></div>
+  <span class="topbar-logo">Geely Serdán</span>
+</div>
+
+<div class="wrapper">
+  <div class="hub-head">
+    <div class="headline">¿Cómo quieres<br><span class="hl">empezar?</span></div>
+    <p class="sub">Elige el camino que mejor se ajuste a ti — los dos son gratuitos y sin compromiso.</p>
+  </div>
+
+  <div class="cards">
+    <a class="card quiz" href="index.html">
+      <div class="card-tag">✨ Para explorar</div>
+      <div class="card-row">
+        <div class="card-icon">🚗</div>
+        <div class="card-body">
+          <div class="card-title">¿Qué Geely me conviene?</div>
+          <div class="card-desc">Responde 5 preguntas rápidas y descubre qué modelo y plan de pago se ajustan a tu situación.</div>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+      <div class="card-perks">
+        <span class="card-perk">⏱ 2 minutos</span>
+        <span class="card-perk">🎯 Resultado al instante</span>
+      </div>
+    </a>
+
+    <a class="card asesoria" href="asesoria-personalizada.html">
+      <div class="card-tag">📹 Para avanzar en serio</div>
+      <div class="card-row">
+        <div class="card-icon">🎧</div>
+        <div class="card-body">
+          <div class="card-title">Asesoría personalizada</div>
+          <div class="card-desc">Una videollamada 1 a 1 con tu propio asesor — arma tu plan para comprar tu auto sin ir a la agencia.</div>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+      <div class="card-perks">
+        <span class="card-perk">👤 Asesor dedicado</span>
+        <span class="card-perk">📋 Plan paso a paso</span>
+      </div>
+    </a>
+  </div>
+</div>
+
+<p class="legal">AsesoresDigitalesG · Distribuidor autorizado Geely · Puebla</p>
+</body>
+</html>
