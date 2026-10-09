@@ -129,10 +129,11 @@
       <div class="q-sub" style="margin-bottom:24px;">Por si se corta tu conexión a media pregunta — así no pierdes tu avance y seguimos justo donde te quedaste.</div>
       <div style="position:relative;margin-bottom:14px;">
         <span style="position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:16px;">📱</span>
-        <input id="tel-early" type="tel" placeholder="Tu WhatsApp (10 dígitos)" autocomplete="tel" style="width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:13px;padding:16px 16px 16px 46px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;outline:none;transition:border-color 0.2s;" oninput="checkTelEarly()" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
+        <input id="tel-early" type="tel" placeholder="Tu WhatsApp (10 dígitos)" autocomplete="tel" style="width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:13px;padding:16px 16px 16px 46px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;outline:none;transition:border-color 0.2s;" oninput="checkTelEarly()" onchange="checkTelEarly()" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
       </div>
       <div id="tel-early-error" style="display:none;background:rgba(255,68,68,0.1);border:1px solid rgba(255,68,68,0.3);border-radius:10px;padding:10px 14px;font-size:12px;color:#ff6b6b;text-align:center;margin-bottom:14px;">⚠️ Escribe un número a 10 dígitos</div>
       <button class="btn-next" id="btn-tel-early" onclick="submitTelEarly()">Continuar →</button>
+      <p style="font-size:11px;color:var(--muted);margin-top:12px;line-height:1.5;">Solo lo usamos para que retomes tu test y para enviarte tu resultado.</p>
     </div>
   </div>
   <div class="screen" id="s-quiz">
@@ -172,7 +173,7 @@
         </div>
         <div style="position:relative;">
           <span style="position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:16px;">📱</span>
-          <input id="cap-tel" type="tel" placeholder="Tu WhatsApp (10 dígitos)" autocomplete="tel" style="width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:13px;padding:16px 16px 16px 46px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;outline:none;transition:border-color 0.2s;" oninput="checkCapture()" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
+          <input id="cap-tel" type="tel" placeholder="Tu WhatsApp (10 dígitos)" autocomplete="tel" style="width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:13px;padding:16px 16px 16px 46px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;outline:none;transition:border-color 0.2s;" oninput="checkCapture()" onchange="checkCapture()" onpaste="setTimeout(checkCapture,10)" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
         </div>
         <div style="position:relative;">
           <span style="position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:16px;">📍</span>
@@ -255,6 +256,19 @@
 <script>
 const WHATSAPP = "522217729210";
 
+// Origen del lead: lee las etiquetas del link (?utm_source=tiktok&utm_content=...) y las
+// guarda en la sesión, así no se pierden aunque la persona pase del quiz a la landing.
+const ORIGEN = (function () {
+  let o = {};
+  try { o = JSON.parse(sessionStorage.getItem('adg_origen') || '{}'); } catch (e) {}
+  const p = new URLSearchParams(location.search);
+  if (p.get('utm_source')) {
+    o = { origen: p.get('utm_source').toLowerCase(), contenido: p.get('utm_content') || '', campana: p.get('utm_campaign') || '' };
+    try { sessionStorage.setItem('adg_origen', JSON.stringify(o)); } catch (e) {}
+  }
+  return o;
+})();
+
 // Bloquea el botón "atrás" del navegador — el flujo del test es solo hacia adelante.
 history.pushState(null, '', location.href);
 window.addEventListener('popstate', function() {
@@ -299,30 +313,28 @@ const questions = [
     ] }
 ];
 const models = {
-  emgrand: { name: "EMGRAND", full: "Geely Emgrand 2026 · Sedan", bono: "Bono hasta $50,000 o Seguro Gratis", tasa: "Tasa desde 10.99%",
-    versions: [ { ver: "GC", price: 274990, m: [4300, 5300] }, { ver: "GL", price: 312990, m: [4900, 6000] }, { ver: "GF", price: 323990, m: [5100, 6300] } ] },
-  gx3pro: { name: "GX3 PRO", full: "Geely GX3 Pro 2026 · SUV Compacto", bono: "Bono $35,000 o Seguro Gratis", tasa: "Tasa desde 10.49% + 0% CxA",
+  emgrand: { name: "EMGRAND", full: "Geely Emgrand 2026 · Sedan", bono: "Precio especial con bono de hasta $60,000 o Seguro Gratis", tasa: "Tasa desde 10.99%",
+    versions: [ { ver: "GC", price: 264990, m: [4100, 5100] }, { ver: "GL", price: 297990, m: [4700, 5700] }, { ver: "GF", price: 313990, m: [4900, 6100] } ] },
+  gx3pro: { name: "GX3 PRO", full: "Geely GX3 Pro 2026 · SUV Compacto", bono: "Precio especial (bono de $35,000) o Seguro Gratis", tasa: "Tasa desde 10.99% o 0% CxA",
     versions: [ { ver: "GC", price: 294990, m: [4700, 5700] }, { ver: "GF", price: 324990, m: [5200, 6300] } ] },
-  coolray_l: { name: "COOLRAY LITE", full: "Geely Coolray Lite 2026 · SUV", bono: "Sin bono ni seguro gratis", tasa: "Tasa desde 10.99% o 0% CxA",
+  coolray_l: { name: "COOLRAY LITE", full: "Geely Coolray Lite 2026 · SUV", bono: "Tasa desde 10.99% o 0% comisión por apertura", tasa: "Tasa desde 10.99% o 0% CxA",
     versions: [ { ver: "GS MT", price: 339990, m: [5400, 6600] }, { ver: "GS CVT", price: 359990, m: [5700, 6900] } ] },
-  ex2: { name: "EX2", full: "Geely EX2 2026 · SUV Electrico", bono: "Bono $23,000 o 12 MSI · Incluye Wallbox", tasa: "Tasa desde 6.14% (Plan Sostenible)",
+  ex2: { name: "EX2", full: "Geely EX2 2026 · SUV Electrico", bono: "Desde 12 MSI o Bono de $23,000 + 0% CxA · Incluye Wallbox", tasa: "12 MSI o tasa desde 10.49% (Plan Sostenible)",
     versions: [ { ver: "GL", price: 366900, m: [5800, 7100] }, { ver: "GF", price: 396900, m: [6300, 7700] } ] },
-  new_coolray: { name: "NEW COOLRAY", full: "Geely New Coolray 2026 · SUV", bono: "Sin bono ni seguro gratis", tasa: "Tasa desde 10.99% o 0% CxA",
+  new_coolray: { name: "NEW COOLRAY", full: "Geely New Coolray 2026 · SUV", bono: "Tasa desde 10.99% o 0% comisión por apertura", tasa: "Tasa desde 10.99% o 0% CxA",
     versions: [ { ver: "GC PLUS", price: 399990, m: [6400, 7700] }, { ver: "GL PLUS", price: 419990, m: [6700, 8100] }, { ver: "GF PLUS", price: 469990, m: [7500, 9100] } ] },
-  cityray: { name: "CITYRAY", full: "Geely Cityray 2026 · SUV Compacto", bono: "Sin bono · Enganche desde $48,899", tasa: "0% CxA con Plan CAMP",
+  cityray: { name: "CITYRAY", full: "Geely Cityray 2026 · SUV Compacto", bono: "Enganche desde $48,899 + 0% CxA", tasa: "Tasa desde 10.99% o 0% CxA (Plan CAMP)",
     versions: [ { ver: "GF Bitono", price: 528990, m: [8400, 10200] } ] },
-  starray25: { name: "STARRAY 2025", full: "Geely Starray 2025 · SUV Premium", bono: "Bono $70,000 o Seguro Gratis · Último mes de promoción", tasa: "Tasa desde 8.99%",
-    versions: [ { ver: "GL 1.5", price: 489990, m: [7800, 9400] }, { ver: "GL 2.0", price: 529990, m: [8500, 10200] }, { ver: "GF 2.0", price: 585990, m: [9400, 11300] } ] },
-  starray26: { name: "STARRAY 2026", full: "Geely Starray 2026 · SUV Premium", bono: "Sin bono ni seguro gratis", tasa: "Tasa desde 10.99% o 0% CxA",
+  starray26: { name: "STARRAY 2026", full: "Geely Starray 2026 · SUV Premium", bono: "Tasa desde 6.73% + 1 año de seguro gratis o 24 meses sin intereses", tasa: "Tasa desde 6.73%",
     versions: [ { ver: "GL 2.0", price: 599990, m: [9600, 11500] }, { ver: "GF 2.0", price: 655990, m: [10500, 12600] } ] },
-  ex5emi: { name: "EX5 EM-I", full: "Geely EX5 EM-i 2026 · SUV Hibrido enchufable", bono: "Version GL: Bono $40,000 o Seguro Gratis · Incluye Wallbox", tasa: "Tasa desde 10.49% + 0% CxA",
+  ex5emi: { name: "EX5 EM-I", full: "Geely EX5 EM-i 2026 · SUV Hibrido enchufable", bono: "Versión GL: Bono de hasta $40,000 o $23,200 + Seguro Gratis · Incluye Wallbox", tasa: "Tasa desde 10.49% + 0% CxA",
     versions: [ { ver: "GL (c/bono)", price: 529990, m: [8500, 10200] }, { ver: "GF", price: 599990, m: [9600, 11500] } ] },
-  ex5: { name: "EX5", full: "Geely EX5 2026 · SUV Electrico", bono: "Tasa desde 6.00% (subsidio a tasa) o 7.70% + Seguro Gratis · Incluye Wallbox", tasa: "Tasa desde 6.00%",
-    versions: [ { ver: "GF", price: 699990, m: [11100, 13500] } ] },
-  okavango: { name: "OKAVANGO", full: "Geely Okavango 2026 · SUV Familiar 7 pasajeros", bono: "Sin bono ni seguro gratis", tasa: "Tasa desde 10.99% + 0% CxA",
+  ex5: { name: "EX5", full: "Geely EX5 2026 · SUV Electrico", bono: "Tasa desde 6.25% + 2 mantenimientos gratis o Bono de $50,000 + 0% CxA · Incluye Wallbox", tasa: "Tasa desde 6.25%",
+    versions: [ { ver: "GF", price: 699900, m: [11100, 13500] } ] },
+  okavango: { name: "OKAVANGO", full: "Geely Okavango 2026 · SUV Familiar 7 pasajeros", bono: "0% comisión por apertura o tasa desde 10.99%", tasa: "Tasa desde 10.99% + 0% CxA",
     versions: [ { ver: "GF Suite", price: 729888, m: [11700, 14000] } ] },
   monjaro: { name: "MONJARO", full: "Geely Monjaro 2026 · SUV Premium", bono: "Tasa desde 6.47% (subsidio a tasa) o 8.05% + Seguro Gratis", tasa: "Tasa desde 6.47%",
-    versions: [ { ver: "GF", price: 699990, m: [11100, 13500] } ] }
+    versions: [ { ver: "GF", price: 699900, m: [11100, 13500] } ] }
 };
 function modelBase(m) { return m.versions[0]; }
 function fmt(n) { return "$" + n.toLocaleString("es-MX"); }
@@ -383,12 +395,23 @@ const perfilData = {
 const SHEET_URL = "https://script.google.com/macros/s/AKfycbwB-ylsX33ZGE918Ty3s7YK0ZLXHv0en4aFbg_X4d7ac9iZ2C7s6JD6lTtRyi_yc1Po/exec";
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzxL73A2NM7YjyiI_IMHtUyT2NvIJFjbbPVpRL8EfI8g3a8dlqs5r481ZFjBKQkXz08Zw/exec";
 let prospecto = { nombre: "", apellido: "", tel: "", telTemprano: "", estado: "" };
+let quizTerminado = false, incompletoEnviado = false;
+
+// Deja el teléfono en 10 dígitos aunque el celular lo autocomplete con lada (+52 o +52 1).
+function normTel(valor) {
+  let t = String(valor || '').replace(/\D/g, '');
+  if (t.length === 13 && t.startsWith('521')) t = t.slice(3);
+  else if (t.length === 12 && t.startsWith('52')) t = t.slice(2);
+  else if (t.length === 11 && t.startsWith('1')) t = t.slice(1);
+  return t;
+}
+
 function checkTelEarly() {
-  const t = document.getElementById('tel-early').value.replace(/\D/g,'');
+  const t = normTel(document.getElementById('tel-early').value);
   document.getElementById('btn-tel-early').classList.toggle('on', t.length === 10);
 }
 function submitTelEarly() {
-  const t = document.getElementById('tel-early').value.replace(/\D/g,'');
+  const t = normTel(document.getElementById('tel-early').value);
   if (t.length !== 10) {
     document.getElementById('tel-early-error').style.display = 'block';
     document.getElementById('tel-early').style.borderColor = 'var(--red)';
@@ -401,7 +424,7 @@ function submitTelEarly() {
 function checkCapture() {
   const n = document.getElementById('cap-nombre').value.trim();
   const a = document.getElementById('cap-apellido').value.trim();
-  const t = document.getElementById('cap-tel').value.replace(/\D/g,'');
+  const t = normTel(document.getElementById('cap-tel').value);
   const e = document.getElementById('cap-estado').value;
   const p = document.getElementById('privacy-check').checked;
   const btn = document.getElementById('btn-capture');
@@ -410,17 +433,17 @@ function checkCapture() {
 }
 function checkPrivacy() { checkCapture(); }
 function showPrivacy(e) { e.preventDefault(); document.getElementById('privacy-modal').style.display = 'flex'; }
-function closePrivacy() { document.getElementById('privacy-modal').style.display = 'none'; document.getElementById('privacy-check').checked = true; }
+function closePrivacy() { document.getElementById('privacy-modal').style.display = 'none'; document.getElementById('privacy-check').checked = true; checkCapture(); }
 function submitCapture() {
   prospecto.nombre   = document.getElementById('cap-nombre').value.trim();
   prospecto.apellido = document.getElementById('cap-apellido').value.trim();
-  prospecto.tel      = document.getElementById('cap-tel').value.trim();
+  prospecto.tel      = normTel(document.getElementById('cap-tel').value);
   prospecto.estado   = document.getElementById('cap-estado').value;
   const aceptaPrivacidad = document.getElementById('privacy-check').checked;
   let valid = true;
   if (!prospecto.nombre || prospecto.nombre.length < 2) { document.getElementById('cap-nombre').style.borderColor = 'var(--red)'; if (valid) { document.getElementById('cap-nombre').focus(); valid = false; } } else { document.getElementById('cap-nombre').style.borderColor = 'var(--accent)'; }
   if (!prospecto.apellido || prospecto.apellido.length < 2) { document.getElementById('cap-apellido').style.borderColor = 'var(--red)'; if (valid) { document.getElementById('cap-apellido').focus(); valid = false; } } else { document.getElementById('cap-apellido').style.borderColor = 'var(--accent)'; }
-  if (prospecto.tel.replace(/\D/g,'').length !== 10) { document.getElementById('cap-tel').style.borderColor = 'var(--red)'; if (valid) { document.getElementById('cap-tel').focus(); valid = false; } } else { document.getElementById('cap-tel').style.borderColor = 'var(--accent)'; }
+  if (prospecto.tel.length !== 10) { document.getElementById('cap-tel').style.borderColor = 'var(--red)'; if (valid) { document.getElementById('cap-tel').focus(); valid = false; } } else { document.getElementById('cap-tel').style.borderColor = 'var(--accent)'; }
   if (!prospecto.estado) { document.getElementById('cap-estado').style.borderColor = 'var(--red)'; if (valid) { document.getElementById('cap-estado').focus(); valid = false; } } else { document.getElementById('cap-estado').style.borderColor = 'var(--accent)'; }
   if (!aceptaPrivacidad) { document.getElementById('privacy-wrap').style.color = 'var(--red)'; valid = false; } else { document.getElementById('privacy-wrap').style.color = ''; }
   if (!valid) { document.getElementById('cap-error').style.display = 'block'; return; }
@@ -428,8 +451,36 @@ function submitCapture() {
   showResult();
 }
 async function sendToSheet(data) {
-  try { await fetch(SHEET_URL, { method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) }); } catch(e) {}
+  const body = JSON.stringify({ ...data, ...ORIGEN });
+  // sendBeacon se entrega aunque la persona se salga de la página (por ejemplo, al tocar WhatsApp
+  // dentro del navegador de TikTok). Si no está disponible, se usa el envío normal.
+  try { if (navigator.sendBeacon && navigator.sendBeacon(SHEET_URL, new Blob([body], {type:'text/plain'}))) return; } catch(e) {}
+  try { await fetch(SHEET_URL, { method: "POST", mode: "no-cors", keepalive: true, body }); } catch(e) {}
 }
+
+// Si la persona ya dio su WhatsApp a la mitad del test y se sale sin terminar,
+// se guarda como "Quiz incompleto" para poder retomarla después. Se manda una sola vez.
+function guardarIncompleto() {
+  if (quizTerminado || incompletoEnviado || !prospecto.telTemprano) return;
+  incompletoEnviado = true;
+  sendToSheet({
+    fecha: new Date().toLocaleString('es-MX', {timeZone:'America/Mexico_City'}),
+    nombre: 'Quiz incompleto',
+    telefono: prospecto.telTemprano,
+    perfil: '—',
+    modelo: '—',
+    otros_modelos: `Se salió en la pregunta ${Math.min(answers.length + 1, questions.length)} de ${questions.length}`,
+    ingreso: labelIngreso[answers[0]] || '',
+    enganche: labelEnganche[answers[1]] || '',
+    historial: labelHistorial[answers[2]] || '',
+    mensualidad: '',
+    acepto_privacidad: 'No',
+    estado: 'No indicado',
+    fuenteContacto: 'Quiz incompleto'
+  });
+}
+document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'hidden') guardarIncompleto(); });
+window.addEventListener('pagehide', guardarIncompleto);
 
 function avisarAbelPorCorreo(data) {
   try {
@@ -491,7 +542,7 @@ function showResult() {
   document.getElementById('r-subtitle').textContent = main.full;
   const fin = document.getElementById('r-fin');
   fin.innerHTML = `
-    <div class="fin-item"><div class="fin-label">Desde</div><div class="fin-val gold">${fmt(baseVer.price)}</div><div class="fin-sub">Versión ${baseVer.ver} · Septiembre 2026</div></div>
+    <div class="fin-item"><div class="fin-label">Desde</div><div class="fin-val gold">${fmt(baseVer.price)}</div><div class="fin-sub">Versión ${baseVer.ver} · Octubre 2026</div></div>
     <div class="fin-item"><div class="fin-label">Enganche mínimo</div><div class="fin-val">${fmt(enganche)}</div><div class="fin-sub">10% del valor</div></div>
     <div class="fin-item"><div class="fin-label">Mensualidad est.</div><div class="fin-val green">${fmt(mMin)}–${fmt(mMax)}</div><div class="fin-sub">60 meses</div></div>
     <div class="fin-item"><div class="fin-label">Probabilidad</div><div class="fin-val" style="color:${pd.probColor};font-size:18px">${pd.prob}</div><div class="fin-sub">De aprobación</div></div>`;
@@ -516,7 +567,8 @@ function showResult() {
   document.getElementById('r-why').textContent = pd.why;
   const datos = { ingreso: labelIngreso[answers[0]] || answers[0], enganche: labelEnganche[answers[1]] || answers[1], historial: labelHistorial[answers[2]]|| answers[2], mensualidad: `${fmt(mMin)}–${fmt(mMax)}` };
   const alsoNames = also.map(m => m.name).join(', ') || '—';
-  const telConsistente = prospecto.telTemprano && (prospecto.tel.replace(/\D/g,'') === prospecto.telTemprano) ? 'Sí' : 'No';
+  const telConsistente = prospecto.telTemprano && (prospecto.tel === prospecto.telTemprano) ? 'Sí' : 'No';
+  quizTerminado = true;
   sendToSheet({ fecha: new Date().toLocaleString('es-MX', {timeZone:'America/Mexico_City'}), nombre: prospecto.nombre + ' ' + prospecto.apellido, telefono: prospecto.tel, telefono_consistente: telConsistente, estado: prospecto.estado || 'No indicado', perfil: perfil, modelo: main.name + ' ' + baseVer.ver, otros_modelos: alsoNames, ingreso: datos.ingreso, enganche: datos.enganche, historial: datos.historial, mensualidad: datos.mensualidad });
   avisarAbelPorCorreo({ nombre: prospecto.nombre + ' ' + prospecto.apellido, telefono: prospecto.tel, telefono_consistente: telConsistente, estado: prospecto.estado || 'No indicado', perfil: perfil, modelo: main.name + ' ' + baseVer.ver, ingreso: datos.ingreso, enganche: datos.enganche, historial: datos.historial, mensualidad: datos.mensualidad });
   const msg = encodeURIComponent(pd.waMsg(main.name, datos, prospecto.nombre));
@@ -537,6 +589,7 @@ function showResult() {
 }
 function restart() {
   qIdx = 0; answers = []; selected = null; prospecto = { nombre: "", apellido: "", tel: "", telTemprano: "", estado: "" };
+  quizTerminado = false; incompletoEnviado = false;
   document.getElementById('cap-error').style.display = 'none';
   document.getElementById('cap-nombre').value = ''; document.getElementById('cap-apellido').value = ''; document.getElementById('cap-tel').value = ''; document.getElementById('cap-estado').value = '';
   document.getElementById('btn-capture').classList.remove('on');

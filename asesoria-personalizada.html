@@ -307,6 +307,18 @@
 const WHATSAPP = "522222003265";
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwB-ylsX33ZGE918Ty3s7YK0ZLXHv0en4aFbg_X4d7ac9iZ2C7s6JD6lTtRyi_yc1Po/exec";
 
+// Origen del lead: etiquetas del link (?utm_source=...) o las que traía desde el quiz en esta sesión.
+const ORIGEN = (function () {
+  let o = {};
+  try { o = JSON.parse(sessionStorage.getItem('adg_origen') || '{}'); } catch (e) {}
+  const p = new URLSearchParams(location.search);
+  if (p.get('utm_source')) {
+    o = { origen: p.get('utm_source').toLowerCase(), contenido: p.get('utm_content') || '', campana: p.get('utm_campaign') || '' };
+    try { sessionStorage.setItem('adg_origen', JSON.stringify(o)); } catch (e) {}
+  }
+  return o;
+})();
+
 // Bloquea el botón "atrás" del navegador — el flujo es solo hacia adelante.
 history.pushState(null, '', location.href);
 window.addEventListener('popstate', function() {
@@ -448,7 +460,7 @@ function submitCapture() {
 
 async function sendToSheet(data) {
   try {
-    const blob = new Blob([JSON.stringify(data)], {type: 'text/plain'});
+    const blob = new Blob([JSON.stringify({ ...data, ...ORIGEN })], {type: 'text/plain'});
     navigator.sendBeacon(SCRIPT_URL, blob);
   } catch(e) {}
 }
