@@ -301,7 +301,7 @@
     </div>
 
     <div class="result-card locked">
-      <div class="result-tag">Dejarías de gastar al mes</div>
+      <div class="result-tag" id="g-tag">Dejarías de gastar al mes</div>
       <div class="big-save lk" id="g-mes">$0,000<small>al mes</small></div>
       <div class="fin-grid">
         <div class="fin-item"><div class="fin-label">Al año</div><div class="fin-val green lk">$00,000</div></div>
@@ -356,17 +356,17 @@
     </div>
 
     <div class="result-card">
-      <div class="result-tag">Dejarías de gastar aprox.</div>
+      <div class="result-tag" id="r-tag">Dejarías de gastar aprox.</div>
       <div class="big-save" id="r-mes">$0<small>al mes</small></div>
       <div class="fin-grid">
-        <div class="fin-item"><div class="fin-label">Al año</div><div class="fin-val green" id="r-anio">$0</div></div>
-        <div class="fin-item"><div class="fin-label">En 5 años</div><div class="fin-val gold" id="r-5">$0</div></div>
-        <div class="fin-item"><div class="fin-label">Litros que no compras</div><div class="fin-val" id="r-litros">0</div><div class="fin-sub">al año</div></div>
-        <div class="fin-item"><div class="fin-label">Idas a la gasolinera</div><div class="fin-val" id="r-visitas">0</div><div class="fin-sub" id="r-visitas-sub">menos al año</div></div>
+        <div class="fin-item"><div class="fin-label" id="l-anio">Al año</div><div class="fin-val green" id="r-anio">$0</div></div>
+        <div class="fin-item"><div class="fin-label" id="l-5">En 5 años</div><div class="fin-val gold" id="r-5">$0</div></div>
+        <div class="fin-item"><div class="fin-label" id="l-litros">Litros que no compras</div><div class="fin-val" id="r-litros">0</div><div class="fin-sub" id="r-litros-sub">al año</div></div>
+        <div class="fin-item"><div class="fin-label" id="l-visitas">Idas a la gasolinera</div><div class="fin-val" id="r-visitas">0</div><div class="fin-sub" id="r-visitas-sub">menos al año</div></div>
         <div class="fin-item wide"><div class="fin-label">Tus días de manejo 100% eléctricos</div><div class="fin-val green" id="r-elec">0%</div><div class="fin-sub" id="r-elec-sub"></div></div>
       </div>
       <div class="bars">
-        <div><div class="bar-l"><span>Hoy en gasolina</span><b id="b-hoy-t">$0/mes</b></div><div class="bar-t"><div class="bar-f hoy" id="b-hoy"></div></div></div>
+        <div><div class="bar-l"><span id="b-hoy-l">Hoy en gasolina</span><b id="b-hoy-t">$0/mes</b></div><div class="bar-t"><div class="bar-f hoy" id="b-hoy"></div></div></div>
         <div><div class="bar-l"><span>Con Monjaro EM-i (luz + gasolina)</span><b id="b-emi-t">$0/mes</b></div><div class="bar-t"><div class="bar-f emi" id="b-emi"></div></div></div>
       </div>
       <p class="note" id="r-supuestos"></p>
@@ -384,6 +384,32 @@
       </a>
       <p class="legal" style="margin-top:6px">Abel Zarate · Asesor Geely Serdán</p>
     </div>
+  </div>
+</div>
+
+<div class="wrapper" style="padding-top:0">
+  <div class="screen" id="s-ya">
+    <div class="gate-head" style="padding-top:28px">
+      <div class="lvl medio">🎟️ Ya estás registrado</div>
+      <div class="headline">Tu invitación<br><span class="hl">ya está apartada</span></div>
+      <p class="sub" id="ya-sub"></p>
+    </div>
+    <div class="pase" style="margin-top:6px">
+      <div class="pase-top">
+        <div><div class="pase-k">Invitación · Lanzamiento</div><div class="pase-t">Monjaro EM-i</div></div>
+        <div class="pase-folio"><b id="ya-folio">#—</b><span>Invitación</span></div>
+      </div>
+      <div class="pase-row">
+        <div><span>Invitado</span><b id="ya-nombre">—</b></div>
+        <div><span>Fecha</span><b>16 oct 2026</b></div>
+        <div><span>Lugar</span><b>Geely Serdán</b></div>
+      </div>
+    </div>
+    <a class="cta-wa" id="ya-wa" href="#" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24"><path d="M17.5 14.4c-.3-.1-1.8-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.1-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.4-.5c.2-.2.2-.3.3-.5.1-.2 0-.4 0-.5l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.8-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.1-.3-.2-.6-.3zM12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2z"/></svg>
+      Confirmar mi asistencia con Abel
+    </a>
+    <p class="legal">El 15 de octubre te escribimos con la hora del evento y la oferta especial de lanzamiento.</p>
   </div>
 </div>
 
@@ -467,6 +493,8 @@ const PREGUNTAS = [
     { v: 14, i: '🚗', t: 'Sedán o compacto', s: 'Rinde alrededor de 14 km/l' },
     { v: 10, i: '🚙', t: 'SUV mediana', s: 'Rinde alrededor de 10 km/l' },
     { v: 7,  i: '🛻', t: 'SUV grande o pickup', s: 'Rinde alrededor de 7 km/l' },
+    { v: 20, i: '🍃', t: 'Híbrido (sin enchufe)', s: 'Rinde alrededor de 20 km/l' },
+    { v: 'ev', i: '⚡', t: 'Eléctrico', s: 'Ya manejo 100% eléctrico' },
     { v: 10, i: '🤷', t: 'No tengo auto / no sé', s: 'Usamos una SUV mediana como referencia', ns: 1 } ] },
   { k: 'gas', titulo: '¿Qué gasolina le pones?', sub: 'Precio promedio por litro en Puebla.', ops: [
     { v: 24.5, i: '🟢', t: 'Magna', s: 'Alrededor de $24.50 por litro' },
@@ -542,10 +570,11 @@ function responder (v, op) {
   if (op) R[q.k + '_t'] = op.t;
   xp(['+20% · ¡Bien!', '+20% · Vas muy bien', '+20% · Ya casi', '+20% · Un paso más', '¡Reporte completo!'][paso]);
   paso++;
+  if (PREGUNTAS[paso] && PREGUNTAS[paso].k === 'gas' && R.auto === 'ev') { R.gas = 24.5; R.gas_t = 'no aplica (ya es eléctrico)'; paso++; }
   if (paso < PREGUNTAS.length) pintarPregunta();
   else analizar();
 }
-function atras () { if (paso > 0) { paso--; pintarPregunta(); } }
+function atras () { if (paso > 0) { paso--; if (PREGUNTAS[paso].k === 'gas' && R.auto === 'ev') paso--; pintarPregunta(); } }
 
 // ══════════════════════════════════════════════════════════════
 // CÁLCULO
@@ -554,8 +583,9 @@ let C = null;
 function calcular () {
   const carga = CARGA[R.carga] || CARGA.nose;
   const kmMes = R.km * R.dias * SEMANAS_MES;
-  const litrosHoy = kmMes / R.auto;
-  const hoy = litrosHoy * R.gas;
+  const ev = R.auto === 'ev';
+  const litrosHoy = ev ? 0 : kmMes / R.auto;
+  const hoy = ev ? kmMes * 0.18 * carga.luz : litrosHoy * R.gas;   // eléctrico: ~0.18 kWh/km
   const elecDia = Math.min(R.km, EMI.kmElectricos) * carga.dias;           // km eléctricos promedio por día
   const gasDia = R.km - elecDia;                                            // el resto lo hace en modo híbrido
   const litrosEmi = gasDia / EMI.kmlHibrido * R.dias * SEMANAS_MES;
@@ -563,8 +593,8 @@ function calcular () {
   const mes = Math.max(0, hoy - emi);
   const litrosAnio = Math.max(0, (litrosHoy - litrosEmi) * 12);
   const diasElec = R.km <= EMI.kmElectricos ? Math.round(carga.dias * 100) : 0;
-  C = { mes, anio: mes * 12, cinco: mes * 60, hoy, emi, litrosAnio, visitas: Math.round(litrosAnio / EMI.tanque), diasElec, luz: carga.luz };
-  C.nivel = mes >= 3000 ? 'alto' : mes >= 1500 ? 'medio' : 'base';
+  C = { ev, mes, anio: mes * 12, cinco: mes * 60, hoy, emi, litrosAnio, visitas: Math.round(litrosAnio / EMI.tanque), diasElec, luz: carga.luz };
+  C.nivel = ev ? 'ev' : mes >= 3000 ? 'alto' : mes >= 1500 ? 'medio' : 'base';
   return C;
 }
 
@@ -584,9 +614,12 @@ function analizar () {
 }
 
 function mostrarGate () {
-  const nv = { alto: ['🔥 Nivel de ahorro: alto', 'alto'], medio: ['⚡ Nivel de ahorro: medio', 'medio'], base: ['🌱 Nivel de ahorro: inicial', 'base'] }[C.nivel];
+  const nv = { alto: ['🔥 Nivel de ahorro: alto', 'alto'], medio: ['⚡ Nivel de ahorro: medio', 'medio'], base: ['🌱 Nivel de ahorro: inicial', 'base'], ev: ['⚡ Ya manejas eléctrico', 'medio'] }[C.nivel];
   $('g-lvl').textContent = nv[0]; $('g-lvl').className = 'lvl ' + nv[1];
-  $('g-sub').innerHTML = C.diasElec >= 100
+  $('g-tag').textContent = C.ev ? 'Tu comparativo eléctrico vs. EM-i' : 'Dejarías de gastar al mes';
+  $('g-sub').innerHTML = C.ev
+    ? `Con la EM-i mantienes tu costo bajo en ciudad y ganas <b>más de 1,000 km de autonomía</b> para carretera, sin depender de un cargador.`
+    : C.diasElec >= 100
     ? `Con <b>${R.km} km al día</b>, tu manejo diario cabe completo en modo eléctrico.`
     : C.diasElec > 0 ? `Con <b>${R.km} km al día</b>, la mayoría de tus días los harías en modo eléctrico.`
     : `Con <b>${R.km} km al día</b>, los primeros 130 km de cada día serían eléctricos.`;
@@ -627,23 +660,72 @@ $('reg-form').addEventListener('submit', async e => {
   if (!$('f-priv').checked) { err.textContent = '⚠️ Marca la casilla para poder mandarte tu reporte por WhatsApp'; err.classList.add('on'); return; }
 
   const btn = $('f-btn'); btn.disabled = true; btn.classList.add('loading');
-  await Promise.race([cargarCupo(), new Promise(r => setTimeout(r, 2500))]); // folio con el conteo más reciente
-  const folio = REGISTRADOS !== null ? REGISTRADOS + 1 : null;
   const [estado, zonaTxt] = zona.split('|');
-  const notas = `🎟️ Invitación lanzamiento Monjaro EM-i${folio ? ' #' + folio : ''} (16 oct, Geely Serdán). Zona: ${zonaTxt}. ` +
-    `Maneja ~${R.km} km/día, ${R.dias} días/sem. Hoy: ${R.auto_t} con ${R.gas_t}. Cargaría: ${R.carga_t}. ` +
-    `Ahorro estimado: ${pesos(C.mes)}/mes (${pesos(C.anio)}/año). Prometido: detalles del evento + oferta especial de lanzamiento por WhatsApp el 15 oct.`;
-  const ok = enviarLead({
+  const notas = `🎟️ Invitación lanzamiento Monjaro EM-i #{FOLIO} (16 oct, Geely Serdán). Zona: ${zonaTxt}. ` +
+    `Maneja ~${R.km} km/día, ${R.dias} días/sem. Hoy: ${R.auto_t}${R.auto === 'ev' ? '' : ' con ' + R.gas_t}. Cargaría: ${R.carga_t}. ` +
+    (C.ev ? `Ya maneja eléctrico: le interesa la autonomía para carretera. ` : `Ahorro estimado: ${pesos(C.mes)}/mes (${pesos(C.anio)}/año). `) + `Prometido: detalles del evento + oferta especial de lanzamiento por WhatsApp el 15 oct.`;
+  const lead = {
     fecha: new Date().toLocaleString('es-MX', { timeZone: 'America/Mexico_City' }),
     nombre, telefono: tel, perfil: '—', modelo: 'Geely Monjaro EM-i',
     otros_modelos: '', ingreso: '', enganche: '', historial: '', mensualidad: '',
     acepto_privacidad: 'Sí', estado, fuenteContacto: FUENTE, notas, ...ORIGEN
-  });
+  };
+
+  // 1) Registro con candado: el servidor revisa que el WhatsApp y el nombre no estén registrados ya.
+  let r = null;
+  try {
+    const res = await Promise.race([
+      fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ tipo: 'registro_evento', ...lead }) }),
+      new Promise((_, no) => setTimeout(() => no(new Error('tiempo')), 12000))
+    ]);
+    r = await res.json();
+  } catch (e) { r = null; }
+
+  if (r && r.ok === false && r.error === 'duplicado') {
+    btn.disabled = false; btn.classList.remove('loading');
+    if (r.motivo === 'telefono') { guardarLocal(nombre, r.folio); mostrarYa(nombre, r.folio, true); }
+    else { err.innerHTML = '⚠️ Ya hay una invitación registrada con ese nombre. Si es tuya, escríbele a Abel por WhatsApp para confirmarla.'; err.classList.add('on'); }
+    return;
+  }
+  if (r && r.ok === false) {
+    btn.disabled = false; btn.classList.remove('loading');
+    err.textContent = '⚠️ Revisa tus datos e intenta de nuevo.'; err.classList.add('on'); return;
+  }
+
+  let folio = r && r.ok ? r.folio : null;
+  // 2) Si no hubo respuesta del servidor (señal débil), se manda igual para no perder el registro.
+  if (!r) {
+    folio = REGISTRADOS !== null ? REGISTRADOS + 1 : null;
+    lead.notas = lead.notas.replace('#{FOLIO}', folio ? '#' + folio : '');
+    if (!enviarLead(lead)) { btn.disabled = false; btn.classList.remove('loading'); err.textContent = '⚠️ No se pudo enviar. Revisa tu internet e intenta de nuevo.'; err.classList.add('on'); return; }
+  }
   btn.disabled = false; btn.classList.remove('loading');
-  if (!ok) { err.textContent = '⚠️ No se pudo enviar. Revisa tu internet e intenta de nuevo.'; err.classList.add('on'); return; }
-  if (REGISTRADOS !== null) REGISTRADOS++;
+  if (folio) REGISTRADOS = Math.max(REGISTRADOS || 0, folio);
+  guardarLocal(nombre, folio);
   mostrarReporte(nombre, folio);
 });
+
+// ── Si ya se registró en este celular, no vuelve a pasar por el registro
+const LS_KEY = 'emi_invitacion';
+function guardarLocal (nombre, folio) { try { localStorage.setItem(LS_KEY, JSON.stringify({ nombre, folio, t: Date.now() })); } catch (e) {} }
+function folioTxt (folio) { return folio ? '#' + String(folio).padStart(3, '0') : '✓'; }
+function waConfirmar (nombre, folio) {
+  const msg = `Hola Abel, soy ${nombre}. Me registré al lanzamiento de la Monjaro EM-i${folio ? ' (invitación ' + folioTxt(folio) + ')' : ''}. Quiero confirmar mi asistencia el 16 de octubre en Geely Serdán y el acceso a la oferta de lanzamiento.`;
+  return `https://wa.me/${WA_ABEL}?text=${encodeURIComponent(msg)}`;
+}
+function mostrarYa (nombre, folio, recien) {
+  $('ya-nombre').textContent = nombre;
+  $('ya-folio').textContent = folioTxt(folio);
+  $('ya-sub').textContent = recien ? 'Este WhatsApp ya tiene una invitación. No hace falta registrarte otra vez.' : 'Ya te registraste desde este celular. Esta es tu invitación.';
+  $('ya-wa').href = waConfirmar(nombre, folio);
+  ir('s-ya');
+}
+(function () {
+  try {
+    const g = JSON.parse(localStorage.getItem(LS_KEY) || 'null');
+    if (g && g.nombre) mostrarYa(g.nombre, g.folio, false);
+  } catch (e) {}
+})();
 
 function animarNum (el, fin, fmt) {
   const t0 = performance.now(), dur = 1100;
@@ -655,20 +737,29 @@ function mostrarReporte (nombre, folio) {
   ir('s-reporte');
   const primer = nombre.split(' ')[0];
   $('r-nombre').textContent = nombre;
-  $('r-folio').textContent = folio ? '#' + String(folio).padStart(3, '0') : '✓';
-  animarNum($('r-mes'), C.mes, n => pesos(n) + '<small>al mes</small>');
-  animarNum($('r-anio'), C.anio, pesos);
-  animarNum($('r-5'), C.cinco, pesos);
-  animarNum($('r-litros'), C.litrosAnio, miles);
-  animarNum($('r-visitas'), C.visitas, miles);
+  $('r-folio').textContent = folioTxt(folio);
+  if (C.ev) {
+    $('r-tag').textContent = 'Autonomía total con una carga y un tanque';
+    animarNum($('r-mes'), 1095, n => miles(n) + '<small>km</small>');
+    $('l-anio').textContent = 'Hoy en luz al mes'; animarNum($('r-anio'), C.hoy, pesos);
+    $('l-5').textContent = 'Con EM-i al mes'; animarNum($('r-5'), C.emi, pesos);
+    $('l-litros').textContent = 'Km eléctricos por carga'; $('r-litros').textContent = '130'; $('r-litros-sub').textContent = 'tu día normal sin gasolina';
+    $('l-visitas').textContent = 'Carga rápida'; $('r-visitas').textContent = '15 min'; $('r-visitas-sub').textContent = 'del 30% al 80%';
+  } else {
+    animarNum($('r-mes'), C.mes, n => pesos(n) + '<small>al mes</small>');
+    animarNum($('r-anio'), C.anio, pesos);
+    animarNum($('r-5'), C.cinco, pesos);
+    animarNum($('r-litros'), C.litrosAnio, miles);
+    animarNum($('r-visitas'), C.visitas, miles);
+  }
   $('r-elec').textContent = C.diasElec + '%';
   $('r-elec-sub').textContent = C.diasElec >= 100 ? 'Tu manejo diario cabe completo en los 130 km eléctricos.' : C.diasElec > 0 ? 'Depende de qué tan seguido puedas cargar.' : 'Manejas más de 130 km al día: el resto lo hace en modo híbrido.';
-  const max = Math.max(C.hoy, 1);
+  const max = Math.max(C.hoy, C.emi, 1);
+  if (C.ev) $('b-hoy-l').textContent = 'Hoy en luz (tu eléctrico)';
   $('b-hoy-t').textContent = pesos(C.hoy) + '/mes'; $('b-emi-t').textContent = pesos(C.emi) + '/mes';
-  setTimeout(() => { $('b-hoy').style.width = '100%'; $('b-emi').style.width = Math.max(3, C.emi / max * 100) + '%'; }, 200);
+  setTimeout(() => { $('b-hoy').style.width = Math.max(3, C.hoy / max * 100) + '%'; $('b-emi').style.width = Math.max(3, C.emi / max * 100) + '%'; }, 200);
   $('r-supuestos').textContent = `Estimación de referencia: ${R.km} km al día, ${R.dias} días a la semana, gasolina a $${R.gas.toFixed(2)}/l, luz a $${C.luz.toFixed(2)}/kWh, consumo eléctrico de ${EMI.kwhKm} kWh/km y ${EMI.kmlHibrido} km/l en modo híbrido. Tu ahorro real depende de cómo manejes y de tu tarifa de luz.`;
-  const msg = `Hola Abel, soy ${nombre}. Me registré al lanzamiento de la Monjaro EM-i${folio ? ' (invitación #' + String(folio).padStart(3, '0') + ')' : ''}. Quiero confirmar mi asistencia el 16 de octubre en Geely Serdán y el acceso a la oferta de lanzamiento. Mi ahorro estimado salió de ${pesos(C.mes)} al mes.`;
-  $('r-wa').href = `https://wa.me/${WA_ABEL}?text=${encodeURIComponent(msg)}`;
+  $('r-wa').href = waConfirmar(nombre, folio).replace(encodeURIComponent('oferta de lanzamiento.'), encodeURIComponent('oferta de lanzamiento. ' + (C.ev ? 'Hoy manejo un eléctrico.' : 'Mi ahorro estimado salió de ' + pesos(C.mes) + ' al mes.')));
   setTimeout(() => xp(`¡Bienvenido, ${primer}!`), 400);
 }
 </script>
