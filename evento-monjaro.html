@@ -318,13 +318,55 @@
         <div class="inp-wrap"><span>📱</span><input class="inp" id="f-tel" type="tel" inputmode="tel" placeholder="Tu WhatsApp (10 dígitos)" autocomplete="tel" maxlength="20"></div>
         <div class="inp-wrap"><span>📍</span>
           <select class="inp" id="f-zona">
-            <option value="" selected disabled>¿Dónde vives?</option>
-            <option value="Puebla|Puebla capital">Puebla capital</option>
-            <option value="Puebla|Cholula / San Andrés">Cholula / San Andrés</option>
-            <option value="Puebla|Angelópolis / Lomas">Angelópolis / Lomas</option>
-            <option value="Puebla|Otro municipio de Puebla">Otro municipio de Puebla</option>
-            <option value="Tlaxcala|Tlaxcala">Tlaxcala</option>
-            <option value="Otro estado|Otro estado">Otro estado</option>
+            <option value="" selected disabled>¿En qué estado vives?</option>
+            <option value="Puebla">Puebla</option>
+            <option value="CDMX">Ciudad de México</option>
+            <option value="Estado de México">Estado de México</option>
+            <option value="Jalisco">Jalisco</option>
+            <option value="Nuevo León">Nuevo León</option>
+            <option value="Veracruz">Veracruz</option>
+            <option value="Tlaxcala">Tlaxcala</option>
+            <option value="Hidalgo">Hidalgo</option>
+            <option value="Morelos">Morelos</option>
+            <option value="Guerrero">Guerrero</option>
+            <option value="Oaxaca">Oaxaca</option>
+            <option value="Chiapas">Chiapas</option>
+            <option value="Michoacán">Michoacán</option>
+            <option value="Guanajuato">Guanajuato</option>
+            <option value="Querétaro">Querétaro</option>
+            <option value="San Luis Potosí">San Luis Potosí</option>
+            <option value="Aguascalientes">Aguascalientes</option>
+            <option value="Zacatecas">Zacatecas</option>
+            <option value="Durango">Durango</option>
+            <option value="Chihuahua">Chihuahua</option>
+            <option value="Sonora">Sonora</option>
+            <option value="Baja California">Baja California</option>
+            <option value="Baja California Sur">Baja California Sur</option>
+            <option value="Sinaloa">Sinaloa</option>
+            <option value="Nayarit">Nayarit</option>
+            <option value="Colima">Colima</option>
+            <option value="Tabasco">Tabasco</option>
+            <option value="Campeche">Campeche</option>
+            <option value="Yucatán">Yucatán</option>
+            <option value="Quintana Roo">Quintana Roo</option>
+            <option value="Tamaulipas">Tamaulipas</option>
+            <option value="Coahuila">Coahuila</option>
+            <option value="Otro">Otro / Extranjero</option>
+          </select>
+        </div>
+        <div class="inp-wrap"><span>🤝</span>
+          <select class="inp" id="f-asesor">
+            <option value="" selected disabled>¿Qué asesor te invitó?</option>
+            <option>Abel Zarate</option>
+            <option>Alberto</option>
+            <option>Atziri</option>
+            <option>Benjamín</option>
+            <option>Brenda</option>
+            <option>Fernanda</option>
+            <option>Fernando</option>
+            <option>Rafael Urcid</option>
+            <option>Otro asesor</option>
+            <option value="Nadie (lo vio en redes)">Nadie, lo vi en redes</option>
           </select>
         </div>
         <label class="check"><input type="checkbox" id="f-priv"><span>Acepto recibir mi invitación, la oferta de lanzamiento e información de la Monjaro EM-i y promociones Geely por WhatsApp. <a href="#" onclick="verAviso(event)">Ver aviso de privacidad</a></span></label>
@@ -376,13 +418,13 @@
       <div class="result-tag">Lo que sigue</div>
       <div class="steps">
         <div class="step"><div class="step-d"><b>15</b><span>Oct</span></div><div><strong>Te mandamos los detalles</strong>Por WhatsApp: la hora del evento y la oferta especial de lanzamiento para invitados.</div></div>
-        <div class="step"><div class="step-d"><b>16</b><span>Oct</span></div><div><strong>Lanzamiento en Geely Serdán Puebla</strong>Muestras tu invitación, conoces la Monjaro EM-i en persona y accedes a la oferta.</div></div>
+        <div class="step"><div class="step-d"><b>16</b><span>Oct</span></div><div><strong>Lanzamiento en Geely Serdán Puebla</strong><span id="r-paso16">Muestras tu invitación, conoces la Monjaro EM-i en persona y accedes a la oferta.</span></div></div>
       </div>
       <a class="cta-wa" id="r-wa" href="#" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24"><path d="M17.5 14.4c-.3-.1-1.8-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.1-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.4-.5c.2-.2.2-.3.3-.5.1-.2 0-.4 0-.5l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.8-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.1-.3-.2-.6-.3zM12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2z"/></svg>
         Confirmar mi asistencia con Abel
       </a>
-      <p class="legal" style="margin-top:6px">Abel Zarate · Asesor Geely Serdán</p>
+      <p class="legal" id="r-wa-legal" style="margin-top:6px">Abel Zarate · Asesor Geely Serdán</p>
     </div>
   </div>
 </div>
@@ -409,7 +451,7 @@
       <svg viewBox="0 0 24 24"><path d="M17.5 14.4c-.3-.1-1.8-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.1-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.4-.5c.2-.2.2-.3.3-.5.1-.2 0-.4 0-.5l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.8-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.1-.3-.2-.6-.3zM12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2z"/></svg>
       Confirmar mi asistencia con Abel
     </a>
-    <p class="legal">El 15 de octubre te escribimos con la hora del evento y la oferta especial de lanzamiento.</p>
+    <p class="legal" id="ya-legal">El 15 de octubre te escribimos con la hora del evento y la oferta especial de lanzamiento.</p>
   </div>
 </div>
 
@@ -432,6 +474,7 @@ const CUPO_TOTAL  = 40;                         // invitaciones disponibles para
 const FECHA_EVENTO = new Date(2026, 9, 16);     // 16 de octubre de 2026
 const WA_ABEL     = '522217729210';
 const FUENTE      = 'Lanzamiento Monjaro EM-i'; // así aparece en el CRM
+const LOCALES     = ['Puebla', 'Tlaxcala', 'Hidalgo', 'Veracruz']; // estados que atiende Abel (igual que en el CRM)
 const SCRIPT_URL  = 'https://script.google.com/macros/s/AKfycbwB-ylsX33ZGE918Ty3s7YK0ZLXHv0en4aFbg_X4d7ac9iZ2C7s6JD6lTtRyi_yc1Po/exec';
 
 // Supuestos de la calculadora (estimación de referencia)
@@ -650,18 +693,20 @@ $('reg-form').addEventListener('submit', async e => {
   const nombre = $('f-nombre').value.trim().replace(/\s+/g, ' ');
   const tel = normTel($('f-tel').value);
   const zona = $('f-zona').value;
+  const asesor = $('f-asesor').value;
   $('f-nombre').classList.toggle('bad', nombre.length < 3);
   $('f-tel').classList.toggle('bad', tel.length !== 10);
   $('f-zona').classList.toggle('bad', !zona);
-  if (nombre.length < 3 || tel.length !== 10 || !zona) {
+  $('f-asesor').classList.toggle('bad', !asesor);
+  if (nombre.length < 3 || tel.length !== 10 || !zona || !asesor) {
     err.textContent = tel && tel.length !== 10 ? '⚠️ Tu WhatsApp debe tener 10 dígitos' : '⚠️ Completa tus datos para desbloquear tu reporte';
     err.classList.add('on'); return;
   }
   if (!$('f-priv').checked) { err.textContent = '⚠️ Marca la casilla para poder mandarte tu reporte por WhatsApp'; err.classList.add('on'); return; }
 
   const btn = $('f-btn'); btn.disabled = true; btn.classList.add('loading');
-  const [estado, zonaTxt] = zona.split('|');
-  const notas = `🎟️ Invitación lanzamiento Monjaro EM-i #{FOLIO} (16 oct, Geely Serdán). Zona: ${zonaTxt}. ` +
+  const estado = zona, zonaTxt = zona;
+  const notas = `🎟️ Invitación lanzamiento Monjaro EM-i #{FOLIO} (16 oct, Geely Serdán). Lo invitó: ${asesor}. Estado: ${zonaTxt}${LOCALES.includes(estado) ? '' : ' (fuera de zona)'}. ` +
     `Maneja ~${R.km} km/día, ${R.dias} días/sem. Hoy: ${R.auto_t}${R.auto === 'ev' ? '' : ' con ' + R.gas_t}. Cargaría: ${R.carga_t}. ` +
     (C.ev ? `Ya maneja eléctrico: le interesa la autonomía para carretera. ` : `Ahorro estimado: ${pesos(C.mes)}/mes (${pesos(C.anio)}/año). `) + `Prometido: detalles del evento + oferta especial de lanzamiento por WhatsApp el 15 oct.`;
   const lead = {
@@ -683,7 +728,7 @@ $('reg-form').addEventListener('submit', async e => {
 
   if (r && r.ok === false && r.error === 'duplicado') {
     btn.disabled = false; btn.classList.remove('loading');
-    if (r.motivo === 'telefono') { guardarLocal(nombre, r.folio); mostrarYa(nombre, r.folio, true); }
+    if (r.motivo === 'telefono') { guardarLocal(nombre, r.folio); mostrarYa(nombre, r.folio, true, zona); }
     else { err.innerHTML = '⚠️ Ya hay una invitación registrada con ese nombre. Si es tuya, escríbele a Abel por WhatsApp para confirmarla.'; err.classList.add('on'); }
     return;
   }
@@ -707,13 +752,16 @@ $('reg-form').addEventListener('submit', async e => {
 
 // ── Si ya se registró en este celular, no vuelve a pasar por el registro
 const LS_KEY = 'emi_invitacion';
-function guardarLocal (nombre, folio) { try { localStorage.setItem(LS_KEY, JSON.stringify({ nombre, folio, t: Date.now() })); } catch (e) {} }
+function guardarLocal (nombre, folio) { try { localStorage.setItem(LS_KEY, JSON.stringify({ nombre, folio, estado: $('f-zona').value, t: Date.now() })); } catch (e) {} }
+const esLocal = e => LOCALES.includes(e);
 function folioTxt (folio) { return folio ? '#' + String(folio).padStart(3, '0') : '✓'; }
 function waConfirmar (nombre, folio) {
   const msg = `Hola Abel, soy ${nombre}. Me registré al lanzamiento de la Monjaro EM-i${folio ? ' (invitación ' + folioTxt(folio) + ')' : ''}. Quiero confirmar mi asistencia el 16 de octubre en Geely Serdán y el acceso a la oferta de lanzamiento.`;
   return `https://wa.me/${WA_ABEL}?text=${encodeURIComponent(msg)}`;
 }
-function mostrarYa (nombre, folio, recien) {
+function mostrarYa (nombre, folio, recien, estado) {
+  $('ya-wa').style.display = esLocal(estado) ? '' : 'none';
+  $('ya-legal').textContent = esLocal(estado) ? 'El 15 de octubre te escribimos con la hora del evento y la oferta especial de lanzamiento.' : 'Te escribimos por WhatsApp con la oferta especial de lanzamiento.';
   $('ya-nombre').textContent = nombre;
   $('ya-folio').textContent = folioTxt(folio);
   $('ya-sub').textContent = recien ? 'Este WhatsApp ya tiene una invitación. No hace falta registrarte otra vez.' : 'Ya te registraste desde este celular. Esta es tu invitación.';
@@ -723,7 +771,7 @@ function mostrarYa (nombre, folio, recien) {
 (function () {
   try {
     const g = JSON.parse(localStorage.getItem(LS_KEY) || 'null');
-    if (g && g.nombre) mostrarYa(g.nombre, g.folio, false);
+    if (g && g.nombre) mostrarYa(g.nombre, g.folio, false, g.estado);
   } catch (e) {}
 })();
 
@@ -735,6 +783,10 @@ function animarNum (el, fin, fmt) {
 
 function mostrarReporte (nombre, folio) {
   ir('s-reporte');
+  const estadoSel = $('f-zona').value;
+  $('r-wa').style.display = esLocal(estadoSel) ? '' : 'none';
+  $('r-wa-legal').style.display = esLocal(estadoSel) ? '' : 'none';
+  if (estadoSel && !LOCALES.includes(estadoSel)) $('r-paso16').textContent = 'Si te queda lejos venir a Puebla, no te preocupes: te escribimos por WhatsApp con la oferta y te asesoramos a distancia.';
   const primer = nombre.split(' ')[0];
   $('r-nombre').textContent = nombre;
   $('r-folio').textContent = folioTxt(folio);
