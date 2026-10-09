@@ -502,18 +502,26 @@ const ESTADOS_LOCALES   = ['Puebla','Tlaxcala','Hidalgo','Veracruz'];
 const TEST_NAMES        = ['prueba','test','demo','ejemplo','fake','trial'];
 
 // role: 'admin' (líder) · 'asesor' (vendedor) · 'contenido' (equipo de contenido: solo ve datos agregados, sin teléfonos)
-const USERS = [
-  {user:'admin',     pass:'Geely2026',     nombre:'Raúl',         role:'admin'},
-  {user:'asesor1',   pass:'geely1.1',      nombre:'Alberto',      role:'asesor', correo:'albertocarcanoh@gmail.com',    whatsapp:'522217523387'},
-  {user:'asesor2',   pass:'geely2',        nombre:'Fernanda',     role:'asesor', correo:'fernie24232103@gmail.com',     whatsapp:'525610716934'},
-  {user:'asesor3',   pass:'geely3',        nombre:'Fernando',     role:'asesor', correo:'fermotha99@gmail.com',         whatsapp:'529672870404'},
-  {user:'asesor4',   pass:'geely4.4',      nombre:'Atziri',       role:'asesor', correo:'Atziryaleman08@gmail.com',     whatsapp:'522212165485'},
-  {user:'asesor5',   pass:'geely5',        nombre:'Benjamín',     role:'asesor', correo:'anayamillan@gmail.com',        whatsapp:'522213969760'},
-  {user:'asesor6',   pass:'geely6',        nombre:'Rafael Urcid', role:'asesor', correo:'rafaelurcid@gmail.com',        whatsapp:'522226610552'},
-  {user:'asesor7',   pass:'geely7',        nombre:'Brenda',       role:'asesor', correo:'Brenda.geelyserdan@gmail.com', whatsapp:'522211740818'},
-  {user:'contenido', pass:'contenido2026', nombre:'Contenido',    role:'contenido'},
-];
-USERS.forEach(u => u.isAdmin = u.role === 'admin');
+// El equipo y las contraseñas viven en el servidor (Apps Script). Esta lista se llena al iniciar sesión.
+const USERS = [];
+let SESION = '';
+try { SESION = localStorage.getItem('crm_sesion') || ''; } catch {}
+function aplicarEquipo(equipo){
+  USERS.splice(0, USERS.length, ...(equipo || []));
+  USERS.forEach(u => u.isAdmin = u.role === 'admin');
+}
+// Llamada al servidor que regresa una respuesta (inicio de sesión y lectura de datos)
+async function api(body){
+  const res = await fetch(SCRIPT_URL, {method:'POST', body: JSON.stringify(body)});
+  const txt = await res.text();
+  try { return JSON.parse(txt); } catch { return {ok:false, error:'respuesta', detalle: txt.slice(0,120)}; }
+}
+function sesionVencida(){
+  try { localStorage.removeItem('crm_sesion'); } catch {}
+  SESION = '';
+  toast('Tu sesión venció. Vuelve a entrar.');
+  setTimeout(() => location.reload(), 1500);
+}
 
 const ETAPAS = [
   {id:'nuevo',       label:'Nuevo',          color:'#6E7889'},
@@ -782,12 +790,12 @@ function procesarFilas(rows) {
 }
 
 async function gviz(sheet) {
-  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheet)}&cachebust=${Date.now()}`;
-  const res = await fetch(url);
-  const text = await res.text();
-  const m = text.match(/setResponse\(([\s\S]*)\);?\s*$/);
-  if (!m) throw new Error('Respuesta inesperada del Sheet');
-  return JSON.parse(m[1]).table.rows || [];
+  const r = await api({tipo:'leer', sesion: SESION, hoja: sheet});
+  if (!r.ok) {
+    if (r.error === 'sesion') sesionVencida();
+    throw new Error('No se pudo leer "' + sheet + '" (' + (r.error || 'error') + ')');
+  }
+  return r.rows || [];
 }
 
 function setSync(state, text){ $('sync-dot').className = 'dot' + (state==='busy'?' busy':state==='err'?' err':''); $('sync-text').textContent = text; }
@@ -832,7 +840,7 @@ function cargarCache(){
 // ══════════════════════════════════════════════════════════════
 function enviar(payload){
   try {
-    const ok = navigator.sendBeacon(SCRIPT_URL, new Blob([JSON.stringify(payload)], {type:'text/plain'}));
+    const ok = navigator.sendBeacon(SCRIPT_URL, new Blob([JSON.stringify({...payload, ...(typeof LINK_AUTH !== 'undefined' && LINK_AUTH ? {link: LINK_AUTH} : {sesion: SESION})})], {type:'text/plain'}));
     dbg(`Enviado ${Object.keys(payload).join(', ')} → ${ok?'ok':'falló'}`, ok?'ok':'err');
     if (!ok) toast('No se pudo enviar el cambio. Revisa tu conexión.');
     return ok;
@@ -1076,13 +1084,25 @@ const NAV_ROL = {
 };
 let pantalla = 'hoy';
 
-function tryLogin(){
+async function tryLogin(){
   const u = $('user-input').value.trim().toLowerCase();
   const p = $('pw-input').value;
-  const match = USERS.find(x => x.user === u && x.pass === p);
-  if (!match) { $('login-err').textContent = 'Usuario o contraseña incorrectos.'; $('pw-input').value=''; $('pw-input').focus(); return; }
-  try { localStorage.setItem('crm_session_user', match.user); } catch {}
-  entrarComo(match);
+  const btn = document.querySelector('#login button[type="submit"], #login .btn');
+  $('login-err').textContent = 'Entrando…';
+  if (btn) btn.disabled = true;
+  let r;
+  try { r = await api({tipo:'login', user:u, pass:p}); }
+  catch (e) { r = {ok:false, error:'red'}; }
+  if (btn) btn.disabled = false;
+  if (!r.ok) {
+    $('login-err').textContent = r.error === 'credenciales' ? 'Usuario o contraseña incorrectos.' : 'No hay conexión con el servidor. Intenta de nuevo.';
+    $('pw-input').value=''; $('pw-input').focus(); return;
+  }
+  SESION = r.sesion;
+  try { localStorage.setItem('crm_sesion', SESION); localStorage.removeItem('crm_session_user'); } catch {}
+  $('login-err').textContent = '';
+  aplicarEquipo(r.equipo);
+  entrarComo(USERS.find(x => x.user === r.usuario.user) || r.usuario);
 }
 async function entrarComo(u){
   currentUser = u;
@@ -1099,11 +1119,22 @@ async function entrarComo(u){
   $('me-name').textContent = currentUser.nombre;
   await syncData();
 }
-function cerrarSesion(){ try { localStorage.removeItem('crm_session_user'); } catch {} location.reload(); }
+function cerrarSesion(){
+  try { navigator.sendBeacon(SCRIPT_URL, new Blob([JSON.stringify({tipo:'logout', sesion: SESION})], {type:'text/plain'})); } catch {}
+  try { localStorage.removeItem('crm_sesion'); localStorage.removeItem('crm_session_user'); localStorage.removeItem('crm2_cache'); } catch {}
+  location.reload();
+}
 (function restoreSession(){
-  let saved = null; try { saved = localStorage.getItem('crm_session_user'); } catch {}
-  const m = saved && USERS.find(x => x.user === saved);
-  if (m) window.addEventListener('DOMContentLoaded', () => entrarComo(m));
+  try { localStorage.removeItem('crm_session_user'); } catch {} // sesiones del sistema anterior ya no son válidas
+  if (!SESION) return;
+  if (new URLSearchParams(location.search).get('l') !== null) return; // link directo por lead
+  window.addEventListener('DOMContentLoaded', async () => {
+    let r;
+    try { r = await api({tipo:'sesion', sesion: SESION}); } catch (e) { r = {ok:false, error:'red'}; }
+    if (r.ok) { aplicarEquipo(r.equipo); entrarComo(USERS.find(x => x.user === r.usuario.user) || r.usuario); }
+    else if (r.error === 'sesion') { try { localStorage.removeItem('crm_sesion'); } catch {} SESION = ''; }
+    else { $('login-err').textContent = 'No hay conexión con el servidor. Intenta de nuevo.'; }
+  });
 })();
 
 function renderNav(){
@@ -1123,6 +1154,7 @@ function mostrarPantalla(){
 function setTitulo(t, sub, tools){ $('page-title').textContent = t; $('page-sub').textContent = sub || ''; $('topbar-tools').innerHTML = tools || ''; }
 
 function render(){
+  if (typeof MODO_RAPIDO !== 'undefined' && MODO_RAPIDO) { renderRapido(); return; }
   if (!currentUser) return;
   renderNav();
   mostrarPantalla();
@@ -1456,14 +1488,23 @@ function asignar(id, user, enMasa){
     extra:{notificarAsignacion: !!user, leadNombre:l.nombre, leadModelo:l.modelo, leadTelefono:l.telefono, leadPerfil:l.perfil}});
   return true;
 }
-function avisarAsesorWA(user, leads){
+async function avisarAsesorWA(user, leads){
   const u = USERS.find(x => x.user === user);
   if (!u || !u.whatsapp || !leads.length) return;
-  const lineas = leads.map(l => `• ${l.nombre} — ${l.modeloCorto} (perfil ${l.perfil}) · ${l.telefono}`);
+  // La ventana se abre en el momento del clic (si no, el navegador la bloquea) y luego se llena con el mensaje.
+  let w = null; try { w = window.open('', '_blank'); } catch {}
+  let claves = [];
+  try { claves = await clavesLinks(leads.map(l => l.id), user); } catch {}
+  const conLinks = claves.some(Boolean);
+  const lineas = leads.map((l, i) => `• ${l.nombre} — ${l.modeloCorto} (perfil ${l.perfil}) · ${l.telefono}${claves[i] ? '\n  ' + urlLink(l.id, claves[i]) : ''}`);
+  const cierre = conLinks
+    ? (leads.length === 1 ? 'Cuando le escribas, abre el link y marca qué pasó (es un toque, sin contraseña).' : 'Cuando les escribas, abre el link de cada uno y marca qué pasó (es un toque, sin contraseña).')
+    : (leads.length === 1 ? 'Ya está en tu sección Hoy del CRM.' : 'Ya están en tu sección Hoy del CRM.');
   const msg = leads.length === 1
-    ? `Hola ${firstName(u.nombre)}, te asigné un lead nuevo:\n\n${lineas[0]}\n\nEntre más rápido el primer contacto, mejor. Ya está en tu sección Hoy del CRM.`
-    : `Hola ${firstName(u.nombre)}, te asigné ${leads.length} leads nuevos:\n\n${lineas.join('\n')}\n\nYa están en tu sección Hoy del CRM.`;
-  window.open(`https://wa.me/${u.whatsapp}?text=${encodeURIComponent(msg)}`, '_blank');
+    ? `Hola ${firstName(u.nombre)}, te asigné un lead nuevo:\n\n${lineas[0]}\n\nEntre más rápido el primer contacto, mejor. ${cierre}`
+    : `Hola ${firstName(u.nombre)}, te asigné ${leads.length} leads nuevos:\n\n${lineas.join('\n')}\n\n${cierre}`;
+  const url = `https://wa.me/${u.whatsapp}?text=${encodeURIComponent(msg)}`;
+  if (w && !w.closed) w.location.href = url; else window.open(url, '_blank');
 }
 function bulkAsignar(){
   const user = $('bulk-asesor').value;
@@ -1561,6 +1602,7 @@ function renderFicha(){
 
     ${admin ? `<div class="f-sec"><div class="h2">Asesor asignado</div>
       <select class="inp" onchange="asignarDesdeFicha(this.value)" aria-label="Asesor"><option value="">Sin asignar</option>${asesores().map(u=>{const c=LEADS.filter(x=>S(x).asignado===u.user&&activo(x)).length;return `<option value="${u.user}" ${s.asignado===u.user?'selected':''}>${esc(u.nombre)} · ${c} activos</option>`;}).join('')}</select>
+      ${s.asignado?`<button class="btn btn-sm" style="margin-top:8px" onclick="copiarLinkLead(${l.id})">${IC.copy} Copiar link directo para ${esc(firstName(nombreAsesor(s.asignado)))}</button>`:''}
       ${s.fechaAsignacion?`<p class="hint" style="margin-top:6px">Asignado ${hace(fromISO(s.fechaAsignacion))}${s.primerContacto?` · primer contacto en ${horasTexto(tiempoPrimerContacto(l))}`:' · aún sin primer contacto'}</p>`:''}
     </div>` : (ase ? '' : '')}
 
@@ -1688,7 +1730,9 @@ function guardarRegistro(){
   const r = REG.res, m = REG.medio;
   if (m==='llamada' && r==='no_contesto') inc('intentos');
   else if (m==='llamada') inc('llamadasRealizadas');
-  if (m==='whatsapp') inc('mensajesSeguimiento');
+  // Un WhatsApp sin respuesta cuenta como intento; solo cuenta como contacto cuando la persona responde
+  if (m==='whatsapp' && r==='mensaje') inc('intentos');
+  else if (m==='whatsapp') inc('mensajesSeguimiento');
   if (m==='videollamada' && r==='realizada') { inc('videollamadasRealizadas'); c.asistioReunion = 'Sí'; }
   if (m==='videollamada' && r==='no_conecto') c.asistioReunion = 'No';
   if (r==='asesoria') inc('videollamadasAgendadas');
@@ -1697,7 +1741,7 @@ function guardarRegistro(){
   if (r==='no_asistio') c.asistioReunion = 'No';
   if (/^llamar/i.test(paso)) inc('llamadasAgendadas');
   // La etapa solo avanza, nunca retrocede sola
-  const destino = {contesto:'contactado', mensaje:'contactado', respondio:'contactado', asesoria:'asesoria', realizada:'seguimiento', cita:'cierre', asistio:'cierre'}[r];
+  const destino = {contesto:'contactado', respondio:'contactado', asesoria:'asesoria', realizada:'seguimiento', cita:'cierre', asistio:'cierre'}[r];
   const e = etapa(l);
   if (destino && ETAPA_IDX[destino] > ETAPA_IDX[e] && e !== 'perdido') c.etapa = destino;
   const resTxt = MEDIOS[m].res.find(x => x[0]===r)[1];
@@ -2266,6 +2310,188 @@ function renderContenido(){
       <p class="hint" style="margin-top:10px">Tip: usa nombres cortos y siempre iguales para el mismo video (por ejemplo <b>ex2-enganche-bajo</b>). Para la bio usa <b>bio</b>.</p>
     </div>`;
 }
+</script>
+<style>
+/* ── FICHA RÁPIDA (link directo por lead) ── */
+#rapido{min-height:100dvh;overflow-y:auto;padding:18px 16px calc(28px + var(--safe-b));max-width:520px;margin:0 auto}
+body.modo-rapido{overflow:auto}
+.r-top{display:flex;align-items:center;justify-content:space-between;color:var(--ink-3);font-size:13px;margin-bottom:14px}
+.r-top b{font-family:var(--cond);font-size:17px;color:var(--ink)}
+.r-top b span{color:var(--brand)}
+.r-name{font-family:var(--cond);font-weight:600;font-size:30px;line-height:1.08;overflow-wrap:anywhere}
+.r-meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.r-facts{font-size:14px;color:var(--ink-2);margin-top:12px;line-height:1.5}
+.r-acts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}
+.r-acts .btn{min-height:48px;font-size:15px}
+.r-q{font-family:var(--cond);font-weight:600;font-size:20px;margin:24px 0 10px}
+.big-opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.big-opt{min-height:62px;padding:10px 12px;border-radius:14px;border:1px solid var(--line-2);background:var(--panel);text-align:left;font-weight:600;font-size:15px;line-height:1.25;display:flex;align-items:center;gap:10px}
+.big-opt i{font-style:normal;font-size:20px}
+.big-opt.on{border-color:var(--brand);background:var(--brand-dim)}
+.big-opt.bad.on{border-color:var(--bad);background:rgba(242,89,107,.12)}
+.r-done{text-align:center;padding:30px 10px}
+.r-done .ok{width:64px;height:64px;border-radius:50%;margin:0 auto 14px;display:grid;place-items:center;background:rgba(47,203,138,.15);color:var(--good)}
+.r-done .ok svg{width:32px;height:32px}
+.r-log{margin-top:24px;border-top:1px solid var(--line);padding-top:14px}
+</style>
+<div id="rapido" hidden></div>
+<script>
+// ══════════════════════════════════════════════════════════════
+// LINK DIRECTO POR LEAD — crm.html?l=<id>&k=<clave>
+// El asesor lo recibe en el WhatsApp/correo de asignación y actualiza el lead
+// en un toque, sin contraseña. La clave depende del lead y del asesor asignado:
+// si el lead se reasigna, el link anterior deja de funcionar.
+// ══════════════════════════════════════════════════════════════
+// La clave la crea el servidor (Apps Script) con un secreto que nunca llega a esta página.
+let MODO_RAPIDO = false, RL = null, LINK_AUTH = null; // RL = {id, res, motivo, cita, hecho}
+const CLAVES = {}; // "id|asesor" → clave ya pedida al servidor
+
+async function clavesLinks(ids, user){
+  const falta = ids.filter(id => !CLAVES[id + '|' + user]);
+  if (falta.length) {
+    const r = await api({tipo:'link_crear', sesion: SESION, ids: falta, user});
+    if (r.ok) Object.entries(r.claves || {}).forEach(([id, k]) => CLAVES[id + '|' + user] = k);
+    else if (r.error === 'sesion') sesionVencida();
+  }
+  return ids.map(id => CLAVES[id + '|' + user] || '');
+}
+function urlLink(id, k){
+  const base = location.origin && location.origin !== 'null' ? location.origin + location.pathname : 'https://asesoresdigitalesg.github.io/geely-quiz/crm.html';
+  return `${base}?l=${id}&k=${k}`;
+}
+async function copiarLinkLead(id){
+  const user = S(BYID[id]).asignado;
+  let k = '';
+  try { [k] = await clavesLinks([id], user); } catch {}
+  if (!k) { toast('No se pudo crear el link. Revisa tu conexión.'); return; }
+  const u = urlLink(id, k);
+  try { await navigator.clipboard.writeText(u); toast('Link copiado'); } catch { prompt('Copia el link:', u); }
+}
+
+const RL_RES = [
+  {k:'hablamos',  i:'💬', t:'Hablamos / me respondió', paso:'Dar seguimiento'},
+  {k:'sinresp',   i:'⏳', t:'Le escribí, no contesta',  paso:'Volver a escribirle'},
+  {k:'asesoria',  i:'📹', t:'Agendó asesoría',          paso:'Hacer la asesoría', fecha:true},
+  {k:'cita',      i:'🏢', t:'Agendó cita en agencia',   paso:'Confirmar la cita', fecha:true},
+  {k:'cerro',     i:'🎉', t:'Ya compró',                fin:true},
+  {k:'nointeresa',i:'✋', t:'No le interesa',           fin:true, bad:true},
+];
+const RL_CUANDO = () => {
+  const out = [];
+  const m = addDias(new Date(),1); m.setHours(10,0,0,0); out.push(['Mañana', isoHora(m)]);
+  const d2 = addDias(new Date(),2); d2.setHours(10,0,0,0); out.push(['En 2 días', isoHora(d2)]);
+  const d3 = addDias(new Date(),3); d3.setHours(10,0,0,0); out.push(['En 3 días', isoHora(d3)]);
+  const w = addDias(new Date(),7); w.setHours(10,0,0,0); out.push(['En una semana', isoHora(w)]);
+  return out;
+};
+
+async function iniciarModoRapido(id, clave){
+  MODO_RAPIDO = true;
+  document.body.classList.add('modo-rapido');
+  $('login').hidden = true; $('app').hidden = true;
+  const box = $('rapido'); box.hidden = false;
+  box.innerHTML = '<div class="empty" style="padding-top:30vh"><b>Abriendo tu lead…</b></div>';
+  const invalido = () => box.innerHTML = `<div class="empty" style="padding-top:26vh"><b>Este link ya no es válido</b>Puede que el lead se haya reasignado a otra persona.<br><br><a class="btn" href="${location.pathname}">Entrar al CRM</a></div>`;
+  let r;
+  try { r = await api({tipo:'link_leer', l: id, k: clave}); } catch (e) { r = {ok:false, error:'red'}; }
+  if (!r.ok) {
+    if (r.error === 'link') invalido();
+    else box.innerHTML = '<div class="empty" style="padding-top:30vh"><b>No se pudo cargar</b>Revisa tu conexión y vuelve a abrir el link.</div>';
+    return;
+  }
+  aplicarEquipo(r.equipo);
+  const rows = []; rows[0] = {c:[]}; rows[id + 1] = r.row; // misma posición que en el Sheet
+  procesarFilas(rows);
+  const l = BYID[id];
+  if (!l) { invalido(); return; }
+  LINK_AUTH = {l: id, k: clave};
+  currentUser = USERS.find(u => u.user === r.asignado) || {user: r.asignado || 'link', nombre: 'Asesor', role:'asesor'};
+  RL = {id, res:'', motivo:'', cita:'', hecho:false};
+  renderRapido();
+}
+
+function renderRapido(){
+  const box = $('rapido'); if (!RL) return;
+  const l = BYID[RL.id], s = S(l), e = etapa(l);
+  const sp = siguientePaso(l);
+  const res = RL_RES.find(r => r.k === RL.res);
+  const top = `<div class="r-top"><b>ADG <span>CRM</span></b><span>${esc(firstName(currentUser.nombre))}</span></div>`;
+
+  if (RL.hecho) {
+    box.innerHTML = top + `<div class="r-done"><div class="ok">${IC.check}</div>
+      <div class="h2" style="font-size:22px">Listo, quedó actualizado</div>
+      <p class="hint" style="margin-top:6px">${esc(l.nombre)} · ${ETAPAS[ETAPA_IDX[e]].label}</p>
+      ${sp ? `<div class="next-card" style="margin-top:18px;text-align:left"><div class="next-t">${esc(sp.texto)}</div><div class="next-d">${cuando(sp.iso)}</div></div>` : ''}
+      <div style="display:grid;gap:8px;margin-top:22px">
+        <button class="btn" onclick="RL.hecho=false;RL.res='';renderRapido()">Registrar otra cosa</button>
+        <a class="btn btn-ghost" href="${location.pathname}">Abrir mi CRM completo</a>
+      </div></div>`;
+    return;
+  }
+
+  const ultimos = (s.bitacora || []).slice(0, 3);
+  box.innerHTML = top + `
+    <div class="r-name">${esc(l.nombre)}</div>
+    <div class="r-meta">${pfHTML(l.perfil)}<span class="chip ${l.local?'good':''}">${esc(l.estado||'Sin estado')}</span><span class="chip">${ETAPAS[ETAPA_IDX[e]].label}</span><span class="chip">Llegó ${hace(l.dt)}</span></div>
+    <div class="r-facts"><b>${esc(l.modelo || '—')}</b><br>Ingreso ${esc(l.ingreso||'—')} · Enganche ${esc(l.enganche||'—')}<br>Historial: ${esc(l.historial||'—')}</div>
+    ${sp ? `<div class="next-card ${sp.estado==='vencido'?'late':''}" style="margin-top:14px"><div class="next-t">${esc(sp.texto)}</div><div class="next-d">${sp.estado==='vencido'?'Vencido · ':''}${cuando(sp.iso)}</div></div>` : ''}
+    <div class="r-acts">
+      <a class="btn" href="tel:${esc(l.telefono)}">${IC.phone} Llamar</a>
+      <button class="btn btn-wa" onclick="rapidoWA()">${IC.wa} WhatsApp</button>
+    </div>
+
+    <div class="r-q">¿Qué pasó?</div>
+    <div class="big-opts">${RL_RES.map(r => `<button class="big-opt ${RL.res===r.k?'on':''} ${r.bad?'bad':''}" onclick="RL.res='${r.k}';RL.motivo='';renderRapido();setTimeout(()=>$('rl-sig')?.scrollIntoView({behavior:'smooth',block:'start'}),40)"><i>${r.i}</i>${r.t}</button>`).join('')}</div>
+
+    ${res ? `<div id="rl-sig">${
+      res.k === 'nointeresa' ? `<div class="r-q">¿Por qué?</div><div class="opts" style="flex-direction:column;align-items:stretch">${MOTIVOS_PERDIDA.map(m => `<button class="opt" style="height:auto;padding:12px 14px;text-align:left;font-size:14px" onclick="guardarRapido({motivo:'${esc(m)}'})">${m}</button>`).join('')}</div>`
+      : res.k === 'cerro' ? `<button class="btn btn-primary btn-block" style="min-height:52px;margin-top:16px;font-size:16px" onclick="guardarRapido({})">Confirmar venta cerrada</button>`
+      : res.fecha ? `<div class="r-q">¿Qué día y a qué hora?</div><input class="inp" type="datetime-local" id="rl-fecha" style="min-height:50px"><button class="btn btn-primary btn-block" style="min-height:52px;margin-top:10px;font-size:16px" onclick="guardarRapido({fecha:$('rl-fecha').value})">Guardar</button>`
+      : `<div class="r-q">¿Cuándo le vuelves a escribir?</div><div class="big-opts">${RL_CUANDO().map(([t,v]) => `<button class="big-opt" style="min-height:52px;justify-content:center" onclick="guardarRapido({fecha:'${v}'})">${t}</button>`).join('')}</div>`
+    }</div>` : ''}
+
+    ${ultimos.length ? `<div class="r-log"><div class="hint" style="margin-bottom:6px">Lo último</div><div class="log">${ultimos.map(b => { const d = fromISO(b.t); return `<div class="log-i" data-k="${esc(b.k||'n')}"><i></i><div><div class="log-x">${esc(b.x)}</div><div class="log-t">${d?hace(d):esc(b.t)}${b.u?' · '+esc(nombreAsesor(b.u)):''}</div></div></div>`; }).join('')}</div></div>` : ''}
+    <p style="text-align:center;margin-top:22px"><a class="hint" href="${location.pathname}">Abrir mi CRM completo</a></p>`;
+}
+
+function rapidoWA(){
+  const l = BYID[RL.id];
+  if (!telLimpio(l)) { toast('Este lead no tiene teléfono válido.'); return; }
+  const ps = plantillas(l);
+  const k = etapa(l) === 'nuevo' ? 'primer' : etapa(l) === 'contactado' ? 'asesoria' : 'seguimiento';
+  const msg = (ps.find(p => p.k === k) || ps[0]).m;
+  window.open(`https://wa.me/${telLimpio(l)}?text=${encodeURIComponent(msg)}`, '_blank');
+}
+
+function guardarRapido(o){
+  const l = BYID[RL.id], s = S(l), e = etapa(l);
+  const res = RL_RES.find(r => r.k === RL.res);
+  if (res.fecha && !o.fecha) { toast('Elige el día y la hora.'); return; }
+  const ahora = isoHora(new Date());
+  const c = {ultimoContacto: ahora};
+  if (!s.primerContacto) c.primerContacto = ahora;
+  const inc = k => c[k] = (s[k]||0) + 1;
+  const avanza = dest => { if (e !== 'perdido' && ETAPA_IDX[dest] > ETAPA_IDX[e]) c.etapa = dest; };
+  let log = '';
+  if (res.k === 'hablamos')   { inc('mensajesSeguimiento'); avanza('contactado'); c.taskText = res.paso; c.taskDate = o.fecha; log = `Hablamos → ${res.paso}, ${cuando(o.fecha)}`; }
+  if (res.k === 'sinresp')    { inc('intentos'); c.taskText = res.paso; c.taskDate = o.fecha; log = `Sin respuesta → ${res.paso}, ${cuando(o.fecha)}`; }
+  if (res.k === 'asesoria')   { inc('videollamadasAgendadas'); avanza('asesoria'); c.taskText = res.paso; c.taskDate = o.fecha; log = `Agendó asesoría: ${cuando(o.fecha)}`; }
+  if (res.k === 'cita')       { inc('citaAgenciaAgendada'); avanza('cierre'); c.citaAgenciaFecha = o.fecha; c.taskText = res.paso; c.taskDate = o.fecha; log = `Agendó cita en agencia: ${cuando(o.fecha)}`; }
+  if (res.k === 'cerro')      { c.etapa = 'cerrado'; c.fechaCierre = ahora; c.taskText = ''; c.taskDate = ''; c.motivoPerdida = ''; log = 'Venta cerrada'; }
+  if (res.k === 'nointeresa') { c.etapa = 'perdido'; c.motivoPerdida = o.motivo; c.taskText = ''; c.taskDate = ''; log = `Perdido (${o.motivo})`; }
+  guardar(l.id, c, {log: log + ' · desde link directo', k: res.k === 'cerro' || res.k === 'nointeresa' ? 'e' : 'c'});
+  if (res.k === 'cerro') celebrar(l.nombre);
+  RL.hecho = true; RL.res = '';
+  renderRapido();
+  window.scrollTo(0,0);
+}
+
+// Arranque: si la URL trae ?l=…&k=…, abre la ficha rápida en lugar del CRM
+(function(){
+  const p = new URLSearchParams(location.search);
+  const id = p.get('l'), k = p.get('k');
+  if (id !== null && k) window.addEventListener('DOMContentLoaded', () => iniciarModoRapido(parseInt(id,10), k));
+})();
 </script>
 </body>
 </html>
