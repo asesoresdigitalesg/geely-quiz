@@ -1,974 +1,676 @@
-<title>Monjaro PHEV — Geely Serdán Puebla</title>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#080810">
+<title>¿Cuánto ahorrarías con la Monjaro EM-i? | Geely Serdán Puebla</title>
+<meta name="description" content="Regístrate al lanzamiento de la Monjaro EM-i el 16 de octubre en Geely Serdán Puebla y obtén acceso a la oferta especial de lanzamiento.">
+<meta property="og:title" content="¿Cuánto dejarías de gastar en gasolina? · Monjaro EM-i">
+<meta property="og:description" content="Calcula tu ahorro y aparta tu lugar en el lanzamiento del 16 de octubre. Lugares limitados.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,800;0,900;1,700&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
-
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
 <style>
-/* =====================================================
-   DESIGN TOKENS — @asesoresdigitalesg premium dark auto
-   ===================================================== */
-:root {
-  --bg:          #05080F;
-  --surface:     #080D18;
-  --surface2:    #0C1220;
-  --border:      #182436;
-  --border-hi:   #223350;
-  --accent:      #4A8FE0;
-  --accent-hi:   #82BDFF;
-  --accent-dim:  rgba(74,143,224,0.10);
-  --accent-glow: rgba(74,143,224,0.20);
-  --teal:        rgba(78,205,196,0.10);
-  --teal-text:   #4ECDC4;
-  --gold:        #C4942A;
-  --gold-dim:    rgba(196,148,42,0.12);
-  --fg:          #FFFFFF;
-  --fg2:         #7B9EC0;
-  --fg3:         #3A5472;
-  --brand:       #94B0CC;
-  --red:         #E05252;
-  color-scheme: dark;
-}
-
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-html { scroll-behavior: smooth; }
-
-body {
-  background: var(--bg);
-  color: var(--fg);
-  font-family: 'Barlow', 'Helvetica Neue', sans-serif;
-  font-weight: 400;
-  min-height: 100vh;
-  padding: 0 16px env(safe-area-inset-bottom, 24px);
-  padding-top: env(safe-area-inset-top, 0px);
-  -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
-}
-
-/* ===== GLOBAL HUD GRID OVERLAY ===== */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(74,143,224,0.018) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(74,143,224,0.018) 1px, transparent 1px);
-  background-size: 40px 40px;
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* ===== CANVAS BG ===== */
-#bg-canvas {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* ===== CONTENT LAYERS ===== */
-.page-content {
-  position: relative;
-  z-index: 1;
-  max-width: 480px;
-  margin: 0 auto;
-  padding-bottom: 60px;
-}
-
-/* ===== TOP BAR ===== */
-.top-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 18px 0 0;
-  margin-bottom: 40px;
-}
-
-.top-logo {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-weight: 700;
-  font-size: 12px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--fg3);
-}
-
-.top-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
-  border: 1px solid var(--border-hi);
-  border-radius: 100px;
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--teal-text);
-  background: rgba(78,205,196,0.06);
-}
-
-.top-badge::before {
-  content: '';
-  display: block;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--teal-text);
-  animation: pulse-dot 1.8s ease-in-out infinite;
-}
-
-@keyframes pulse-dot {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.3; }
-}
-
-/* ===== HERO ===== */
-.hero {
-  position: relative;
-  padding: 0 0 48px;
-  text-align: center;
-}
-
-.hero::before {
-  content: '';
-  position: absolute;
-  top: -60px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 340px;
-  height: 340px;
-  background: radial-gradient(ellipse, rgba(74,143,224,0.10) 0%, transparent 68%);
-  pointer-events: none;
-}
-
-/* Corner marks on hero */
-.hero::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 22px;
-  height: 22px;
-  border-top: 1.5px solid rgba(74,143,224,0.3);
-  border-right: 1.5px solid rgba(74,143,224,0.3);
-  pointer-events: none;
-}
-
-.hero-eyebrow {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.20em;
-  text-transform: uppercase;
-  color: var(--teal-text);
-  margin-bottom: 20px;
-}
-
-.hero-lockup {
-  position: relative;
-  display: inline-block;
-  margin-bottom: 6px;
-}
-
-.hero-overline {
-  display: block;
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 13px;
-  font-weight: 300;
-  letter-spacing: 0.26em;
-  text-transform: uppercase;
-  color: var(--fg3);
-  margin-bottom: 8px;
-}
-
-.hero h1 {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: clamp(52px, 15vw, 80px);
-  font-weight: 900;
-  line-height: 0.92;
-  text-transform: uppercase;
-  letter-spacing: -0.01em;
-  color: var(--fg);
-  text-wrap: balance;
-}
-
-.hero h1 .accent-word {
-  color: var(--accent);
-  position: relative;
-  display: inline-block;
-}
-
-/* Underline glow on accent word */
-.hero h1 .accent-word::after {
-  content: '';
-  position: absolute;
-  bottom: -4px;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--accent), transparent);
-  opacity: 0.6;
-}
-
-.hero-sub {
-  margin-top: 22px;
-  font-size: 14px;
-  font-weight: 400;
-  color: var(--fg2);
-  max-width: 320px;
-  margin-left: auto;
-  margin-right: auto;
-  line-height: 1.65;
-  text-wrap: balance;
-}
-
-/* ===== DATE STRIP ===== */
-.date-strip {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  margin: 0 0 40px;
-}
-
-.date-block {
-  position: relative;
-  background: var(--surface);
-  border: 1px solid var(--border-hi);
-  border-radius: 8px;
-  padding: 14px 20px;
-  text-align: center;
-  min-width: 76px;
-  overflow: hidden;
-}
-
-/* corner accent on date block */
-.date-block::before {
-  content: '';
-  position: absolute;
-  top: 6px;
-  left: 6px;
-  width: 10px;
-  height: 10px;
-  border-top: 1px solid rgba(74,143,224,0.35);
-  border-left: 1px solid rgba(74,143,224,0.35);
-}
-
-.date-block::after {
-  content: '';
-  position: absolute;
-  bottom: 6px;
-  right: 6px;
-  width: 10px;
-  height: 10px;
-  border-bottom: 1px solid rgba(74,143,224,0.35);
-  border-right: 1px solid rgba(74,143,224,0.35);
-}
-
-.date-num {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 34px;
-  font-weight: 900;
-  color: var(--accent);
-  line-height: 1;
-  text-shadow: 0 0 16px rgba(74,143,224,0.4);
-}
-
-.date-mon {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--fg3);
-  margin-top: 4px;
-}
-
-.date-sep {
-  color: var(--fg3);
-  font-size: 18px;
-  font-weight: 300;
-  padding: 0 2px;
-}
-
-/* ===== SECTION LABEL ===== */
-.section-label {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--fg3);
-  margin-bottom: 12px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.section-label::before {
-  content: '';
-  display: block;
-  width: 18px;
-  height: 1px;
-  background: var(--fg3);
-  opacity: 0.5;
-}
-
-/* ===== FORM CARD ===== */
-.card {
-  position: relative;
-  background: var(--surface);
-  border: 1px solid var(--border-hi);
-  border-radius: 12px;
-  padding: 28px 24px;
-  overflow: hidden;
-}
-
-/* top accent line on card */
-.card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 10%;
-  right: 10%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--accent) 40%, var(--accent) 60%, transparent);
-  opacity: 0.4;
-}
-
-/* corner ticks */
-.card::after {
-  content: '';
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 14px;
-  height: 14px;
-  border-top: 1px solid rgba(74,143,224,0.25);
-  border-right: 1px solid rgba(74,143,224,0.25);
-}
-
-.card-inner-tl {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  width: 14px;
-  height: 14px;
-  border-top: 1px solid rgba(74,143,224,0.25);
-  border-left: 1px solid rgba(74,143,224,0.25);
-  pointer-events: none;
-}
-
-/* ===== FIELDS ===== */
-.field {
-  margin-bottom: 16px;
-}
-
-.field label {
-  display: block;
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--fg3);
-  margin-bottom: 8px;
-}
-
-.field input,
-.field select {
-  width: 100%;
-  background: var(--surface2);
-  border: 1.5px solid var(--border);
-  border-radius: 8px;
-  color: var(--fg);
-  font-family: 'Barlow', sans-serif;
-  font-size: 16px;
-  font-weight: 400;
-  padding: 13px 16px;
-  transition: border-color 0.18s, box-shadow 0.18s;
-  -webkit-appearance: none;
-  appearance: none;
-  outline: none;
-}
-
-.field input::placeholder { color: var(--fg3); }
-
-.field input:focus,
-.field select:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(74,143,224,0.12);
-}
-
-.select-wrap { position: relative; }
-
-.select-wrap::after {
-  content: '';
-  position: absolute;
-  right: 14px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 8px;
-  height: 5px;
-  background: var(--fg3);
-  clip-path: polygon(0 0, 100% 0, 50% 100%);
-  pointer-events: none;
-}
-
-.field select { padding-right: 36px; cursor: pointer; }
-.field select option { background: var(--surface2); }
-
-/* ===== SUBMIT BTN ===== */
-.btn-submit {
-  width: 100%;
-  margin-top: 8px;
-  padding: 16px;
-  background: var(--accent);
-  color: #fff;
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 17px;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: opacity 0.15s, transform 0.12s, box-shadow 0.15s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  box-shadow: 0 0 20px rgba(74,143,224,0.25);
-}
-
-.btn-submit:hover {
-  opacity: 0.92;
-  box-shadow: 0 0 30px rgba(74,143,224,0.40);
-}
-
-.btn-submit:active { transform: scale(0.985); }
-.btn-submit:disabled { opacity: 0.4; cursor: not-allowed; box-shadow: none; }
-
-.btn-submit .spinner {
-  width: 18px; height: 18px;
-  border: 2.5px solid rgba(255,255,255,0.25);
-  border-top-color: #fff;
-  border-radius: 50%;
-  animation: spin 0.7s linear infinite;
-  display: none;
-}
-
-.btn-submit.loading .spinner { display: block; }
-.btn-submit.loading .btn-text { display: none; }
-
-@keyframes spin { to { transform: rotate(360deg); } }
-
-.form-footer {
-  text-align: center;
-  margin-top: 14px;
-  font-size: 12px;
-  color: var(--fg3);
-  letter-spacing: 0.02em;
-}
-
-/* ===== ERROR ===== */
-.error-msg {
-  background: rgba(224,82,82,0.10);
-  border: 1px solid rgba(224,82,82,0.28);
-  border-radius: 8px;
-  padding: 10px 14px;
-  font-size: 13px;
-  color: #FC8181;
-  margin-top: 12px;
-  display: none;
-}
-.error-msg.visible { display: block; }
-
-/* ===== SUCCESS ===== */
-.success-view {
-  display: none;
-  text-align: center;
-  padding: 8px 0;
-}
-.success-view.visible { display: block; }
-
-.success-icon {
-  width: 64px; height: 64px;
-  background: rgba(74,143,224,0.08);
-  border: 1.5px solid rgba(74,143,224,0.3);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 20px;
-  box-shadow: 0 0 24px rgba(74,143,224,0.15);
-}
-
-.success-icon svg {
-  width: 28px; height: 28px;
-  stroke: var(--accent);
-  fill: none;
-  stroke-width: 2.5;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.success-view h2 {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 36px;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
-  margin-bottom: 12px;
-  color: var(--fg);
-}
-
-.success-view p {
-  font-size: 14px;
-  color: var(--fg2);
-  margin-bottom: 20px;
-  text-wrap: balance;
-  line-height: 1.65;
-}
-
-.success-detail {
-  background: var(--surface2);
-  border: 1px solid var(--border-hi);
-  border-radius: 10px;
-  padding: 18px;
-  font-size: 13px;
-  color: var(--fg2);
-  text-align: left;
-  line-height: 1.75;
-}
-
-.success-detail strong {
-  color: var(--accent);
-  font-weight: 600;
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 14px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-/* ===== PERKS ===== */
-.perks {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 28px;
-}
-
-.perk {
-  position: relative;
-  display: flex;
-  align-items: flex-start;
-  gap: 14px;
-  padding: 16px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  overflow: hidden;
-  transition: border-color 0.2s;
-}
-
-.perk::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 20%;
-  bottom: 20%;
-  width: 2px;
-  background: linear-gradient(180deg, transparent, var(--accent) 40%, var(--accent) 60%, transparent);
-  opacity: 0.5;
-}
-
-.perk:hover { border-color: var(--border-hi); }
-
-.perk-icon {
-  width: 36px; height: 36px;
-  border-radius: 8px;
-  background: rgba(74,143,224,0.08);
-  border: 1px solid rgba(74,143,224,0.18);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.perk-icon svg {
-  width: 17px; height: 17px;
-  stroke: var(--accent);
-  fill: none;
-  stroke-width: 1.8;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.perk-text strong {
-  display: block;
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 15px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--fg);
-  margin-bottom: 3px;
-}
-
-.perk-text span {
-  font-size: 12px;
-  color: var(--fg2);
-  line-height: 1.5;
-}
-
-/* ===== HUD DATA STRIP ===== */
-.hud-strip {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  margin: 32px 0;
-}
-
-.hud-cell {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 12px 10px;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-}
-
-.hud-cell::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(74,143,224,0.06), transparent);
-}
-
-.hud-value {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 22px;
-  font-weight: 900;
-  color: var(--accent);
-  line-height: 1;
-  margin-bottom: 4px;
-  text-shadow: 0 0 12px rgba(74,143,224,0.35);
-}
-
-.hud-label {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 9px;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--fg3);
-}
-
-/* ===== FOOTER ===== */
-.page-footer {
-  text-align: center;
-  padding: 28px 0 16px;
-  font-size: 11px;
-  font-family: 'Barlow Condensed', sans-serif;
-  font-weight: 400;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--fg3);
-  border-top: 1px solid var(--border);
-  margin-top: 40px;
-}
-
-.page-footer a {
-  color: var(--accent);
-  text-decoration: none;
-}
-
-.page-footer a:hover { color: var(--accent-hi); }
+  :root {
+    --bg: #080810;
+    --surface: #0f0f1a;
+    --card: #13131f;
+    --border: #1c1c2e;
+    --border-hi: #26263d;
+    --accent: #00d4ff;
+    --accent2: #0055ff;
+    --gold: #f5c518;
+    --green: #00e59b;
+    --orange: #ff8c00;
+    --red: #ff4444;
+    --text: #eeeef8;
+    --muted: #5a5a7a;
+    --muted2: #8a8aa8;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+  button { font-family: inherit; color: inherit; }
+  .bg-grid { position: fixed; inset: 0; background-image: linear-gradient(rgba(0,212,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(0,212,255,0.025) 1px, transparent 1px); background-size: 44px 44px; pointer-events: none; z-index: 0; }
+  .bg-glow { position: fixed; top: -40vh; left: 50%; transform: translateX(-50%); width: 90vw; height: 70vh; background: radial-gradient(ellipse, rgba(0,60,200,0.13) 0%, transparent 70%); pointer-events: none; z-index: 0; }
+  .wrapper { position: relative; z-index: 1; max-width: 600px; margin: 0 auto; padding: 0 18px calc(60px + env(safe-area-inset-bottom)); }
+  .topbar { display: flex; align-items: center; justify-content: center; padding: 22px 0 0; gap: 10px; }
+  .topbar-logo { font-size: 11px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+  .topbar-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--muted); opacity: 0.4; }
+  .screen { display: none; }
+  .screen.on { display: block; animation: fadeUp 0.38s cubic-bezier(0.4,0,0.2,1); }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
+
+  /* ── INTRO ── */
+  .intro { text-align: center; padding: 40px 0 28px; }
+  .badge { display: inline-flex; align-items: center; gap: 7px; background: rgba(0,212,255,0.07); border: 1px solid rgba(0,212,255,0.18); border-radius: 100px; padding: 7px 18px; font-size: 11px; font-weight: 600; letter-spacing: 0.13em; text-transform: uppercase; color: var(--accent); margin-bottom: 24px; }
+  .badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: blink 2s infinite; }
+  @keyframes blink { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.3;transform:scale(1.5)} }
+  .headline { font-family: 'Bebas Neue', sans-serif; font-size: clamp(42px, 12vw, 70px); line-height: 0.93; letter-spacing: 0.02em; margin-bottom: 6px; }
+  .hl { background: linear-gradient(90deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .sub { color: var(--muted2); font-size: 15px; font-weight: 300; line-height: 1.65; margin-top: 18px; }
+  .sub b { color: var(--text); font-weight: 500; }
+  .perks { display: flex; justify-content: center; gap: 18px; margin-top: 22px; flex-wrap: wrap; }
+  .perk { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted2); }
+
+  .btn-main { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; background: linear-gradient(135deg, var(--accent2), var(--accent)); color: #000; font-size: 16px; font-weight: 700; letter-spacing: 0.04em; border: none; border-radius: 13px; padding: 18px 24px; cursor: pointer; transition: transform .2s, box-shadow .2s, opacity .2s; text-decoration: none; }
+  .btn-main:hover { transform: translateY(-2px); box-shadow: 0 14px 40px rgba(0,85,255,0.35); }
+  .btn-main:disabled { opacity: .35; pointer-events: none; }
+  .btn-main.pulse { animation: glowpulse 2.4s ease-in-out infinite; }
+  @keyframes glowpulse { 0%,100% { box-shadow: 0 0 0 rgba(0,212,255,0); } 50% { box-shadow: 0 0 28px rgba(0,212,255,0.35); } }
+
+  /* Escasez */
+  .cupo { margin-top: 16px; background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px 16px; }
+  .cupo-top { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; font-size: 12px; color: var(--muted2); margin-bottom: 9px; }
+  .cupo-top b { color: var(--text); font-weight: 700; }
+  .cupo-top .cupo-n { color: var(--gold); font-weight: 700; white-space: nowrap; }
+  .cupo-bar { height: 6px; border-radius: 6px; background: var(--border); overflow: hidden; }
+  .cupo-fill { height: 100%; width: 0; border-radius: 6px; background: linear-gradient(90deg, var(--gold), var(--orange)); transition: width 1.2s cubic-bezier(.4,0,.2,1); }
+  .cupo-foot { display: flex; justify-content: space-between; margin-top: 8px; font-size: 11px; color: var(--muted); }
+  .cupo-foot .live { display: inline-flex; align-items: center; gap: 6px; }
+  .cupo-foot .live::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: blink 2s infinite; }
+
+  .legal { text-align: center; font-size: 11px; color: var(--muted); margin-top: 18px; line-height: 1.55; }
+  .sec-label { font-size: 10px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin: 36px 0 12px; text-align: center; }
+  .specs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .spec { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px 8px; text-align: center; }
+  .spec-v { font-family: 'Bebas Neue', sans-serif; font-size: 28px; line-height: 1; color: var(--accent); letter-spacing: .02em; }
+  .spec-l { font-size: 10px; color: var(--muted2); text-transform: uppercase; letter-spacing: .08em; margin-top: 4px; font-weight: 600; }
+  .gets { display: grid; gap: 8px; }
+  .get { display: flex; gap: 14px; align-items: center; background: var(--card); border: 1px solid var(--border); border-radius: 13px; padding: 14px 16px; font-size: 13px; color: var(--muted2); line-height: 1.45; }
+  .get b { display: block; color: var(--text); font-weight: 500; font-size: 14px; margin-bottom: 1px; }
+  .get-ico { font-size: 22px; width: 32px; text-align: center; flex-shrink: 0; }
+
+  /* ── PREGUNTAS ── */
+  .progress-wrap { margin: 28px 0 22px; }
+  .progress-meta { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 9px; }
+  .progress-meta .xp { color: var(--gold); }
+  .progress-bar { height: 3px; background: var(--border); border-radius: 10px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent2), var(--accent)); border-radius: 10px; transition: width 0.55s cubic-bezier(0.4,0,0.2,1); }
+  .q-card { background: var(--card); border: 1px solid var(--border); border-radius: 22px; padding: 28px 24px 26px; margin-bottom: 14px; animation: fadeUp 0.38s cubic-bezier(0.4,0,0.2,1); }
+  .q-step { font-size: 10px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; }
+  .q-title { font-size: 21px; font-weight: 500; line-height: 1.3; margin-bottom: 6px; }
+  .q-sub { font-size: 13px; color: var(--muted2); font-weight: 300; margin-bottom: 24px; line-height: 1.5; }
+  .options { display: grid; gap: 11px; }
+  .opt { display: flex; align-items: center; gap: 14px; background: var(--surface); border: 1.5px solid var(--border); border-radius: 13px; padding: 15px 18px; cursor: pointer; transition: border-color 0.18s, background 0.18s, transform 0.15s; text-align: left; font-size: 14px; width: 100%; }
+  .opt:hover { border-color: rgba(0,212,255,0.35); transform: translateY(-1px); }
+  .opt.sel { border-color: var(--accent); background: rgba(0,212,255,0.05); }
+  .opt-icon { font-size: 22px; flex-shrink: 0; width: 32px; text-align: center; }
+  .opt-body { flex: 1; }
+  .opt-body strong { display: block; font-weight: 500; font-size: 14px; }
+  .opt-body small { font-size: 12px; color: var(--muted2); font-weight: 300; }
+  .opt-ring { width: 19px; height: 19px; border-radius: 50%; border: 1.5px solid var(--border-hi); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--bg); }
+  .opt.sel .opt-ring { background: var(--accent); border-color: var(--accent); }
+  .opt.sel .opt-ring::after { content: '✓'; font-weight: 800; }
+  .km-big { text-align: center; font-family: 'Bebas Neue', sans-serif; font-size: 72px; line-height: 1; letter-spacing: .02em; }
+  .km-big small { font-size: 26px; color: var(--muted2); margin-left: 4px; }
+  .km-tag { text-align: center; font-size: 13px; color: var(--accent); font-weight: 500; min-height: 20px; margin: 2px 0 18px; }
+  input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 32px; background: transparent; cursor: pointer; }
+  input[type=range]::-webkit-slider-runnable-track { height: 4px; border-radius: 4px; background: linear-gradient(90deg, var(--accent2), var(--accent) var(--p,15%), var(--border) var(--p,15%)); }
+  input[type=range]::-moz-range-track { height: 4px; border-radius: 4px; background: var(--border); }
+  input[type=range]::-moz-range-progress { height: 4px; border-radius: 4px; background: var(--accent); }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 28px; height: 28px; margin-top: -12px; border-radius: 50%; background: #fff; border: 5px solid var(--accent); box-shadow: 0 0 18px rgba(0,212,255,.55); }
+  input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; background: #fff; border: 5px solid var(--accent); }
+  .quick { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; margin: 14px 0 22px; }
+  .quick button { background: var(--surface); border: 1.5px solid var(--border); border-radius: 10px; padding: 10px 4px; font-size: 13px; font-weight: 500; cursor: pointer; color: var(--muted2); }
+  .quick button.sel { border-color: var(--accent); color: var(--text); }
+  .btn-back { background: none; border: none; color: var(--muted); font-size: 12px; cursor: pointer; text-decoration: underline; display: block; margin: 14px auto 0; }
+  .xp-pop { position: fixed; left: 50%; top: 22%; transform: translateX(-50%); font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: .04em; color: var(--gold); pointer-events: none; opacity: 0; z-index: 30; text-shadow: 0 0 20px rgba(245,197,24,.5); }
+  .xp-pop.go { animation: xp 0.9s ease-out; }
+  @keyframes xp { 0% { opacity: 0; transform: translate(-50%, 10px) scale(.8); } 25% { opacity: 1; transform: translate(-50%, 0) scale(1.05); } 100% { opacity: 0; transform: translate(-50%, -40px) scale(1); } }
+
+  /* ── ANALIZANDO ── */
+  .analiza { text-align: center; padding: 70px 0 30px; }
+  .radar { width: 120px; height: 120px; margin: 0 auto 28px; border-radius: 50%; border: 1.5px solid rgba(0,212,255,.25); position: relative; display: grid; place-items: center; }
+  .radar::before { content: ''; position: absolute; inset: 14px; border-radius: 50%; border: 1px solid rgba(0,212,255,.15); }
+  .radar::after { content: ''; position: absolute; inset: 0; border-radius: 50%; background: conic-gradient(from 0deg, rgba(0,212,255,.45), transparent 30%); animation: spin 1.4s linear infinite; }
+  .radar span { position: relative; z-index: 1; font-family: 'Bebas Neue', sans-serif; font-size: 34px; color: var(--accent); }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .a-list { display: grid; gap: 10px; max-width: 330px; margin: 0 auto; text-align: left; }
+  .a-item { display: flex; gap: 12px; align-items: center; font-size: 14px; color: var(--muted); transition: color .3s; }
+  .a-item i { width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--border-hi); flex-shrink: 0; display: grid; place-items: center; font-style: normal; font-size: 11px; color: var(--bg); }
+  .a-item.on { color: var(--text); }
+  .a-item.on i { background: var(--green); border-color: var(--green); }
+  .a-item.on i::after { content: '✓'; font-weight: 800; }
+
+  /* ── GATE ── */
+  .gate-head { text-align: center; padding: 30px 0 18px; }
+  .gate-head .headline { font-size: clamp(36px, 10vw, 54px); }
+  .lvl { display: inline-flex; align-items: center; gap: 8px; border-radius: 100px; padding: 7px 16px; font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 18px; }
+  .lvl.alto { background: rgba(0,229,155,0.1); border: 1px solid rgba(0,229,155,0.3); color: var(--green); }
+  .lvl.medio { background: rgba(0,212,255,0.08); border: 1px solid rgba(0,212,255,0.25); color: var(--accent); }
+  .lvl.base { background: rgba(245,197,24,0.08); border: 1px solid rgba(245,197,24,0.25); color: var(--gold); }
+  .result-card { background: var(--card); border: 1px solid var(--border); border-radius: 22px; padding: 26px 22px; margin-bottom: 14px; position: relative; overflow: hidden; }
+  .result-tag { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+  .big-save { font-family: 'Bebas Neue', sans-serif; font-size: clamp(60px, 18vw, 92px); line-height: .9; letter-spacing: .02em; background: linear-gradient(135deg, var(--text) 30%, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .big-save small { font-size: .32em; -webkit-text-fill-color: var(--muted2); margin-left: 6px; letter-spacing: .06em; }
+  .fin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 18px; }
+  .fin-item { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 15px 14px; }
+  .fin-item.wide { grid-column: 1 / -1; }
+  .fin-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; margin-bottom: 6px; }
+  .fin-val { font-family: 'Bebas Neue', sans-serif; font-size: 28px; color: var(--accent); letter-spacing: 0.02em; line-height: 1; }
+  .fin-val.green { color: var(--green); }
+  .fin-val.gold { color: var(--gold); }
+  .fin-sub { font-size: 11px; color: var(--muted2); margin-top: 4px; font-weight: 300; line-height: 1.4; }
+  .locked .lk { filter: blur(9px); user-select: none; }
+  .lock-over { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; background: rgba(19,19,31,.72); text-align: center; padding: 20px; }
+  .lock-over .ic { font-size: 30px; }
+  .lock-over b { font-size: 15px; font-weight: 700; }
+  .lock-over span { font-size: 12px; color: var(--muted2); }
+  .form-card { background: var(--card); border: 1px solid rgba(0,212,255,0.25); border-radius: 22px; padding: 26px 22px; box-shadow: 0 0 40px rgba(0,85,255,0.08); }
+  .form-title { font-size: 19px; font-weight: 500; margin-bottom: 4px; }
+  .form-sub { font-size: 13px; color: var(--muted2); font-weight: 300; margin-bottom: 20px; line-height: 1.5; }
+  .inp-wrap { position: relative; margin-bottom: 12px; }
+  .inp-wrap span { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); font-size: 16px; pointer-events: none; }
+  .inp { width: 100%; background: var(--surface); border: 1.5px solid var(--border); border-radius: 13px; padding: 16px 16px 16px 46px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 16px; outline: none; transition: border-color .2s; -webkit-appearance: none; appearance: none; }
+  .inp:focus { border-color: var(--accent); }
+  .inp.bad { border-color: var(--red); }
+  select.inp { padding-right: 40px; background-image: linear-gradient(45deg, transparent 50%, var(--muted2) 50%), linear-gradient(135deg, var(--muted2) 50%, transparent 50%); background-position: calc(100% - 22px) 50%, calc(100% - 16px) 50%; background-size: 6px 6px; background-repeat: no-repeat; }
+  select.inp option { background: var(--surface); }
+  .check { display: flex; gap: 10px; align-items: flex-start; margin: 6px 0 16px; font-size: 12px; color: var(--muted2); line-height: 1.5; cursor: pointer; }
+  .check input { width: 18px; height: 18px; margin-top: 1px; accent-color: var(--accent); flex-shrink: 0; }
+  .check a { color: var(--accent); text-decoration: none; }
+  .err { display: none; background: rgba(255,68,68,0.1); border: 1px solid rgba(255,68,68,0.3); border-radius: 10px; padding: 10px 14px; font-size: 12px; color: #ff6b6b; text-align: center; margin-bottom: 12px; }
+  .err.on { display: block; }
+  .spinner { width: 18px; height: 18px; border: 2.5px solid rgba(0,0,0,0.2); border-top-color: #000; border-radius: 50%; animation: spin .7s linear infinite; display: none; }
+  .loading .spinner { display: block; }
+  .loading .btn-t { display: none; }
+
+  /* ── REPORTE ── */
+  .pase { position: relative; margin: 28px 0 14px; border-radius: 20px; padding: 22px 22px 20px; background: linear-gradient(135deg, #0b1830 0%, #101028 55%, #1a1405 100%); border: 1px solid rgba(245,197,24,.35); overflow: hidden; box-shadow: 0 18px 50px rgba(0,0,0,.45), 0 0 30px rgba(245,197,24,.08); animation: paseIn .8s cubic-bezier(.2,.8,.2,1); }
+  @keyframes paseIn { from { opacity: 0; transform: translateY(24px) rotate(-2deg) scale(.96); } to { opacity: 1; transform: none; } }
+  .pase::before { content: ''; position: absolute; inset: 0; background: linear-gradient(115deg, transparent 35%, rgba(255,255,255,.07) 50%, transparent 65%); transform: translateX(-100%); animation: shine 3.5s ease-in-out 1s infinite; }
+  @keyframes shine { 0% { transform: translateX(-100%); } 40%,100% { transform: translateX(100%); } }
+  .pase::after { content: ''; position: absolute; left: -10px; right: -10px; top: 108px; border-top: 1.5px dashed rgba(245,197,24,.25); }
+  .pase-top { display: flex; justify-content: space-between; align-items: flex-start; height: 86px; }
+  .pase-k { font-size: 10px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--gold); }
+  .pase-t { font-family: 'Bebas Neue', sans-serif; font-size: 30px; line-height: 1; letter-spacing: .03em; margin-top: 6px; }
+  .pase-folio { text-align: right; }
+  .pase-folio b { display: block; font-family: 'Bebas Neue', sans-serif; font-size: 40px; line-height: 1; color: var(--gold); }
+  .pase-folio span { font-size: 10px; color: var(--muted2); letter-spacing: .1em; text-transform: uppercase; }
+  .pase-row { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 10px; margin-top: 26px; }
+  .pase-row div span { display: block; font-size: 9px; color: var(--muted2); letter-spacing: .12em; text-transform: uppercase; margin-bottom: 3px; }
+  .pase-row div b { font-size: 14px; font-weight: 500; overflow-wrap: anywhere; }
+  .bars { display: grid; gap: 12px; margin-top: 20px; }
+  .bar-l { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted2); margin-bottom: 6px; }
+  .bar-l b { color: var(--text); font-weight: 500; }
+  .bar-t { height: 10px; border-radius: 6px; background: var(--surface); overflow: hidden; }
+  .bar-f { height: 100%; width: 0; border-radius: 6px; transition: width 1.2s cubic-bezier(.4,0,.2,1); }
+  .bar-f.hoy { background: linear-gradient(90deg, var(--orange), var(--red)); }
+  .bar-f.emi { background: linear-gradient(90deg, var(--accent2), var(--accent)); }
+  .steps { display: grid; gap: 0; }
+  .step { display: flex; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--muted2); line-height: 1.5; }
+  .step:last-child { border-bottom: none; }
+  .step-d { flex-shrink: 0; width: 48px; text-align: center; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 6px 0; }
+  .step-d b { display: block; font-family: 'Bebas Neue', sans-serif; font-size: 22px; line-height: 1; color: var(--accent); }
+  .step-d span { font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .step strong { display: block; color: var(--text); font-weight: 500; font-size: 14px; }
+  .cta-wa { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; background: #22c55e; color: #fff; font-size: 15px; font-weight: 700; border: none; border-radius: 13px; padding: 18px 24px; cursor: pointer; text-decoration: none; margin: 18px 0 8px; transition: all 0.2s; animation: glowwa 2.4s ease-in-out infinite; }
+  @keyframes glowwa { 0%,100% { box-shadow: 0 0 0 rgba(34,197,94,0); } 50% { box-shadow: 0 0 28px rgba(34,197,94,.4); } }
+  .cta-wa:hover { transform: translateY(-2px); background: #16a34a; }
+  .cta-wa svg { width: 20px; height: 20px; fill: #fff; }
+  .note { font-size: 11px; color: var(--muted); line-height: 1.6; margin-top: 14px; }
+
+  .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 50; align-items: center; justify-content: center; padding: 20px; }
+  .modal.on { display: flex; }
+  .modal-box { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 28px 24px; max-width: 480px; width: 100%; max-height: 80vh; overflow-y: auto; }
+  .modal-box h3 { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: .04em; margin-bottom: 14px; }
+  .modal-box p { font-size: 13px; color: var(--muted2); line-height: 1.7; margin-bottom: 12px; }
+  .modal-box p b { color: var(--text); }
+  @media (max-width: 380px) { .q-card, .result-card, .form-card { padding: 22px 16px; } .pase-row { grid-template-columns: 1fr 1fr; } .pase-row div:first-child { grid-column: 1 / -1; } }
 </style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<div class="bg-glow"></div>
+<div class="xp-pop" id="xp"></div>
 
-<!-- CANVAS FOR AMBIENT PARTICLES -->
-<canvas id="bg-canvas"></canvas>
-
-<div class="page-content">
-
-  <!-- TOP BAR -->
-  <div class="top-bar">
-    <div class="top-logo">Geely Serdán · Puebla</div>
-    <div class="top-badge">Preventa exclusiva</div>
+<div class="wrapper">
+  <div class="topbar">
+    <span class="topbar-logo">AsesoresDigitalesG</span>
+    <div class="topbar-dot"></div>
+    <span class="topbar-logo">Geely Serdán Puebla</span>
   </div>
 
-  <!-- HERO -->
-  <section class="hero">
-    <p class="hero-eyebrow">Geely Serdán Puebla · 2026</p>
-    <div class="hero-lockup">
-      <span class="hero-overline">El Monjaro</span>
-      <h1>cambió de<br><span class="accent-word">categoría</span></h1>
+  <!-- ═══════════ 1. INTRO ═══════════ -->
+  <div class="screen on" id="s-intro">
+    <div class="intro">
+      <div class="badge"><div class="badge-dot"></div>Calculadora Monjaro EM-i · Gratis</div>
+      <div class="headline">¿Cuánto dejarías<br>de gastar en<br><span class="hl">gasolina?</span></div>
+      <p class="sub">Calcula tu ahorro real con la nueva <b>Monjaro EM-i híbrida enchufable</b>. Al terminar, <b>apartas uno de los lugares para su lanzamiento</b> el 16 de octubre en Geely Serdán Puebla.</p>
+      <div class="perks">
+        <div class="perk">⚡ 60 segundos</div>
+        <div class="perk">🔒 Sin costo</div>
+        <div class="perk">🎟️ Lugares limitados</div>
+      </div>
     </div>
-    <p class="hero-sub">Sé el primero en conocer lo que nadie ha visto todavía.</p>
-  </section>
 
-  <!-- DATE STRIP -->
-  <div class="date-strip">
-    <div class="date-block">
-      <div class="date-num">14</div>
-      <div class="date-mon">Oct</div>
+    <button class="btn-main pulse" onclick="empezar()">Calcular mi ahorro →</button>
+
+    <div class="cupo" id="cupo-intro">
+      <div class="cupo-top"><span>🎟️ <b>Lugares para el lanzamiento</b></span><span class="cupo-n" data-cupo-txt>Lugares limitados</span></div>
+      <div class="cupo-bar"><div class="cupo-fill" data-cupo-bar></div></div>
+      <div class="cupo-foot"><span class="live" data-cupo-live>Se asignan en orden de registro</span><span data-faltan></span></div>
     </div>
-    <div class="date-sep">—</div>
-    <div class="date-block">
-      <div class="date-num">15</div>
-      <div class="date-mon">Oct</div>
+
+    <p class="sec-label">Al terminar recibes</p>
+    <div class="gets">
+      <div class="get"><div class="get-ico">📊</div><div><b>Tu reporte de ahorro en gasolina</b>Cuánto dejarías de gastar al mes, al año y en 5 años, según cómo manejas tú.</div></div>
+      <div class="get"><div class="get-ico">🎟️</div><div><b>Tu lugar en el lanzamiento</b>16 de octubre en Geely Serdán Puebla. La conoces en persona antes que el resto.</div></div>
+      <div class="get"><div class="get-ico">💰</div><div><b>Acceso a la oferta especial de lanzamiento</b>Solo para registrados. Te mandamos los detalles por WhatsApp el 15 de octubre.</div></div>
+    </div>
+
+    <p class="sec-label">La nueva Monjaro EM-i</p>
+    <div class="specs">
+      <div class="spec"><div class="spec-v">335</div><div class="spec-l">Caballos</div></div>
+      <div class="spec"><div class="spec-v">130 km</div><div class="spec-l">Eléctricos</div></div>
+      <div class="spec"><div class="spec-v">e-AWD</div><div class="spec-l">Tracción total</div></div>
+    </div>
+
+    <button class="btn-main" style="margin-top:22px" onclick="empezar()">Calcular mi ahorro →</button>
+    <p class="legal">AsesoresDigitalesG · Geely Serdán · Puebla</p>
+  </div>
+
+  <!-- ═══════════ 2. PREGUNTAS ═══════════ -->
+  <div class="screen" id="s-quiz">
+    <div class="progress-wrap">
+      <div class="progress-meta"><span id="p-txt">Paso 1 de 5</span><span class="xp" id="p-xp">0% del reporte</span></div>
+      <div class="progress-bar"><div class="progress-fill" id="p-fill" style="width:0%"></div></div>
+    </div>
+    <div id="q-box"></div>
+    <button class="btn-back" id="q-back" onclick="atras()">← Regresar</button>
+  </div>
+
+  <!-- ═══════════ 3. ANALIZANDO ═══════════ -->
+  <div class="screen" id="s-analiza">
+    <div class="analiza">
+      <div class="radar"><span id="a-pct">0%</span></div>
+      <div class="q-title" style="margin-bottom:22px">Generando tu reporte…</div>
+      <div class="a-list" id="a-list"></div>
     </div>
   </div>
 
-  <!-- HUD DATA CELLS -->
-  <div class="hud-strip">
-    <div class="hud-cell">
-      <div class="hud-value">HÍBRIDA</div>
-      <div class="hud-label">Tecnología</div>
+  <!-- ═══════════ 4. DESBLOQUEO ═══════════ -->
+  <div class="screen" id="s-gate">
+    <div class="gate-head">
+      <div class="lvl" id="g-lvl"></div>
+      <div class="headline">Tu reporte<br><span class="hl">está listo</span></div>
+      <p class="sub" id="g-sub"></p>
     </div>
-    <div class="hud-cell">
-      <div class="hud-value">2026</div>
-      <div class="hud-label">Modelo</div>
+
+    <div class="result-card locked">
+      <div class="result-tag">Dejarías de gastar al mes</div>
+      <div class="big-save lk" id="g-mes">$0,000<small>al mes</small></div>
+      <div class="fin-grid">
+        <div class="fin-item"><div class="fin-label">Al año</div><div class="fin-val green lk">$00,000</div></div>
+        <div class="fin-item"><div class="fin-label">En 5 años</div><div class="fin-val gold lk">$000,000</div></div>
+      </div>
+      <div class="lock-over"><div class="ic">🔒</div><b>Desbloquea tu reporte completo</b><span>Y aparta tu lugar en el lanzamiento</span></div>
     </div>
-    <div class="hud-cell">
-      <div class="hud-value">PBL</div>
-      <div class="hud-label">Lanzamiento</div>
-    </div>
-  </div>
 
-  <!-- FORM -->
-  <p class="section-label">Aparta tu lugar</p>
-
-  <div class="card">
-    <div class="card-inner-tl"></div>
-
-    <div id="form-view">
+    <div class="form-card" id="registro">
+      <div class="form-title">Desbloquea tu reporte y aparta tu lugar</div>
+      <div class="form-sub">Con tus datos ves tu ahorro completo y quedas registrado para el lanzamiento del 16 de octubre, con acceso a la oferta especial.</div>
       <form id="reg-form" novalidate>
-
-        <div class="field">
-          <label for="nombre">Tu nombre</label>
-          <input id="nombre" name="nombre" type="text" placeholder="Nombre completo" autocomplete="name" required>
+        <div class="inp-wrap"><span>👤</span><input class="inp" id="f-nombre" type="text" placeholder="Nombre y apellido" autocomplete="name"></div>
+        <div class="inp-wrap"><span>📱</span><input class="inp" id="f-tel" type="tel" inputmode="tel" placeholder="Tu WhatsApp (10 dígitos)" autocomplete="tel" maxlength="20"></div>
+        <div class="inp-wrap"><span>📍</span>
+          <select class="inp" id="f-zona">
+            <option value="" selected disabled>¿Dónde vives?</option>
+            <option value="Puebla|Puebla capital">Puebla capital</option>
+            <option value="Puebla|Cholula / San Andrés">Cholula / San Andrés</option>
+            <option value="Puebla|Angelópolis / Lomas">Angelópolis / Lomas</option>
+            <option value="Puebla|Otro municipio de Puebla">Otro municipio de Puebla</option>
+            <option value="Tlaxcala|Tlaxcala">Tlaxcala</option>
+            <option value="Otro estado|Otro estado">Otro estado</option>
+          </select>
         </div>
-
-        <div class="field">
-          <label for="telefono">WhatsApp</label>
-          <input id="telefono" name="telefono" type="tel" placeholder="10 dígitos" autocomplete="tel" inputmode="numeric" maxlength="14" required>
-        </div>
-
-        <div class="field">
-          <label for="zona">Zona de Puebla</label>
-          <div class="select-wrap">
-            <select id="zona" name="zona" required>
-              <option value="" disabled selected>¿Dónde estás?</option>
-              <option value="Centro">Centro histórico</option>
-              <option value="Angelópolis">Angelópolis</option>
-              <option value="Cholula">Cholula / San Andrés</option>
-              <option value="Zona Dorada">Zona Dorada</option>
-              <option value="Periférico">Periférico / Sur</option>
-              <option value="Norte">Norte de Puebla</option>
-              <option value="Tlaxcala">Tlaxcala</option>
-              <option value="Otra">Otra zona</option>
-            </select>
-          </div>
-        </div>
-
-        <button type="submit" class="btn-submit" id="submit-btn">
-          <span class="btn-text">Quiero saber primero →</span>
-          <span class="spinner"></span>
-        </button>
-
-        <div class="error-msg" id="error-msg"></div>
+        <label class="check"><input type="checkbox" id="f-priv"><span>Acepto recibir mi invitación, la oferta de lanzamiento e información de la Monjaro EM-i y promociones Geely por WhatsApp. <a href="#" onclick="verAviso(event)">Ver aviso de privacidad</a></span></label>
+        <div class="err" id="f-err"></div>
+        <button type="submit" class="btn-main" id="f-btn"><span class="btn-t">Desbloquear y apartar mi lugar →</span><span class="spinner"></span></button>
       </form>
-
-      <p class="form-footer">Sin compromisos · Abel te contacta el 14 de octubre</p>
-    </div>
-
-    <div class="success-view" id="success-view">
-      <div class="success-icon">
-        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-      </div>
-      <h2>Ya estás adentro</h2>
-      <p>Te avisamos antes que a nadie.<br>Abel te llama el <strong style="color:var(--accent)">14 de octubre</strong>.</p>
-      <div class="success-detail">
-        <strong>¿Qué sigue?</strong><br><br>
-        El 14 oct por la tarde, Abel te escribe por WhatsApp con los detalles completos del Monjaro antes del evento oficial.<br><br>
-        El 15 oct arranca el lanzamiento en Geely Serdán. Tú ya sabrás todo.
-      </div>
-    </div>
-
-  </div><!-- /card -->
-
-  <!-- PERKS -->
-  <div class="perks">
-    <div class="perk">
-      <div class="perk-icon">
-        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-      </div>
-      <div class="perk-text">
-        <strong>Acceso anticipado</strong>
-        <span>Conoces la información el día antes del evento público</span>
-      </div>
-    </div>
-    <div class="perk">
-      <div class="perk-icon">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-      </div>
-      <div class="perk-text">
-        <strong>Sin esperar fila</strong>
-        <span>Abel te asesora de forma personalizada antes de que llegue el resto</span>
-      </div>
-    </div>
-    <div class="perk">
-      <div class="perk-icon">
-        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-      </div>
-      <div class="perk-text">
-        <strong>Solo para Puebla</strong>
-        <span>Cupo limitado · Los primeros en registrarse tienen prioridad</span>
+      <div class="cupo" style="margin-top:16px">
+        <div class="cupo-top"><span>🎟️ <b>Lugares para el lanzamiento</b></span><span class="cupo-n" data-cupo-txt>Lugares limitados</span></div>
+        <div class="cupo-bar"><div class="cupo-fill" data-cupo-bar></div></div>
       </div>
     </div>
   </div>
 
-  <footer class="page-footer">
-    Geely Serdán · Puebla &nbsp;·&nbsp;
-    <a href="https://wa.me/522217729210" target="_blank" rel="noopener">WhatsApp</a>
-  </footer>
+  <!-- ═══════════ 5. REPORTE ═══════════ -->
+  <div class="screen" id="s-reporte">
+    <div class="pase">
+      <div class="pase-top">
+        <div>
+          <div class="pase-k">Invitación · Lanzamiento</div>
+          <div class="pase-t">Monjaro EM-i</div>
+        </div>
+        <div class="pase-folio"><b id="r-folio">#—</b><span>Invitación</span></div>
+      </div>
+      <div class="pase-row">
+        <div><span>Invitado</span><b id="r-nombre">—</b></div>
+        <div><span>Fecha</span><b>16 oct 2026</b></div>
+        <div><span>Lugar</span><b>Geely Serdán</b></div>
+      </div>
+    </div>
 
-</div><!-- /page-content -->
+    <div class="result-card">
+      <div class="result-tag">Dejarías de gastar aprox.</div>
+      <div class="big-save" id="r-mes">$0<small>al mes</small></div>
+      <div class="fin-grid">
+        <div class="fin-item"><div class="fin-label">Al año</div><div class="fin-val green" id="r-anio">$0</div></div>
+        <div class="fin-item"><div class="fin-label">En 5 años</div><div class="fin-val gold" id="r-5">$0</div></div>
+        <div class="fin-item"><div class="fin-label">Litros que no compras</div><div class="fin-val" id="r-litros">0</div><div class="fin-sub">al año</div></div>
+        <div class="fin-item"><div class="fin-label">Idas a la gasolinera</div><div class="fin-val" id="r-visitas">0</div><div class="fin-sub" id="r-visitas-sub">menos al año</div></div>
+        <div class="fin-item wide"><div class="fin-label">Tus días de manejo 100% eléctricos</div><div class="fin-val green" id="r-elec">0%</div><div class="fin-sub" id="r-elec-sub"></div></div>
+      </div>
+      <div class="bars">
+        <div><div class="bar-l"><span>Hoy en gasolina</span><b id="b-hoy-t">$0/mes</b></div><div class="bar-t"><div class="bar-f hoy" id="b-hoy"></div></div></div>
+        <div><div class="bar-l"><span>Con Monjaro EM-i (luz + gasolina)</span><b id="b-emi-t">$0/mes</b></div><div class="bar-t"><div class="bar-f emi" id="b-emi"></div></div></div>
+      </div>
+      <p class="note" id="r-supuestos"></p>
+    </div>
+
+    <div class="result-card">
+      <div class="result-tag">Lo que sigue</div>
+      <div class="steps">
+        <div class="step"><div class="step-d"><b>15</b><span>Oct</span></div><div><strong>Te mandamos los detalles</strong>Por WhatsApp: la hora del evento y la oferta especial de lanzamiento para invitados.</div></div>
+        <div class="step"><div class="step-d"><b>16</b><span>Oct</span></div><div><strong>Lanzamiento en Geely Serdán Puebla</strong>Muestras tu invitación, conoces la Monjaro EM-i en persona y accedes a la oferta.</div></div>
+      </div>
+      <a class="cta-wa" id="r-wa" href="#" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M17.5 14.4c-.3-.1-1.8-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.1-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.4-.5c.2-.2.2-.3.3-.5.1-.2 0-.4 0-.5l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.8-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.1-.3-.2-.6-.3zM12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2z"/></svg>
+        Confirmar mi asistencia con Abel
+      </a>
+      <p class="legal" style="margin-top:6px">Abel Zarate · Asesor Geely Serdán</p>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="aviso" onclick="if(event.target===this)cerrarAviso()">
+  <div class="modal-box">
+    <h3>Aviso de privacidad</h3>
+    <p><b>Responsable:</b> AsesoresDigitalesG by Abel Zarate, asesor comercial autorizado de Geely Serdán, Puebla, México.</p>
+    <p><b>Datos que recopilamos:</b> nombre, número de WhatsApp, zona donde vives y tus respuestas de la calculadora.</p>
+    <p><b>Finalidad:</b> enviarte tu invitación al lanzamiento, la oferta especial y la información de la Monjaro EM-i, promociones vigentes y agendar tu visita o prueba de manejo. Tus datos no se venden ni se comparten con terceros ajenos a Geely Serdán.</p>
+    <p><b>Tus derechos:</b> puedes pedir en cualquier momento que borremos tus datos escribiendo por WhatsApp.</p>
+    <button class="btn-main" onclick="cerrarAviso()">Entendido</button>
+  </div>
+</div>
 
 <script>
-/* ======================================================
-   AMBIENT PARTICLE SYSTEM
-   ====================================================== */
-(function () {
-  const canvas = document.getElementById('bg-canvas');
-  const ctx = canvas.getContext('2d');
-  let W, H, particles = [];
+// ══════════════════════════════════════════════════════════════
+// AJUSTES — cambia aquí el cupo, la fecha o el WhatsApp de Abel
+// ══════════════════════════════════════════════════════════════
+const CUPO_TOTAL  = 40;                         // invitaciones disponibles para el lanzamiento
+const FECHA_EVENTO = new Date(2026, 9, 16);     // 16 de octubre de 2026
+const WA_ABEL     = '522217729210';
+const FUENTE      = 'Lanzamiento Monjaro EM-i'; // así aparece en el CRM
+const SCRIPT_URL  = 'https://script.google.com/macros/s/AKfycbwB-ylsX33ZGE918Ty3s7YK0ZLXHv0en4aFbg_X4d7ac9iZ2C7s6JD6lTtRyi_yc1Po/exec';
 
-  function resize () {
-    W = canvas.width = window.innerWidth;
-    H = canvas.height = window.innerHeight;
+// Supuestos de la calculadora (estimación de referencia)
+const EMI = { kmElectricos: 130, kwhKm: 0.23, kmlHibrido: 17, tanque: 50 };
+const SEMANAS_MES = 4.33;
+
+const $ = id => document.getElementById(id);
+const pesos = n => '$' + Math.round(n).toLocaleString('es-MX');
+const miles = n => Math.round(n).toLocaleString('es-MX');
+
+// ── Origen del lead (TikTok, video, campaña)
+const ORIGEN = (function () {
+  let o = {};
+  try { o = JSON.parse(sessionStorage.getItem('adg_origen') || '{}'); } catch (e) {}
+  const p = new URLSearchParams(location.search);
+  if (p.get('utm_source')) {
+    o = { origen: p.get('utm_source').toLowerCase(), contenido: p.get('utm_content') || '', campana: p.get('utm_campaign') || '' };
+    try { sessionStorage.setItem('adg_origen', JSON.stringify(o)); } catch (e) {}
   }
-  resize();
-  window.addEventListener('resize', resize);
-
-  function rand (min, max) { return Math.random() * (max - min) + min; }
-
-  function initParticles () {
-    particles = [];
-    const n = Math.floor(W * H / 14000);
-    for (let i = 0; i < n; i++) {
-      particles.push({
-        x: rand(0, W),
-        y: rand(0, H),
-        r: rand(0.5, 1.8),
-        a: rand(0.04, 0.22),
-        vx: rand(-0.08, 0.08),
-        vy: rand(-0.05, -0.18),
-      });
-    }
-  }
-  initParticles();
-
-  function draw () {
-    ctx.clearRect(0, 0, W, H);
-
-    // bottom radial glow
-    const grd = ctx.createRadialGradient(W / 2, H * 1.05, 0, W / 2, H * 1.05, H * 0.65);
-    grd.addColorStop(0, 'rgba(74,143,224,0.07)');
-    grd.addColorStop(1, 'transparent');
-    ctx.fillStyle = grd;
-    ctx.fillRect(0, 0, W, H);
-
-    // particles
-    particles.forEach(p => {
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(74,143,224,${p.a})`;
-      ctx.fill();
-
-      p.x += p.vx;
-      p.y += p.vy;
-      if (p.y < -4) { p.y = H + 4; p.x = rand(0, W); }
-      if (p.x < -4) p.x = W + 4;
-      if (p.x > W + 4) p.x = -4;
-    });
-
-    requestAnimationFrame(draw);
-  }
-  draw();
+  if (!o.campana) o.campana = 'lanzamiento-monjaro-emi';
+  return o;
 })();
 
-/* ======================================================
-   FORM LOGIC (same Google Apps Script endpoint)
-   ====================================================== */
-(function () {
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxlqX93MfZXFXixEPi7ZUiiBmUmUvnhR7hJXV5wZklDAXRLZM5cjBrJT3J5LhJA1D0/exec';
-  const TOKEN = 'ADG2026secure';
+// ══════════════════════════════════════════════════════════════
+// CUPO REAL — cuenta los registros que ya están en el CRM
+// ══════════════════════════════════════════════════════════════
+let REGISTRADOS = null;
+async function cargarCupo () {
+  try {
+    const r = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ tipo: 'cupo_evento', fuente: FUENTE }) });
+    const d = await r.json();
+    if (d && d.ok) { REGISTRADOS = d.registrados; pintarCupo(); }
+  } catch (e) { /* sin conexión: se queda el texto genérico */ }
+}
+function pintarCupo () {
+  const dias = Math.ceil((FECHA_EVENTO - new Date(new Date().toDateString())) / 86400000);
+  document.querySelectorAll('[data-faltan]').forEach(el => el.textContent = dias > 1 ? `Faltan ${dias} días` : dias === 1 ? 'Es mañana' : dias === 0 ? 'Es hoy' : '');
+  if (REGISTRADOS === null) return;
+  const quedan = Math.max(0, CUPO_TOTAL - REGISTRADOS);
+  const pct = Math.min(100, Math.max(6, REGISTRADOS / CUPO_TOTAL * 100));
+  document.querySelectorAll('[data-cupo-txt]').forEach(el => el.textContent = quedan > 0 ? `Quedan ${quedan} de ${CUPO_TOTAL}` : 'Lista de espera');
+  document.querySelectorAll('[data-cupo-bar]').forEach(el => el.style.width = pct + '%');
+  document.querySelectorAll('[data-cupo-live]').forEach(el => el.textContent = REGISTRADOS > 0 ? `${REGISTRADOS} ya apartaron su lugar` : 'Se asignan en orden de registro');
+}
+pintarCupo();
+cargarCupo();
 
-  const form      = document.getElementById('reg-form');
-  const formView  = document.getElementById('form-view');
-  const succView  = document.getElementById('success-view');
-  const submitBtn = document.getElementById('submit-btn');
-  const errorMsg  = document.getElementById('error-msg');
+// ══════════════════════════════════════════════════════════════
+// PREGUNTAS
+// ══════════════════════════════════════════════════════════════
+const R = { km: 40, dias: null, auto: null, gas: null, carga: null };
+const PREGUNTAS = [
+  { k: 'km', tipo: 'km', titulo: '¿Cuántos kilómetros manejas en un día normal?', sub: 'Cuenta ida y vuelta. Si no sabes exacto, aproxima.' },
+  { k: 'dias', titulo: '¿Cuántos días a la semana manejas?', sub: 'Así sabemos cuánto recorres al mes.', ops: [
+    { v: 5, i: '💼', t: 'Entre semana', s: 'Lunes a viernes' },
+    { v: 6, i: '📅', t: '6 días', s: 'Casi toda la semana' },
+    { v: 7, i: '🔁', t: 'Todos los días', s: 'Incluye fines de semana' } ] },
+  { k: 'auto', titulo: '¿Qué manejas hoy?', sub: 'Con esto calculamos cuánto gastas ahora en gasolina.', ops: [
+    { v: 14, i: '🚗', t: 'Sedán o compacto', s: 'Rinde alrededor de 14 km/l' },
+    { v: 10, i: '🚙', t: 'SUV mediana', s: 'Rinde alrededor de 10 km/l' },
+    { v: 7,  i: '🛻', t: 'SUV grande o pickup', s: 'Rinde alrededor de 7 km/l' },
+    { v: 10, i: '🤷', t: 'No tengo auto / no sé', s: 'Usamos una SUV mediana como referencia', ns: 1 } ] },
+  { k: 'gas', titulo: '¿Qué gasolina le pones?', sub: 'Precio promedio por litro en Puebla.', ops: [
+    { v: 24.5, i: '🟢', t: 'Magna', s: 'Alrededor de $24.50 por litro' },
+    { v: 26.5, i: '🔴', t: 'Premium', s: 'Alrededor de $26.50 por litro' },
+    { v: 24.5, i: '🤷', t: 'No sé', s: 'Usamos Magna como referencia', ns: 1 } ] },
+  { k: 'carga', titulo: '¿Dónde la cargarías?', sub: 'La Monjaro EM-i se conecta como un celular. Esto cambia cuánto pagas de luz.', ops: [
+    { v: 'casa',    i: '🏠', t: 'En mi casa', s: 'Tengo cochera o lugar con contacto' },
+    { v: 'trabajo', i: '🏢', t: 'En el trabajo o en plazas', s: 'Cargadores públicos o de la oficina' },
+    { v: 'nose',    i: '🔌', t: 'Todavía no sé', s: 'Hacemos un cálculo conservador' } ] }
+];
+const CARGA = { casa: { luz: 2.5, dias: 1 }, trabajo: { luz: 4.5, dias: 0.8 }, nose: { luz: 3.5, dias: 0.7 } };
+let paso = 0;
 
-  /* phone formatting */
-  const telInput = document.getElementById('telefono');
-  telInput.addEventListener('input', () => {
-    let v = telInput.value.replace(/\D/g, '').slice(0, 10);
-    telInput.value = v;
-  });
+function empezar () { paso = 0; ir('s-quiz'); pintarPregunta(); }
+function ir (id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.toggle('on', s.id === id));
+  window.scrollTo(0, 0);
+}
+function xp (txt) { const el = $('xp'); el.textContent = txt; el.classList.remove('go'); void el.offsetWidth; el.classList.add('go'); }
 
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    errorMsg.classList.remove('visible');
+function etiquetaKm (km) {
+  if (km <= 20) return 'Trayectos cortos en la ciudad';
+  if (km <= 50) return 'Ida y vuelta al trabajo';
+  if (km <= 100) return 'Te mueves bastante';
+  return 'Mucho camino: carretera seguido';
+}
 
-    const nombre   = form.nombre.value.trim();
-    const telefono = form.telefono.value.replace(/\D/g, '');
-    const zona     = form.zona.value;
-
-    if (!nombre || telefono.length < 10 || !zona) {
-      errorMsg.textContent = 'Completa todos los campos antes de continuar.';
-      errorMsg.classList.add('visible');
-      return;
-    }
-
-    submitBtn.disabled = true;
-    submitBtn.classList.add('loading');
-
-    const payload = {
-      tipo:           'nuevo_lead',
-      token:          TOKEN,
-      nombre:         nombre,
-      telefono:       telefono,
-      zona:           zona,
-      fuenteContacto: 'Pre-registro Monjaro PHEV',
+function pintarPregunta () {
+  const q = PREGUNTAS[paso];
+  const pct = Math.round(paso / PREGUNTAS.length * 100);
+  $('p-txt').textContent = `Paso ${paso + 1} de ${PREGUNTAS.length}`;
+  $('p-xp').textContent = `${pct}% del reporte`;
+  $('p-fill').style.width = pct + '%';
+  $('q-back').style.visibility = paso === 0 ? 'hidden' : 'visible';
+  let cuerpo = '';
+  if (q.tipo === 'km') {
+    cuerpo = `
+      <div class="km-big" id="km-v">${R.km}<small>km</small></div>
+      <div class="km-tag" id="km-t">${etiquetaKm(R.km)}</div>
+      <input type="range" id="km-r" min="5" max="200" step="5" value="${R.km}" aria-label="Kilómetros al día">
+      <div class="quick">${[20, 40, 60, 100].map(v => `<button type="button" data-km="${v}" class="${R.km === v ? 'sel' : ''}">${v} km</button>`).join('')}</div>
+      <button class="btn-main" onclick="responder(R.km)">Continuar →</button>`;
+  } else {
+    cuerpo = `<div class="options">${q.ops.map((o, i) => `
+      <button type="button" class="opt ${R[q.k + '_i'] === i ? 'sel' : ''}" onclick="elegir(${i})">
+        <span class="opt-icon">${o.i}</span><span class="opt-body"><strong>${o.t}</strong><small>${o.s}</small></span><span class="opt-ring"></span>
+      </button>`).join('')}</div>`;
+  }
+  $('q-box').innerHTML = `<div class="q-card"><div class="q-step">Pregunta ${paso + 1}</div><div class="q-title">${q.titulo}</div><div class="q-sub">${q.sub}</div>${cuerpo}</div>`;
+  if (q.tipo === 'km') {
+    const r = $('km-r');
+    const pintar = () => {
+      r.style.setProperty('--p', ((R.km - r.min) / (r.max - r.min) * 100) + '%');
+      $('km-v').innerHTML = R.km + '<small>km</small>';
+      $('km-t').textContent = etiquetaKm(R.km);
+      document.querySelectorAll('[data-km]').forEach(b => b.classList.toggle('sel', +b.dataset.km === R.km));
     };
-
-    try {
-      await fetch(SCRIPT_URL, {
-        method: 'POST',
-        mode:   'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body:   JSON.stringify(payload),
-      });
-      showSuccess();
-    } catch (err) {
-      submitBtn.disabled = false;
-      submitBtn.classList.remove('loading');
-      errorMsg.textContent = 'Error de conexión. Revisa tu internet e intenta de nuevo.';
-      errorMsg.classList.add('visible');
-    }
-  });
-
-  function showSuccess () {
-    formView.style.display = 'none';
-    succView.classList.add('visible');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    r.addEventListener('input', () => { R.km = +r.value; pintar(); });
+    document.querySelectorAll('[data-km]').forEach(b => b.addEventListener('click', () => { R.km = +b.dataset.km; r.value = R.km; pintar(); }));
+    pintar();
   }
-})();
+}
+
+function elegir (i) {
+  const q = PREGUNTAS[paso];
+  R[q.k + '_i'] = i;
+  document.querySelectorAll('#q-box .opt').forEach((b, j) => b.classList.toggle('sel', j === i));
+  setTimeout(() => responder(q.ops[i].v, q.ops[i]), 260);
+}
+function responder (v, op) {
+  const q = PREGUNTAS[paso];
+  R[q.k] = v;
+  if (op) R[q.k + '_t'] = op.t;
+  xp(['+20% · ¡Bien!', '+20% · Vas muy bien', '+20% · Ya casi', '+20% · Un paso más', '¡Reporte completo!'][paso]);
+  paso++;
+  if (paso < PREGUNTAS.length) pintarPregunta();
+  else analizar();
+}
+function atras () { if (paso > 0) { paso--; pintarPregunta(); } }
+
+// ══════════════════════════════════════════════════════════════
+// CÁLCULO
+// ══════════════════════════════════════════════════════════════
+let C = null;
+function calcular () {
+  const carga = CARGA[R.carga] || CARGA.nose;
+  const kmMes = R.km * R.dias * SEMANAS_MES;
+  const litrosHoy = kmMes / R.auto;
+  const hoy = litrosHoy * R.gas;
+  const elecDia = Math.min(R.km, EMI.kmElectricos) * carga.dias;           // km eléctricos promedio por día
+  const gasDia = R.km - elecDia;                                            // el resto lo hace en modo híbrido
+  const litrosEmi = gasDia / EMI.kmlHibrido * R.dias * SEMANAS_MES;
+  const emi = (elecDia * EMI.kwhKm * carga.luz) * R.dias * SEMANAS_MES + litrosEmi * R.gas;
+  const mes = Math.max(0, hoy - emi);
+  const litrosAnio = Math.max(0, (litrosHoy - litrosEmi) * 12);
+  const diasElec = R.km <= EMI.kmElectricos ? Math.round(carga.dias * 100) : 0;
+  C = { mes, anio: mes * 12, cinco: mes * 60, hoy, emi, litrosAnio, visitas: Math.round(litrosAnio / EMI.tanque), diasElec, luz: carga.luz };
+  C.nivel = mes >= 3000 ? 'alto' : mes >= 1500 ? 'medio' : 'base';
+  return C;
+}
+
+function analizar () {
+  calcular();
+  ir('s-analiza');
+  const pasos = ['Calculando tu gasto actual en gasolina', 'Simulando 130 km eléctricos por carga', 'Aplicando la tarifa de luz para tu carga', 'Proyectando tu ahorro a 5 años', 'Preparando tu invitación'];
+  $('a-list').innerHTML = pasos.map(t => `<div class="a-item"><i></i>${t}</div>`).join('');
+  const items = [...document.querySelectorAll('.a-item')];
+  let n = 0;
+  const t = setInterval(() => {
+    if (n < items.length) items[n].classList.add('on');
+    n++;
+    $('a-pct').textContent = Math.min(100, Math.round(n / items.length * 100)) + '%';
+    if (n > items.length) { clearInterval(t); mostrarGate(); }
+  }, 520);
+}
+
+function mostrarGate () {
+  const nv = { alto: ['🔥 Nivel de ahorro: alto', 'alto'], medio: ['⚡ Nivel de ahorro: medio', 'medio'], base: ['🌱 Nivel de ahorro: inicial', 'base'] }[C.nivel];
+  $('g-lvl').textContent = nv[0]; $('g-lvl').className = 'lvl ' + nv[1];
+  $('g-sub').innerHTML = C.diasElec >= 100
+    ? `Con <b>${R.km} km al día</b>, tu manejo diario cabe completo en modo eléctrico.`
+    : C.diasElec > 0 ? `Con <b>${R.km} km al día</b>, la mayoría de tus días los harías en modo eléctrico.`
+    : `Con <b>${R.km} km al día</b>, los primeros 130 km de cada día serían eléctricos.`;
+  ir('s-gate');
+  pintarCupo();
+}
+
+// ══════════════════════════════════════════════════════════════
+// REGISTRO → mismo Apps Script del CRM
+// ══════════════════════════════════════════════════════════════
+function normTel (valor) {
+  let t = String(valor || '').replace(/\D/g, '');
+  if (t.length === 13 && t.startsWith('521')) t = t.slice(3);
+  else if (t.length === 12 && t.startsWith('52')) t = t.slice(2);
+  return t;
+}
+function enviarLead (data) {
+  const body = JSON.stringify(data);
+  try { if (navigator.sendBeacon && navigator.sendBeacon(SCRIPT_URL, new Blob([body], { type: 'text/plain' }))) return true; } catch (e) {}
+  try { fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', keepalive: true, body }); return true; } catch (e) { return false; }
+}
+function verAviso (e) { e.preventDefault(); $('aviso').classList.add('on'); }
+function cerrarAviso () { $('aviso').classList.remove('on'); $('f-priv').checked = true; }
+
+$('reg-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const err = $('f-err'); err.classList.remove('on');
+  const nombre = $('f-nombre').value.trim().replace(/\s+/g, ' ');
+  const tel = normTel($('f-tel').value);
+  const zona = $('f-zona').value;
+  $('f-nombre').classList.toggle('bad', nombre.length < 3);
+  $('f-tel').classList.toggle('bad', tel.length !== 10);
+  $('f-zona').classList.toggle('bad', !zona);
+  if (nombre.length < 3 || tel.length !== 10 || !zona) {
+    err.textContent = tel && tel.length !== 10 ? '⚠️ Tu WhatsApp debe tener 10 dígitos' : '⚠️ Completa tus datos para desbloquear tu reporte';
+    err.classList.add('on'); return;
+  }
+  if (!$('f-priv').checked) { err.textContent = '⚠️ Marca la casilla para poder mandarte tu reporte por WhatsApp'; err.classList.add('on'); return; }
+
+  const btn = $('f-btn'); btn.disabled = true; btn.classList.add('loading');
+  await Promise.race([cargarCupo(), new Promise(r => setTimeout(r, 2500))]); // folio con el conteo más reciente
+  const folio = REGISTRADOS !== null ? REGISTRADOS + 1 : null;
+  const [estado, zonaTxt] = zona.split('|');
+  const notas = `🎟️ Invitación lanzamiento Monjaro EM-i${folio ? ' #' + folio : ''} (16 oct, Geely Serdán). Zona: ${zonaTxt}. ` +
+    `Maneja ~${R.km} km/día, ${R.dias} días/sem. Hoy: ${R.auto_t} con ${R.gas_t}. Cargaría: ${R.carga_t}. ` +
+    `Ahorro estimado: ${pesos(C.mes)}/mes (${pesos(C.anio)}/año). Prometido: detalles del evento + oferta especial de lanzamiento por WhatsApp el 15 oct.`;
+  const ok = enviarLead({
+    fecha: new Date().toLocaleString('es-MX', { timeZone: 'America/Mexico_City' }),
+    nombre, telefono: tel, perfil: '—', modelo: 'Geely Monjaro EM-i',
+    otros_modelos: '', ingreso: '', enganche: '', historial: '', mensualidad: '',
+    acepto_privacidad: 'Sí', estado, fuenteContacto: FUENTE, notas, ...ORIGEN
+  });
+  btn.disabled = false; btn.classList.remove('loading');
+  if (!ok) { err.textContent = '⚠️ No se pudo enviar. Revisa tu internet e intenta de nuevo.'; err.classList.add('on'); return; }
+  if (REGISTRADOS !== null) REGISTRADOS++;
+  mostrarReporte(nombre, folio);
+});
+
+function animarNum (el, fin, fmt) {
+  const t0 = performance.now(), dur = 1100;
+  const f = t => { const p = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - p, 3); el.innerHTML = fmt(fin * e); if (p < 1) requestAnimationFrame(f); };
+  requestAnimationFrame(f);
+}
+
+function mostrarReporte (nombre, folio) {
+  ir('s-reporte');
+  const primer = nombre.split(' ')[0];
+  $('r-nombre').textContent = nombre;
+  $('r-folio').textContent = folio ? '#' + String(folio).padStart(3, '0') : '✓';
+  animarNum($('r-mes'), C.mes, n => pesos(n) + '<small>al mes</small>');
+  animarNum($('r-anio'), C.anio, pesos);
+  animarNum($('r-5'), C.cinco, pesos);
+  animarNum($('r-litros'), C.litrosAnio, miles);
+  animarNum($('r-visitas'), C.visitas, miles);
+  $('r-elec').textContent = C.diasElec + '%';
+  $('r-elec-sub').textContent = C.diasElec >= 100 ? 'Tu manejo diario cabe completo en los 130 km eléctricos.' : C.diasElec > 0 ? 'Depende de qué tan seguido puedas cargar.' : 'Manejas más de 130 km al día: el resto lo hace en modo híbrido.';
+  const max = Math.max(C.hoy, 1);
+  $('b-hoy-t').textContent = pesos(C.hoy) + '/mes'; $('b-emi-t').textContent = pesos(C.emi) + '/mes';
+  setTimeout(() => { $('b-hoy').style.width = '100%'; $('b-emi').style.width = Math.max(3, C.emi / max * 100) + '%'; }, 200);
+  $('r-supuestos').textContent = `Estimación de referencia: ${R.km} km al día, ${R.dias} días a la semana, gasolina a $${R.gas.toFixed(2)}/l, luz a $${C.luz.toFixed(2)}/kWh, consumo eléctrico de ${EMI.kwhKm} kWh/km y ${EMI.kmlHibrido} km/l en modo híbrido. Tu ahorro real depende de cómo manejes y de tu tarifa de luz.`;
+  const msg = `Hola Abel, soy ${nombre}. Me registré al lanzamiento de la Monjaro EM-i${folio ? ' (invitación #' + String(folio).padStart(3, '0') + ')' : ''}. Quiero confirmar mi asistencia el 16 de octubre en Geely Serdán y el acceso a la oferta de lanzamiento. Mi ahorro estimado salió de ${pesos(C.mes)} al mes.`;
+  $('r-wa').href = `https://wa.me/${WA_ABEL}?text=${encodeURIComponent(msg)}`;
+  setTimeout(() => xp(`¡Bienvenido, ${primer}!`), 400);
+}
 </script>
+</body>
+</html>
