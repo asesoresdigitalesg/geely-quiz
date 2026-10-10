@@ -586,6 +586,7 @@ const CAMPOS = [
   ['motivoPerdida',47-1,'text'],
   ['bitacora',48-1,'json'],
   ['fechaCierre',49-1,'date'],
+  ['confianza',50-1,'text'],   // semáforo que pone el Apps Script al llegar el lead (solo lectura)
 ];
 const CAMPO_TIPO = Object.fromEntries(CAMPOS.map(c=>[c[0],c[2]]));
 const CAMPO_KEY  = Object.fromEntries(CAMPOS.map(c=>[c[0],c[3]||c[0]]));
@@ -925,7 +926,15 @@ function laneHTML(l){
   return `<span class="lane ${cls}" data-tip="${esc(ETAPAS[ETAPA_IDX[e]].label)}${e==='perdido'&&S(l).motivoPerdida?' · '+esc(S(l).motivoPerdida):''}">${CICLO.map((_,i)=>`<i class="${i<=n?'on':''}${e==='perdido'&&i===n+1?' cut':''}"></i>`).join('')}</span>`;
 }
 const pfHTML = p => `<span class="pf pf-${['S','A','B','C'].includes(p)?p:'x'}" title="Perfil ${esc(p)}">${esc(p)}</span>`;
-function telHTML(l){ const tc = S(l).telefonoConsistente; return tc==='No' ? `<span class="chip bad" data-tip="El teléfono del inicio del test no coincide con el del final">Tel. sin verificar</span>` : ''; }
+function confNivel(l){ const c = String(S(l).confianza || ''); return c.startsWith('🟢') ? 'verde' : c.startsWith('🟡') ? 'amarillo' : c.startsWith('🔴') ? 'rojo' : ''; }
+function telHTML(l){
+  const c = String(S(l).confianza || ''), n = confNivel(l);
+  const motivo = c.replace(/^\S+\s*/, '');
+  if (n === 'verde') return `<span class="chip good" data-tip="${esc(motivo)}">🟢 Confiable</span>`;
+  if (n === 'amarillo') return `<span class="chip warn" data-tip="${esc(motivo)}">🟡 Revisar</span>`;
+  if (n === 'rojo') return `<span class="chip bad" data-tip="${esc(motivo)}">🔴 Prob. falso</span>`;
+  const tc = S(l).telefonoConsistente; return tc==='No' ? `<span class="chip bad" data-tip="El teléfono del inicio del test no coincide con el del final">Tel. sin verificar</span>` : '';
+}
 function origenTexto(l){
   const s = S(l);
   if (s.origen) return redNombre(s.origen.toLowerCase()) + (s.contenido ? ` · ${s.contenido}` : '');
@@ -1341,7 +1350,7 @@ function renderHoy(){
 // ══════════════════════════════════════════════════════════════
 // PANTALLA: LEADS
 // ══════════════════════════════════════════════════════════════
-const LF0 = () => ({q:'', zona: 'local', etapa:'', perfil:'', asesor:'', origen:'', sinAsignar:false, asesoria:false, sinPlan:false, test:false, cola:'', vista:'lista', orden:'reciente', limite:60});
+const LF0 = () => ({q:'', zona: 'local', etapa:'', perfil:'', confianza:'', asesor:'', origen:'', sinAsignar:false, asesoria:false, sinPlan:false, test:false, cola:'', vista:'lista', orden:'reciente', limite:60});
 let LF = LF0();
 let SEL = new Set();
 let leadsShell = '';
@@ -1363,6 +1372,7 @@ function filtrarLeads(){
     if (colaSet && !colaSet.has(l.id)) return false;
     if (LF.etapa && etapa(l) !== LF.etapa) return false;
     if (LF.perfil && l.perfil !== LF.perfil) return false;
+    if (LF.confianza && confNivel(l) !== LF.confianza) return false;
     if (LF.asesor) { if (LF.asesor === '__none') { if (s.asignado) return false; } else if (s.asignado !== LF.asesor) return false; }
     if (LF.origen) { const o = (s.origen || (s.fuenteContacto==='Asesoría Personalizada'?'landing':'sin etiqueta')).toLowerCase(); if (o !== LF.origen) return false; }
     if (LF.sinAsignar && (s.asignado || !activo(l))) return false;
@@ -1399,6 +1409,7 @@ function renderLeads(){
         ${admin||esContenido() ? `<div class="seg"><button class="${LF.zona==='local'?'on':''}" onclick="setLF('zona','local')">Zona local</button><button class="${LF.zona==='fuera'?'on':''}" onclick="setLF('zona','fuera')">Fuera</button><button class="${LF.zona==='todas'?'on':''}" onclick="setLF('zona','todas')">Todas</button></div>` : ''}
         <select class="inp" onchange="setLF('etapa',this.value)" aria-label="Etapa"><option value="">Todas las etapas</option>${ETAPAS.map(e=>`<option value="${e.id}" ${LF.etapa===e.id?'selected':''}>${e.label}</option>`).join('')}</select>
         <select class="inp" onchange="setLF('perfil',this.value)" aria-label="Perfil"><option value="">Todo perfil</option>${['S','A','B','C'].map(p=>`<option ${LF.perfil===p?'selected':''}>${p}</option>`).join('')}</select>
+        <select class="inp" onchange="setLF('confianza',this.value)" aria-label="Confianza"><option value="">Toda confianza</option>${[['verde','🟢 Confiables'],['amarillo','🟡 Revisar'],['rojo','🔴 Prob. falsos']].map(([v,t])=>`<option value="${v}" ${LF.confianza===v?'selected':''}>${t}</option>`).join('')}</select>
         ${admin ? `<select class="inp" onchange="setLF('asesor',this.value)" aria-label="Asesor"><option value="">Todos los asesores</option><option value="__none" ${LF.asesor==='__none'?'selected':''}>Sin asignar</option>${asesores().map(u=>`<option value="${u.user}" ${LF.asesor===u.user?'selected':''}>${esc(u.nombre)}</option>`).join('')}</select>` : ''}
         ${admin && origenes.length ? `<select class="inp" onchange="setLF('origen',this.value)" aria-label="Origen"><option value="">Todo origen</option>${origenes.map(o=>`<option value="${esc(o)}" ${LF.origen===o?'selected':''}>${esc(o)}</option>`).join('')}<option value="landing" ${LF.origen==='landing'?'selected':''}>landing</option><option value="sin etiqueta" ${LF.origen==='sin etiqueta'?'selected':''}>sin etiqueta</option></select>` : ''}
       </div>
@@ -1419,7 +1430,7 @@ function renderLeadsResults(){
   const box = $('leads-results'); if (!box) return;
   const arr = ordenar(filtrarLeads());
   const admin = esAdmin();
-  const resumen = `<div class="result-line"><span>${plural(arr.length,'lead')}${LF.zona==='local'&&admin?' en zona local':''}</span>${(LF.q||LF.etapa||LF.perfil||LF.asesor||LF.origen||LF.sinAsignar||LF.asesoria||LF.sinPlan||LF.cola)?`<button class="btn btn-sm btn-ghost" onclick="LF={...LF0(),vista:LF.vista};leadsShell='';render()">Quitar filtros</button>`:''}</div>`;
+  const resumen = `<div class="result-line"><span>${plural(arr.length,'lead')}${LF.zona==='local'&&admin?' en zona local':''}</span>${(LF.q||LF.etapa||LF.perfil||LF.confianza||LF.asesor||LF.origen||LF.sinAsignar||LF.asesoria||LF.sinPlan||LF.cola)?`<button class="btn btn-sm btn-ghost" onclick="LF={...LF0(),vista:LF.vista};leadsShell='';render()">Quitar filtros</button>`:''}</div>`;
   const bulk = admin && SEL.size ? `<div class="bulk"><b>${plural(SEL.size,'seleccionado')}</b>
     <select class="inp" id="bulk-asesor" aria-label="Asesor"><option value="">Asignar a…</option>${asesores().map(u=>`<option value="${u.user}">${esc(u.nombre)} (${LEADS.filter(l=>S(l).asignado===u.user&&activo(l)).length} activos)</option>`).join('')}</select>
     <button class="btn btn-sm btn-primary" onclick="bulkAsignar()">Asignar y avisar por WhatsApp</button>
@@ -1935,6 +1946,51 @@ function embudoHTML(steps){
   return h + '</div>';
 }
 
+// ══════════════════════════════════════════════════════════════
+// EMBUDO DE LAS PÁGINAS (quiz y evento) — solo administrador
+// ══════════════════════════════════════════════════════════════
+let METRICAS = null, METRICAS_T = 0, METRICAS_CARGANDO = false;
+const PASOS_PAG = {
+  quiz:   [['visita','Entraron al quiz'],['inicio','Empezaron el test'],['p1','Respondieron la pregunta 1'],['p2','Respondieron la pregunta 2'],['tel','Dieron su WhatsApp a la mitad'],['tel_omitido','Prefirieron no dar su WhatsApp a la mitad'],['p3','Respondieron la pregunta 3'],['p4','Respondieron la pregunta 4'],['p5','Respondieron la pregunta 5'],['formulario','Llegaron al formulario final'],['registro','Se registraron'],['whatsapp','Tocaron el botón de WhatsApp']],
+  evento: [['visita','Entraron a la página'],['inicio','Empezaron la calculadora'],['p1','Pregunta 1'],['p2','Pregunta 2'],['p3','Pregunta 3'],['p4','Pregunta 4'],['p5','Pregunta 5'],['formulario','Llegaron al registro'],['registro','Se registraron'],['repetido','Intentaron registrarse otra vez'],['whatsapp','Tocaron el botón de WhatsApp']]
+};
+async function cargarMetricas(forzar){
+  if (!esAdmin() || METRICAS_CARGANDO) return;
+  if (!forzar && METRICAS && Date.now() - METRICAS_T < 5*60*1000) return;
+  METRICAS_CARGANDO = true;
+  try { const r = await api({tipo:'metricas', sesion: SESION, dias: 30}); if (r.ok) { METRICAS = r.datos || {}; METRICAS_T = Date.now(); } else if (r.error === 'sesion') sesionVencida(); }
+  catch (e) { dbg('Embudo no cargado: ' + e.message, 'warn'); }
+  METRICAS_CARGANDO = false;
+  if (pantalla === 'panel' && $('embudo-paginas')) $('embudo-paginas').innerHTML = embudoPaginasHTML();
+}
+function sumaPasos(pagina, dias){
+  const out = {}; const datos = (METRICAS || {})[pagina] || {};
+  const hoy = new Date(); hoy.setHours(0,0,0,0);
+  Object.entries(datos).forEach(([dia, o]) => {
+    const [y,m,d] = dia.split('-').map(Number); const f = new Date(y, m-1, d);
+    if ((hoy - f) / 86400000 >= dias) return;
+    Object.entries(o).forEach(([k,v]) => out[k] = (out[k]||0) + v);
+  });
+  return out;
+}
+function embudoPaginasHTML(){
+  if (!METRICAS) return '<div class="empty">Cargando…</div>';
+  const tabla = (pagina, titulo) => {
+    const h = sumaPasos(pagina, 1), s7 = sumaPasos(pagina, 7), s30 = sumaPasos(pagina, 30);
+    const base = s30.visita || 0;
+    const filas = PASOS_PAG[pagina].map(([k, t]) => {
+      const p = base ? Math.round((s30[k]||0) / base * 100) : 0;
+      return `<tr style="cursor:default"><td>${t}</td><td class="r num">${h[k]||0}</td><td class="r num">${s7[k]||0}</td><td class="r num">${s30[k]||0}</td>
+        <td style="min-width:110px"><div style="display:flex;align-items:center;gap:8px"><div style="flex:1;height:6px;border-radius:4px;background:var(--line);overflow:hidden"><div style="height:100%;width:${p}%;background:var(--brand)"></div></div><span class="num hint" style="width:34px;text-align:right">${base?p+'%':'—'}</span></div></td></tr>`;
+    }).join('');
+    return `<div class="h2" style="font-size:15px;margin:4px 0 8px">${titulo}</div>
+      <div style="overflow-x:auto"><table class="tbl" style="min-width:520px"><thead><tr><th>Paso</th><th class="r">Hoy</th><th class="r">7 días</th><th class="r">30 días</th><th>De los que entraron (30 días)</th></tr></thead><tbody>${filas}</tbody></table></div>`;
+  };
+  const vacio = !Object.keys(METRICAS).length;
+  return (vacio ? '<p class="hint" style="margin-bottom:10px">Todavía no hay datos: se empiezan a contar desde que subas las páginas nuevas.</p>' : '') +
+    tabla('quiz', 'Quiz') + '<div style="height:18px"></div>' + tabla('evento', 'Página del evento Monjaro EM-i');
+}
+
 function renderPanel(){
   const el = $('s-panel');
   const r = rango(PERIODO), rp = rangoPrevio(PERIODO);
@@ -1980,6 +2036,13 @@ function renderPanel(){
     <div class="tile"><div class="tile-l">Tiempo al primer contacto</div><div class="tile-v num">${horasTexto(mediana(tiempos))}</div><div class="tile-s">${tiempos.length ? `mediana de ${plural(tiempos.length,'lead')}` : 'Se empieza a medir con los registros nuevos'}</div></div>
     <div class="tile"><div class="tile-l">Ventas cerradas</div><div class="tile-v num" style="color:var(--good)">${cierres.length}</div><div class="tile-s">${cierresPrev!=null?deltaHTML(cierres.length, cierresPrev, rp):'en todo el historial'}</div></div>
   </div>`;
+
+  // ── Embudo de las páginas (solo administrador) ──
+  if (esAdmin()) {
+    html += `<div class="block" style="margin-top:16px"><div class="h2-row"><div class="h2">Dónde se sale la gente de las páginas</div><span class="hint">Solo tú ves esto · <a href="#" onclick="cargarMetricas(true);return false">Actualizar</a></span></div>
+      <div id="embudo-paginas">${embudoPaginasHTML()}</div></div>`;
+    setTimeout(() => cargarMetricas(), 0);
+  }
 
   // ── Embudo + resultados por mes ──
   const meses = ultimosMeses(6);

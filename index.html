@@ -114,7 +114,7 @@
         <div class="perk"><span>🚗</span> Resultado real</div>
       </div>
     </div>
-    <button class="btn-next on" onclick="go('s-quiz'); renderQ()">Descubrir mi opción →</button>
+    <button class="btn-next on" onclick="empezarQuiz()">Descubrir mi opción →</button>
     <p class="legal" style="margin-top:16px">AsesoresDigitalesG · Financiamiento bancario y financiera · Puebla</p>
   </div>
   <div class="screen" id="s-tel-early">
@@ -133,6 +133,7 @@
       </div>
       <div id="tel-early-error" style="display:none;background:rgba(255,68,68,0.1);border:1px solid rgba(255,68,68,0.3);border-radius:10px;padding:10px 14px;font-size:12px;color:#ff6b6b;text-align:center;margin-bottom:14px;">⚠️ Escribe un número a 10 dígitos</div>
       <button class="btn-next" id="btn-tel-early" onclick="submitTelEarly()">Continuar →</button>
+      <button onclick="omitirTelEarly()" style="background:none;border:none;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:13px;text-decoration:underline;cursor:pointer;display:block;margin:14px auto 0;">Prefiero seguir sin darlo</button>
       <p style="font-size:11px;color:var(--muted);margin-top:12px;line-height:1.5;">Solo lo usamos para que retomes tu test y para enviarte tu resultado.</p>
     </div>
   </div>
@@ -149,6 +150,7 @@
       <div class="options" id="opts"></div>
     </div>
     <button class="btn-next" id="btn-next" onclick="nextQ()">Siguiente →</button>
+    <button onclick="regresar()" style="background:none;border:none;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:12px;text-decoration:underline;cursor:pointer;display:block;margin:14px auto 0;">← Regresar</button>
   </div>
   <div class="screen" id="s-capture">
     <div style="height:28px"></div>
@@ -238,7 +240,7 @@
         <div class="also-block" id="r-also"></div>
         <div class="why-block" id="r-why"></div>
       </div>
-      <a class="cta-wa" id="r-wa" href="#" target="_blank">
+      <a class="cta-wa" id="r-wa" href="#" target="_blank" onclick="paso('whatsapp')">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
         Quiero hablar con un asesor
       </a>
@@ -269,10 +271,29 @@ const ORIGEN = (function () {
   return o;
 })();
 
-// Bloquea el botón "atrás" del navegador — el flujo del test es solo hacia adelante.
-history.pushState(null, '', location.href);
-window.addEventListener('popstate', function() {
-  history.pushState(null, '', location.href);
+// Contador de pasos (solo lo ve el administrador en el CRM). Cada paso se cuenta una vez por visita.
+function paso(nombre) {
+  try {
+    const vistos = JSON.parse(sessionStorage.getItem('adg_pasos_quiz') || '[]');
+    if (vistos.indexOf(nombre) !== -1) return;
+    vistos.push(nombre); sessionStorage.setItem('adg_pasos_quiz', JSON.stringify(vistos));
+  } catch (e) {}
+  try { navigator.sendBeacon(SHEET_URL, new Blob([JSON.stringify({ tipo: 'paso', pagina: 'quiz', paso: nombre })], { type: 'text/plain' })); } catch (e) {}
+}
+
+// Botón "atrás": dentro del test regresa a la pregunta anterior en lugar de salirse de la página.
+function regresar() {
+  const en = id => document.getElementById(id).classList.contains('on');
+  if (en('s-capture')) { qIdx = questions.length - 1; answers.pop(); go('s-quiz'); renderQ(); return true; }
+  if (en('s-tel-early')) { qIdx = 1; answers.pop(); go('s-quiz'); renderQ(); return true; }
+  if (en('s-quiz')) {
+    if (qIdx > 0) { qIdx--; answers.pop(); renderQ(); } else { go('s-intro'); }
+    return true;
+  }
+  return false;
+}
+window.addEventListener('popstate', function () {
+  if (regresar() && !document.getElementById('s-intro').classList.contains('on')) history.pushState({ quiz: 1 }, '', location.href);
 });
 const questions = [
   { step: "01 / 05", title: "¿Cuánto ganas al mes?", sub: "Ingreso neto aproximado (lo que recibes después de impuestos)",
@@ -419,6 +440,11 @@ function submitTelEarly() {
   }
   document.getElementById('tel-early-error').style.display = 'none';
   prospecto.telTemprano = t;
+  paso('tel');
+  if (qIdx < questions.length) { go('s-quiz'); renderQ(); } else { go('s-capture'); }
+}
+function omitirTelEarly() {
+  paso('tel_omitido');
   if (qIdx < questions.length) { go('s-quiz'); renderQ(); } else { go('s-capture'); }
 }
 function checkCapture() {
@@ -488,6 +514,8 @@ function avisarAbelPorCorreo(data) {
   } catch(e) {}
 }
 let qIdx = 0; let answers = []; let selected = null;
+let T0 = 0, T1 = 0; // T0: empezó el test · T1: terminó las 5 preguntas
+function empezarQuiz() { if (!T0) T0 = Date.now(); paso('inicio'); try { history.pushState({ quiz: 1 }, '', location.href); } catch (e) {} go('s-quiz'); renderQ(); }
 function go(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('on')); document.getElementById(id).classList.add('on'); window.scrollTo(0, 0); }
 function renderQ() {
   const q = questions[qIdx];
@@ -516,6 +544,7 @@ function pick(i, val, btn) { document.querySelectorAll('.opt').forEach(o => o.cl
 function nextQ() {
   if (!selected) return;
   answers.push(selected);
+  paso('p' + (qIdx + 1));
   qIdx++;
   if (qIdx === 2 && !prospecto.telTemprano) {
     const pct = Math.round((qIdx / questions.length) * 100);
@@ -524,7 +553,7 @@ function nextQ() {
     go('s-tel-early');
     return;
   }
-  if (qIdx < questions.length) { renderQ(); } else { go('s-capture'); }
+  if (qIdx < questions.length) { renderQ(); } else { T1 = Date.now(); paso('formulario'); go('s-capture'); }
 }
 function showResult() {
   const perfil = calcProfile(answers);
@@ -567,9 +596,10 @@ function showResult() {
   document.getElementById('r-why').textContent = pd.why;
   const datos = { ingreso: labelIngreso[answers[0]] || answers[0], enganche: labelEnganche[answers[1]] || answers[1], historial: labelHistorial[answers[2]]|| answers[2], mensualidad: `${fmt(mMin)}–${fmt(mMax)}` };
   const alsoNames = also.map(m => m.name).join(', ') || '—';
-  const telConsistente = prospecto.telTemprano && (prospecto.tel === prospecto.telTemprano) ? 'Sí' : 'No';
+  const telConsistente = !prospecto.telTemprano ? 'Omitido' : (prospecto.tel === prospecto.telTemprano ? 'Sí' : 'No');
   quizTerminado = true;
-  sendToSheet({ fecha: new Date().toLocaleString('es-MX', {timeZone:'America/Mexico_City'}), nombre: prospecto.nombre + ' ' + prospecto.apellido, telefono: prospecto.tel, telefono_consistente: telConsistente, estado: prospecto.estado || 'No indicado', perfil: perfil, modelo: main.name + ' ' + baseVer.ver, otros_modelos: alsoNames, ingreso: datos.ingreso, enganche: datos.enganche, historial: datos.historial, mensualidad: datos.mensualidad });
+  paso('registro');
+  sendToSheet({ fecha: new Date().toLocaleString('es-MX', {timeZone:'America/Mexico_City'}), nombre: prospecto.nombre + ' ' + prospecto.apellido, telefono: prospecto.tel, telefono_consistente: telConsistente, estado: prospecto.estado || 'No indicado', perfil: perfil, modelo: main.name + ' ' + baseVer.ver, otros_modelos: alsoNames, ingreso: datos.ingreso, enganche: datos.enganche, historial: datos.historial, mensualidad: datos.mensualidad, tiempo_seg: T0 && T1 ? Math.round((T1 - T0) / 1000) : '' });
   avisarAbelPorCorreo({ nombre: prospecto.nombre + ' ' + prospecto.apellido, telefono: prospecto.tel, telefono_consistente: telConsistente, estado: prospecto.estado || 'No indicado', perfil: perfil, modelo: main.name + ' ' + baseVer.ver, ingreso: datos.ingreso, enganche: datos.enganche, historial: datos.historial, mensualidad: datos.mensualidad });
   const msg = encodeURIComponent(pd.waMsg(main.name, datos, prospecto.nombre));
   const esZonaAccionable = ['Puebla', 'Tlaxcala', 'Hidalgo', 'Veracruz'].includes(prospecto.estado);
@@ -598,6 +628,7 @@ function restart() {
   document.getElementById('tel-early-error').style.display = 'none';
   go('s-quiz'); renderQ();
 }
+paso('visita');
 </script>
 <div id="privacy-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:999;align-items:center;justify-content:center;padding:20px;">
   <div style="background:var(--card);border:1px solid var(--border);border-radius:20px;padding:32px 28px;max-width:480px;width:100%;max-height:80vh;overflow-y:auto;">

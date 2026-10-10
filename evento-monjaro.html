@@ -420,7 +420,7 @@
         <div class="step"><div class="step-d"><b>15</b><span>Oct</span></div><div><strong>Te mandamos los detalles</strong>Por WhatsApp: la hora del evento y la oferta especial de lanzamiento para invitados.</div></div>
         <div class="step"><div class="step-d"><b>16</b><span>Oct</span></div><div><strong>Lanzamiento en Geely Serdán Puebla</strong><span id="r-paso16">Muestras tu invitación, conoces la Monjaro EM-i en persona y accedes a la oferta.</span></div></div>
       </div>
-      <a class="cta-wa" id="r-wa" href="#" target="_blank" rel="noopener">
+      <a class="cta-wa" id="r-wa" href="#" target="_blank" rel="noopener" onclick="marcar('whatsapp')">
         <svg viewBox="0 0 24 24"><path d="M17.5 14.4c-.3-.1-1.8-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.1-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.4-.5c.2-.2.2-.3.3-.5.1-.2 0-.4 0-.5l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.8-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.1-.3-.2-.6-.3zM12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2z"/></svg>
         Confirmar mi asistencia con Abel
       </a>
@@ -447,7 +447,7 @@
         <div><span>Lugar</span><b>Geely Serdán</b></div>
       </div>
     </div>
-    <a class="cta-wa" id="ya-wa" href="#" target="_blank" rel="noopener">
+    <a class="cta-wa" id="ya-wa" href="#" target="_blank" rel="noopener" onclick="marcar('whatsapp')">
       <svg viewBox="0 0 24 24"><path d="M17.5 14.4c-.3-.1-1.8-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.1-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.4-.5c.2-.2.2-.3.3-.5.1-.2 0-.4 0-.5l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.8-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.1-.3-.2-.6-.3zM12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2z"/></svg>
       Confirmar mi asistencia con Abel
     </a>
@@ -482,6 +482,13 @@ const EMI = { kmElectricos: 130, kwhKm: 0.23, kmlHibrido: 17, tanque: 50 };
 const SEMANAS_MES = 4.33;
 
 const $ = id => document.getElementById(id);
+
+// Contador de visitas por paso (solo lo ve el administrador en el CRM). Cada paso se cuenta una vez por visita.
+const MARCADOS = {};
+function marcar (p) {
+  if (MARCADOS[p]) return; MARCADOS[p] = 1;
+  try { navigator.sendBeacon(SCRIPT_URL, new Blob([JSON.stringify({ tipo: 'paso', pagina: 'evento', paso: p })], { type: 'text/plain' })); } catch (e) {}
+}
 const pesos = n => '$' + Math.round(n).toLocaleString('es-MX');
 const miles = n => Math.round(n).toLocaleString('es-MX');
 
@@ -521,6 +528,7 @@ function pintarCupo () {
 }
 pintarCupo();
 cargarCupo();
+marcar('visita');
 
 // ══════════════════════════════════════════════════════════════
 // PREGUNTAS
@@ -551,7 +559,14 @@ const PREGUNTAS = [
 const CARGA = { casa: { luz: 2.5, dias: 1 }, trabajo: { luz: 4.5, dias: 0.8 }, nose: { luz: 3.5, dias: 0.7 } };
 let paso = 0;
 
-function empezar () { paso = 0; ir('s-quiz'); pintarPregunta(); }
+let T0 = 0, T1 = 0; // T0: empezó la calculadora · T1: terminó las preguntas
+function empezar () { if (!T0) T0 = Date.now(); marcar('inicio'); paso = 0; try { history.pushState({ calc: 1 }, '', location.href); } catch (e) {} ir('s-quiz'); pintarPregunta(); }
+// Botón "atrás" del navegador: dentro de la calculadora regresa a la pregunta anterior
+window.addEventListener('popstate', () => {
+  if (!$('s-quiz').classList.contains('on')) return;
+  if (paso > 0) { atras(); history.pushState({ calc: 1 }, '', location.href); }
+  else ir('s-intro');
+});
 function ir (id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.toggle('on', s.id === id));
   window.scrollTo(0, 0);
@@ -613,7 +628,8 @@ function responder (v, op) {
   if (op) R[q.k + '_t'] = op.t;
   xp(['+20% · ¡Bien!', '+20% · Vas muy bien', '+20% · Ya casi', '+20% · Un paso más', '¡Reporte completo!'][paso]);
   paso++;
-  if (PREGUNTAS[paso] && PREGUNTAS[paso].k === 'gas' && R.auto === 'ev') { R.gas = 24.5; R.gas_t = 'no aplica (ya es eléctrico)'; paso++; }
+  marcar('p' + paso);
+  if (PREGUNTAS[paso] && PREGUNTAS[paso].k === 'gas' && R.auto === 'ev') { R.gas = 24.5; R.gas_t = 'no aplica (ya es eléctrico)'; paso++; marcar('p' + paso); }
   if (paso < PREGUNTAS.length) pintarPregunta();
   else analizar();
 }
@@ -642,6 +658,7 @@ function calcular () {
 }
 
 function analizar () {
+  T1 = Date.now();
   calcular();
   ir('s-analiza');
   const pasos = ['Calculando tu gasto actual en gasolina', 'Simulando 130 km eléctricos por carga', 'Aplicando la tarifa de luz para tu carga', 'Proyectando tu ahorro a 5 años', 'Preparando tu invitación'];
@@ -667,6 +684,7 @@ function mostrarGate () {
     : C.diasElec > 0 ? `Con <b>${R.km} km al día</b>, la mayoría de tus días los harías en modo eléctrico.`
     : `Con <b>${R.km} km al día</b>, los primeros 130 km de cada día serían eléctricos.`;
   ir('s-gate');
+  marcar('formulario');
   pintarCupo();
 }
 
@@ -713,7 +731,7 @@ $('reg-form').addEventListener('submit', async e => {
     fecha: new Date().toLocaleString('es-MX', { timeZone: 'America/Mexico_City' }),
     nombre, telefono: tel, perfil: '—', modelo: 'Geely Monjaro EM-i',
     otros_modelos: '', ingreso: '', enganche: '', historial: '', mensualidad: '',
-    acepto_privacidad: 'Sí', estado, fuenteContacto: FUENTE, notas, ...ORIGEN
+    acepto_privacidad: 'Sí', estado, fuenteContacto: FUENTE, notas, tiempo_seg: T0 && T1 ? Math.round((T1 - T0) / 1000) : '', ...ORIGEN
   };
 
   // 1) Registro con candado: el servidor revisa que el WhatsApp y el nombre no estén registrados ya.
@@ -728,6 +746,7 @@ $('reg-form').addEventListener('submit', async e => {
 
   if (r && r.ok === false && r.error === 'duplicado') {
     btn.disabled = false; btn.classList.remove('loading');
+    marcar('repetido');
     if (r.motivo === 'telefono') { guardarLocal(nombre, r.folio); mostrarYa(nombre, r.folio, true, zona); }
     else { err.innerHTML = '⚠️ Ya hay una invitación registrada con ese nombre. Si es tuya, escríbele a Abel por WhatsApp para confirmarla.'; err.classList.add('on'); }
     return;
@@ -747,6 +766,7 @@ $('reg-form').addEventListener('submit', async e => {
   btn.disabled = false; btn.classList.remove('loading');
   if (folio) REGISTRADOS = Math.max(REGISTRADOS || 0, folio);
   guardarLocal(nombre, folio);
+  marcar('registro');
   mostrarReporte(nombre, folio);
 });
 
