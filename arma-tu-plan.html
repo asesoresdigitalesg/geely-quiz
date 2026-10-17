@@ -553,11 +553,11 @@
   <div class="screen" id="s-docs">
     <div class="q-card">
       <div class="q-step">Paso 2 · Tus documentos</div>
-      <div class="q-title">Sube tus documentos</div>
-      <div class="q-sub">Tómales foto con tu celular o sube el PDF. Sube lo que tengas ahora; lo que falte lo completas después con tu asesor.</div>
-      <label class="check" style="margin:0 0 16px"><input type="checkbox" id="d-ok"><span>Autorizo que se guarden mis documentos de forma privada para tramitar mi crédito con Geely Serdán y la financiera que yo elija. <a href="#" onclick="verAviso(event)">Aviso de privacidad</a></span></label>
+      <div class="q-title" id="d-tit">Sube tus documentos</div>
+      <div class="q-sub" id="d-sub">Tómales foto con tu celular o sube el PDF. Sube lo que tengas ahora; lo que falte lo completas después con tu asesor.</div>
+      <label class="check" id="d-ok-w" style="margin:0 0 16px"><input type="checkbox" id="d-ok"><span>Autorizo que se guarden mis documentos de forma privada para tramitar mi crédito con Geely Serdán y la financiera que yo elija. <a href="#" onclick="verAviso(event)">Aviso de privacidad</a></span></label>
       <div class="dl" id="d-list"></div>
-      <button class="btn-main" style="margin-top:18px" onclick="trasDocs()">Siguiente: tu solicitud →</button>
+      <button class="btn-main" id="d-sig" style="margin-top:18px" onclick="trasDocs()">Siguiente: tu solicitud →</button>
       <button class="btn-back" onclick="volverCamino()">← Regresar</button>
     </div>
   </div>
@@ -980,8 +980,13 @@ const DOCS_POR = {
   negocio: [['ine', 'INE vigente', 'Foto de frente y de atrás', 1], ['domicilio', 'Comprobante de domicilio', 'De menos de 3 meses', 1], ['ingresos', 'Estados de cuenta y declaración anual', '6 meses de estados de cuenta y tu última declaración', 1], ['otro', 'Constancia de situación fiscal', '', 1]],
   efectivo:[['ine', 'INE vigente', 'Foto de frente y de atrás', 1], ['domicilio', 'Comprobante de domicilio', 'De menos de 3 meses', 1], ['ingresos', 'Algo que muestre tus ingresos', 'Estados de cuenta, notas o lo que tengas; tu asesor te dice qué opciones hay', 0]]
 };
+// ══ INTERRUPTOR: subir documentos y llenar solicitud en línea ══
+// Está APAGADO hasta que Geely Serdán apruebe recibir documentos por aquí y dé su aviso de privacidad.
+// Apagado, el cliente solo ve SU LISTA de documentos (sin subir nada) y agenda su cita.
+// Para encenderlo, cambia false por true.
+const EXPEDIENTE_ACTIVO = false;
 const docsDe = () => DOCS_POR[EXP.snap.compr] || DOCS_POR.nomina;
-const listoDocs = () => docsDe().filter(d => d[3] && !(EXP.docs[d[0]] > 0)).length === 0;
+const listoDocs = () => EXPEDIENTE_ACTIVO ? docsDe().filter(d => d[3] && !(EXP.docs[d[0]] > 0)).length === 0 : !!EXP.docsVisto;
 const hayClave = () => EXP && EXP.e !== null && EXP.e !== undefined && EXP.k;
 
 function pintarCamino () {
@@ -989,13 +994,21 @@ function pintarCamino () {
   const req = docsDe().filter(d => d[3]), hechos = req.filter(d => EXP.docs[d[0]] > 0).length;
   const docsOk = listoDocs(), local = LOCALES.includes(EXP.snap.estado);
   const set = (id, ok, s, g, n) => { $(id).classList.toggle('ok', ok); $(id + '-s').textContent = s; $(id + '-g').textContent = g; $(id).querySelector('.n').textContent = ok ? '✓' : n; };
-  set('c-docs', docsOk, docsOk ? 'Listos ✓ (puedes agregar más)' : hechos ? `${hechos} de ${req.length} listos` : 'Fotos desde tu celular · 3 minutos', docsOk ? 'Ver' : hechos ? 'Seguir →' : 'Empezar →', 2);
-  set('c-sol', EXP.sol, EXP.sol ? 'Enviada ✓' : 'Tus datos para la financiera · 5 minutos', EXP.sol ? 'Editar' : 'Llenar →', 3);
+  if (EXPEDIENTE_ACTIVO) {
+    set('c-docs', docsOk, docsOk ? 'Listos ✓ (puedes agregar más)' : hechos ? `${hechos} de ${req.length} listos` : 'Fotos desde tu celular · 3 minutos', docsOk ? 'Ver' : hechos ? 'Seguir →' : 'Empezar →', 2);
+    set('c-sol', EXP.sol, EXP.sol ? 'Enviada ✓' : 'Tus datos para la financiera · 5 minutos', EXP.sol ? 'Editar' : 'Llenar →', 3);
+  } else {
+    $('c-docs').querySelector('.tx b').textContent = 'Tu lista de documentos';
+    set('c-docs', docsOk, docsOk ? 'Ya la viste ✓' : 'Lo que vas a llevar a tu cita', docsOk ? 'Ver' : 'Ver →', 2);
+    $('c-sol').style.display = 'none';
+  }
   $('c-cita-t').textContent = local && EXP.modo !== 'video' ? 'Agenda tu cita en la agencia' : 'Agenda tu videollamada';
-  set('c-cita', !!EXP.cita, EXP.cita ? cuando(EXP.cita) + ' ✓' : (local ? 'Conoces tu auto, prueba de manejo y revisamos tu plan' : 'Revisamos tu plan con un asesor, sin salir de casa'), EXP.cita ? 'Cambiar' : 'Elegir →', 4);
-  const sig = !docsOk ? 'c-docs' : !EXP.sol ? 'c-sol' : !EXP.cita ? 'c-cita' : '';
+  set('c-cita', !!EXP.cita, EXP.cita ? cuando(EXP.cita) + ' ✓' : (local ? 'Conoces tu auto, prueba de manejo y revisamos tu plan' : 'Revisamos tu plan con un asesor, sin salir de casa'), EXP.cita ? 'Cambiar' : 'Elegir →', EXPEDIENTE_ACTIVO ? 4 : 3);
+  const solOk = EXP.sol || !EXPEDIENTE_ACTIVO;
+  const sig = !docsOk ? 'c-docs' : !solOk ? 'c-sol' : !EXP.cita ? 'c-cita' : '';
   ['c-docs', 'c-sol', 'c-cita'].forEach(id => $(id).classList.toggle('next', id === sig));
-  $('r-listo').classList.toggle('on', docsOk && EXP.sol && !!EXP.cita);
+  $('r-listo').classList.toggle('on', docsOk && solOk && !!EXP.cita);
+  if (!EXPEDIENTE_ACTIVO) $('r-listo').innerHTML = '🎉 <b>¡Listo, ya tienes tu cita!</b><br>Lleva tu lista de documentos y tu asesor te confirma por WhatsApp.';
   const err = $('r-err');
   if (!hayClave() && !REG_PEND) { err.textContent = local ? 'No pudimos abrir tu expediente en línea. Toca "Prefiero que me ayude un asesor" y lo hacemos por WhatsApp.' : 'No pudimos abrir tu expediente en línea. Un asesor te va a escribir por WhatsApp para completarlo.'; err.classList.add('on'); }
   else err.classList.remove('on');
@@ -1010,6 +1023,7 @@ async function conClave () {
 
 // ── Documentos
 async function irDocs () {
+  if (!EXPEDIENTE_ACTIVO) return verListaDocs();
   if (!(await conClave())) return;
   contar('docs');
   $('d-list').innerHTML = docsDe().map(([k, t, s, req]) => `<div class="drow ${EXP.docs[k] > 0 ? 'ok' : ''}" id="dr-${k}">
@@ -1062,12 +1076,25 @@ async function subirArchivos (k, files) {
   st.className = 'st on ' + (fallo ? 'bad' : 'good');
   st.textContent = fallo ? (ok ? `✅ ${ok} subido(s). ` : '⚠️ ') + fallo : `✅ ${EXP.docs[k]} archivo${EXP.docs[k] > 1 ? 's' : ''} recibido${EXP.docs[k] > 1 ? 's' : ''}`;
 }
-function trasDocs () { if (!EXP.sol) irSol(); else if (!EXP.cita) irCita(); else volverCamino(); }
+// Interruptor apagado: solo la lista de documentos, sin subir nada
+function verListaDocs () {
+  contar('docs');
+  $('d-tit').textContent = 'Los documentos que vas a necesitar';
+  $('d-sub').textContent = 'Tenlos listos para tu cita. Tu asesor te dice si la financiera pide algo más según tu caso.';
+  $('d-ok-w').style.display = 'none';
+  $('d-list').innerHTML = docsDe().map(([k, t, s, req]) => `<div class="drow"><div class="top"><div class="tx"><b>${t}${req ? '' : '<span class="opc">opcional</span>'}</b>${s}</div></div></div>`).join('');
+  $('d-sig').textContent = EXP.cita ? 'Listo →' : 'Siguiente: agenda tu cita →';
+  EXP.docsVisto = true; guardarEXP();
+  ir('s-docs');
+}
+function trasDocs () {
+  if (!EXPEDIENTE_ACTIVO) { if (!EXP.cita) irCita(); else volverCamino(); return; } if (!EXP.sol) irSol(); else if (!EXP.cita) irCita(); else volverCamino(); }
 
 // ── Solicitud
 const SOL = ['nombre', 'nacimiento', 'civil', 'correo', 'dependientes', 'calle', 'colonia', 'cp', 'municipio', 'estado', 'tiempoDom', 'vivienda', 'empresa', 'puesto', 'ingresoExacto', 'antiguedad', 'telTrabajo', 'ref1', 'ref1tel', 'ref1rel', 'ref2', 'ref2tel', 'ref2rel'];
 const LS_SOL = 'adg_solicitud';
 async function irSol () {
+  if (!EXPEDIENTE_ACTIVO) return;
   if (!(await conClave())) return;
   let g = {}; try { g = JSON.parse(localStorage.getItem(LS_SOL) || '{}'); } catch (e) {}
   const pre = { nombre: EXP.snap.nombre, estado: EXP.snap.estado === 'Otro' ? '' : EXP.snap.estado, antiguedad: EXP.snap.antig };

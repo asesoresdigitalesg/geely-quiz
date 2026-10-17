@@ -221,3 +221,302 @@
   .modal-box p b { color: var(--text); }
   @media (max-width: 380px) { .q-card, .result-card, .form-card { padding: 22px 16px; } .pase-row { grid-template-columns: 1fr 1fr; } .pase-row div:first-child { grid-column: 1 / -1; } }
 </style>
+<style>
+  /* ── ¿Cuánto vale tu auto? ── */
+  .marcas { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 8px; }
+  .marcas button { background: var(--surface); border: 1.5px solid var(--border); border-radius: 12px; padding: 13px 4px; font-size: 13.5px; color: var(--text); cursor: pointer; font-family: inherit; }
+  .marcas button.sel { border-color: var(--accent); background: rgba(0,212,255,.06); }
+  .fld { margin-bottom: 12px; }
+  .fld label { display: block; font-size: 12px; color: var(--muted2); margin: 0 0 6px 2px; }
+  .fld .inp { padding-left: 16px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chips button, .chips a { background: var(--surface); border: 1.5px solid var(--border); border-radius: 100px; padding: 9px 13px; font-size: 13px; color: var(--muted2); cursor: pointer; font-family: inherit; text-decoration: none; }
+  .chips button.sel { border-color: var(--accent); color: var(--text); }
+  .chips a:hover { border-color: var(--accent); color: var(--text); }
+  .consent { font-size: 11.5px; color: var(--muted); line-height: 1.55; text-align: center; margin-top: 12px; }
+  .consent a { color: var(--accent); text-decoration: none; }
+  .dl { display: grid; gap: 10px; }
+  .drow { background: var(--surface); border: 1.5px solid var(--border); border-radius: 14px; padding: 13px 14px; }
+  .drow.ok { border-color: rgba(0,229,155,.45); }
+  .drow .top { display: flex; gap: 12px; align-items: center; }
+  .drow .top .tx { flex: 1; min-width: 0; font-size: 12.5px; color: var(--muted2); line-height: 1.4; }
+  .drow .top .tx b { display: block; color: var(--text); font-size: 14px; font-weight: 600; }
+  .up { flex-shrink: 0; display: inline-flex; align-items: center; gap: 6px; background: rgba(0,212,255,.1); border: 1.5px solid rgba(0,212,255,.4); color: var(--text); border-radius: 100px; padding: 9px 14px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; }
+  .drow.ok .up { background: transparent; border-color: var(--border-hi); font-weight: 500; color: var(--muted2); }
+  .drow .st { font-size: 12px; margin-top: 8px; display: none; color: var(--muted2); }
+  .drow .st.on { display: block; } .drow .st.bad { color: #ff6b6b; } .drow .st.good { color: var(--green); }
+  .resumen { display: grid; gap: 0; }
+  .resumen div { display: flex; justify-content: space-between; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--muted2); }
+  .resumen div:last-child { border-bottom: none; }
+  .resumen b { color: var(--text); font-weight: 600; text-align: right; }
+  .aviso-zona { display: none; margin-top: 12px; background: rgba(245,197,24,.06); border: 1px solid rgba(245,197,24,.22); border-radius: 12px; padding: 12px 14px; font-size: 13px; color: var(--muted2); line-height: 1.5; }
+  .aviso-zona.on { display: block; }
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<div class="bg-glow"></div>
+<div class="xp-pop" id="xp"></div>
+
+<div class="wrapper">
+  <div class="topbar">
+    <span class="topbar-logo">AsesoresDigitalesG</span>
+    <div class="topbar-dot"></div>
+    <span class="topbar-logo">Geely Serdán Puebla</span>
+  </div>
+
+  <!-- ═══════════ INTRO ═══════════ -->
+  <div class="screen on" id="s-intro">
+    <div class="intro">
+      <div class="badge"><div class="badge-dot"></div><span>Valuación gratis · auto a cuenta</span></div>
+      <div class="headline">Tu auto actual<br>puede ser<br><span class="hl">tu enganche.</span></div>
+      <p class="sub" id="i-sub">Cuéntanos de tu auto en 1 minuto y te mandamos por WhatsApp <b>cuánto te damos por él</b> a cuenta de tu Geely, en menos de 24 horas hábiles.</p>
+      <div class="perks">
+        <div class="perk">⚡ 1 minuto</div>
+        <div class="perk">📲 Respuesta por WhatsApp</div>
+        <div class="perk">✋ Sin compromiso</div>
+      </div>
+    </div>
+    <button class="btn-main pulse" onclick="empezar()">Valuar mi auto →</button>
+    <p class="sec-label">Cómo funciona</p>
+    <div class="gets">
+      <div class="get"><div class="get-ico">📝</div><div><b>1. Nos cuentas de tu auto</b>Marca, modelo, año, kilómetros y cómo está.</div></div>
+      <div class="get"><div class="get-ico">📸</div><div><b>2. Subes unas fotos (opcional)</b>Con fotos te damos un rango más preciso.</div></div>
+      <div class="get"><div class="get-ico">💬</div><div><b>3. Te mandamos tu valuación</b>Por WhatsApp, en menos de 24 horas hábiles. El monto final se confirma al revisarlo en la agencia.</div></div>
+    </div>
+    <button class="btn-main" style="margin-top:22px" onclick="empezar()">Valuar mi auto →</button>
+    <p class="legal">AsesoresDigitalesG · Geely Serdán · Puebla</p>
+  </div>
+
+  <!-- ═══════════ PREGUNTAS ═══════════ -->
+  <div class="screen" id="s-quiz">
+    <div class="progress-wrap">
+      <div class="progress-meta"><span id="p-txt">Pregunta 1</span><span class="xp" id="p-xp">0%</span></div>
+      <div class="progress-bar"><div class="progress-fill" id="p-fill" style="width:0%"></div></div>
+    </div>
+    <div id="q-box"></div>
+    <button class="btn-back" id="q-back" onclick="atras()">← Regresar</button>
+  </div>
+
+  <!-- ═══════════ REGISTRO ═══════════ -->
+  <div class="screen" id="s-gate">
+    <div class="gate-head">
+      <div class="lvl medio">✅ Tu auto está listo para valuar</div>
+      <div class="headline">¿A dónde te<br><span class="hl">mandamos tu valuación?</span></div>
+    </div>
+    <div class="result-card"><div class="result-tag">Tu auto</div><div class="resumen" id="g-res"></div></div>
+    <div class="form-card">
+      <form id="reg-form" novalidate>
+        <div class="inp-wrap"><span>👤</span><input class="inp" id="f-nombre" type="text" placeholder="Nombre y apellido" autocomplete="name"></div>
+        <div class="inp-wrap"><span>📱</span><input class="inp" id="f-tel" type="tel" inputmode="tel" placeholder="Tu WhatsApp (10 dígitos)" autocomplete="tel" maxlength="20"></div>
+        <div class="err" id="f-err"></div>
+        <button type="submit" class="btn-main" id="f-btn"><span class="btn-t">Pedir mi valuación →</span><span class="spinner"></span></button>
+        <p class="consent">Al tocar el botón aceptas que te escribamos por WhatsApp con tu valuación y opciones para estrenar un Geely. <a href="#" onclick="verAviso(event)">Aviso de privacidad</a></p>
+      </form>
+    </div>
+  </div>
+
+  <!-- ═══════════ FOTOS ═══════════ -->
+  <div class="screen" id="s-fotos">
+    <div class="q-card">
+      <div class="q-step">Opcional · 1 minuto</div>
+      <div class="q-title">Sube unas fotos y te damos un rango más preciso</div>
+      <div class="q-sub">Solo del auto, con luz de día y completo en la foto. Si ahorita no puedes, sáltate este paso.</div>
+      <div class="dl" id="d-list"></div>
+      <button class="btn-main" style="margin-top:18px" onclick="terminar()">Listo →</button>
+      <button class="btn-back" onclick="terminar()">Saltar este paso</button>
+    </div>
+  </div>
+
+  <!-- ═══════════ LISTO ═══════════ -->
+  <div class="screen" id="s-fin">
+    <div class="gate-head" style="padding-top:26px">
+      <div class="lvl alto">✅ Valuación solicitada</div>
+      <div class="headline" id="fin-head">Listo</div>
+      <p class="sub" id="fin-sub"></p>
+      <div class="aviso-zona" id="fin-zona">Los autos a cuenta se revisan en Geely Serdán, Puebla. Como vives fuera, un asesor te explica por WhatsApp cómo hacerlo.</div>
+    </div>
+    <div class="result-card">
+      <div class="result-tag">Mientras, arma tu plan con tu auto como enganche</div>
+      <p class="sub" style="margin:0 0 12px;font-size:13.5px">¿Por cuál Geely lo cambiarías? Ve tu mensualidad y si te aprueban.</p>
+      <div class="chips" id="fin-autos"></div>
+    </div>
+    <p class="legal">El monto final de tu auto se confirma al revisarlo físicamente en la agencia.</p>
+  </div>
+</div>
+
+<div class="modal" id="aviso" onclick="if(event.target===this)cerrarAviso()">
+  <div class="modal-box">
+    <h3>Aviso de privacidad</h3>
+    <p><b>Responsable:</b> AsesoresDigitalesG by Abel Zarate, asesor comercial autorizado de Geely Serdán, Puebla, México.</p>
+    <p><b>Datos que recopilamos:</b> nombre, WhatsApp, estado donde vives, los datos y fotos de tu auto actual.</p>
+    <p><b>Finalidad:</b> darte una valuación de tu auto para tomarlo a cuenta, contactarte sobre tu compra y agendar la revisión en la agencia. No se venden ni se comparten con terceros ajenos a Geely Serdán.</p>
+    <p><b>Tus derechos:</b> puedes pedir en cualquier momento acceder, corregir o borrar tus datos escribiéndonos por WhatsApp.</p>
+    <button class="btn-main" onclick="cerrarAviso()">Entendido</button>
+  </div>
+</div>
+
+<script src="precios.js"></script>
+<script>
+// Los precios y tasas viven en precios.js (se actualizan ahí cada mes)
+const LOCALES = ['Puebla', 'Tlaxcala', 'Hidalgo', 'Veracruz'];
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwB-ylsX33ZGE918Ty3s7YK0ZLXHv0en4aFbg_X4d7ac9iZ2C7s6JD6lTtRyi_yc1Po/exec';
+const GEELYS = ['monjaroemi', 'emgrand', 'ex2', 'ex5emi', 'coolray_l', 'new_coolray', 'cityray', 'gx3pro', 'starray26', 'okavango', 'monjaro'];
+
+const $ = id => document.getElementById(id);
+const pesos = n => '$' + Math.round(n).toLocaleString('es-MX');
+const MARCADOS = {};
+function contar (p) { if (MARCADOS[p]) return; MARCADOS[p] = 1; try { navigator.sendBeacon(SCRIPT_URL, new Blob([JSON.stringify({ tipo: 'paso', pagina: 'valua', paso: p })], { type: 'text/plain' })); } catch (e) {} }
+const ORIGEN = (function () {
+  let o = {}; try { o = JSON.parse(sessionStorage.getItem('adg_origen') || '{}'); } catch (e) {}
+  const p = new URLSearchParams(location.search);
+  if (p.get('utm_source')) { o = { origen: p.get('utm_source').toLowerCase(), contenido: p.get('utm_content') || '', campana: p.get('utm_campaign') || '' }; try { sessionStorage.setItem('adg_origen', JSON.stringify(o)); } catch (e) {} }
+  if (!o.campana) o.campana = 'valua-tu-auto';
+  return o;
+})();
+const INTERES = (k => k && models[k] ? k : '')(new URLSearchParams(location.search).get('auto'));   // si viene de "Arma tu plan"
+if (INTERES) $('i-sub').innerHTML = `Cuéntanos de tu auto en 1 minuto y te mandamos por WhatsApp <b>cuánto te damos por él</b> a cuenta de tu <b>${models[INTERES].name}</b>, en menos de 24 horas hábiles.`;
+contar('visita');
+
+function ir (id) { document.querySelectorAll('.screen').forEach(s => s.classList.toggle('on', s.id === id)); window.scrollTo(0, 0); }
+function xp (txt) { const el = $('xp'); el.textContent = txt; el.classList.remove('go'); void el.offsetWidth; el.classList.add('go'); }
+
+// ══════════════════════════════════════════════════════════════
+// PREGUNTAS
+// ══════════════════════════════════════════════════════════════
+const ANIOS = []; for (let y = new Date().getFullYear(); y >= 2010; y--) ANIOS.push(String(y)); ANIOS.push('2009 o antes');
+const PREGUNTAS = [
+  { k: 'marca', tipo: 'marca', titulo: '¿Qué marca es tu auto?', sub: 'Toca la marca.', ops: ['Nissan', 'Chevrolet', 'Volkswagen', 'Toyota', 'Honda', 'Mazda', 'Kia', 'Hyundai', 'Ford', 'Seat', 'Suzuki', 'Renault', 'MG', 'Jeep', 'Otra'] },
+  { k: 'modelo', tipo: 'modelo', titulo: '¿Qué modelo y de qué año?', sub: 'Como aparece en tu tarjeta de circulación. Ejemplo: Versa Advance, Jetta Trendline.' },
+  { k: 'km', titulo: '¿Cuántos kilómetros tiene?', sub: 'Lo que marca el tablero. Aproximado está bien.', ops: [
+    { v: 'Menos de 30,000 km', i: '🟢' }, { v: '30,000 a 60,000 km', i: '🟢' }, { v: '60,000 a 100,000 km', i: '🟡' }, { v: '100,000 a 150,000 km', i: '🟠' }, { v: 'Más de 150,000 km', i: '🔴' } ] },
+  { k: 'cond', titulo: '¿Cómo está tu auto?', sub: 'Sé honesto: así la valuación sale más cercana a la real.', ops: [
+    { v: 'Excelente', i: '✨', s: 'Sin golpes, servicios al día, interiores impecables' }, { v: 'Bueno', i: '👍', s: 'Detalles menores de uso normal' },
+    { v: 'Regular', i: '🔧', s: 'Tiene golpes, rayones o algo que arreglar' }, { v: 'Necesita reparaciones', i: '⚠️', s: 'Fallas mecánicas o daños importantes' } ] },
+  { k: 'papeles', titulo: '¿Cómo están sus papeles?', sub: 'Esto cambia mucho el valor.', ops: [
+    { v: 'Factura original y sin adeudos', i: '📄' }, { v: 'Todavía lo estoy pagando', i: '🏦', s: 'Tiene crédito activo' },
+    { v: 'Refacturado o de aseguradora', i: '🔁' }, { v: 'No estoy seguro', i: '🤷' } ] },
+  { k: 'cuando', titulo: '¿Cuándo te gustaría cambiarlo?', sub: 'Así sabemos qué tan rápido moverte la valuación.', ops: [
+    { v: 'mes', t: 'Este mes', i: '🔥' }, { v: 'trim', t: 'En 1 a 3 meses', i: '📅' }, { v: 'luego', t: 'Más adelante, solo quiero saber cuánto vale', i: '👀' } ] },
+  { k: 'estado', titulo: '¿En qué estado vives?', sub: 'Los autos a cuenta se revisan en la agencia de Puebla.', ops: [
+    { v: 'Puebla', i: '📍' }, { v: 'Tlaxcala', i: '📍' }, { v: 'Veracruz', i: '📍' }, { v: 'Hidalgo', i: '📍' }, { v: 'CDMX', t: 'Ciudad de México', i: '🏙️' }, { v: 'Estado de México', i: '🏙️' }, { v: 'Otro', t: 'Otro estado', i: '🇲🇽' } ] }
+];
+const R = {}; let paso = 0, T0 = 0, ocupado = false;
+function empezar () { if (!T0) T0 = Date.now(); contar('inicio'); paso = 0; try { history.pushState({ v: 1 }, '', location.href); } catch (e) {} ir('s-quiz'); pintar(); }
+window.addEventListener('popstate', () => { if (!$('s-quiz').classList.contains('on')) return; if (paso > 0) { atras(); history.pushState({ v: 1 }, '', location.href); } else ir('s-intro'); });
+function pintar () {
+  const q = PREGUNTAS[paso], pct = Math.round(paso / PREGUNTAS.length * 100);
+  $('p-txt').textContent = `Pregunta ${paso + 1} de ${PREGUNTAS.length}`; $('p-xp').textContent = pct + '%'; $('p-fill').style.width = pct + '%';
+  $('q-back').style.visibility = paso === 0 ? 'hidden' : 'visible';
+  let c = '';
+  if (q.tipo === 'marca') c = `<div class="marcas">${q.ops.map(m => `<button type="button" class="${R.marca === m ? 'sel' : ''}" onclick="responder('${m}')">${m}</button>`).join('')}</div>`;
+  else if (q.tipo === 'modelo') c = `<div class="fld"><label for="m-modelo">Modelo y versión</label><input class="inp" id="m-modelo" value="${(R.modelo || '').replace(/"/g, '&quot;')}" placeholder="Ej. Versa Advance"></div>
+      <div class="fld"><label for="m-anio">Año</label><select class="inp" id="m-anio"><option value="" disabled ${R.anio ? '' : 'selected'}>Elige el año</option>${ANIOS.map(a => `<option ${R.anio === a ? 'selected' : ''}>${a}</option>`).join('')}</select></div>
+      <div class="err" id="m-err">⚠️ Escribe el modelo y elige el año</div>
+      <button class="btn-main" onclick="guardarModelo()">Continuar →</button>`;
+  else c = `<div class="options">${q.ops.map((o, i) => `<button type="button" class="opt ${R[q.k] === o.v ? 'sel' : ''}" onclick="elegir(${i})"><span class="opt-icon">${o.i}</span><span class="opt-body"><strong>${o.t || o.v}</strong>${o.s ? `<small>${o.s}</small>` : ''}</span><span class="opt-ring"></span></button>`).join('')}</div>`;
+  $('q-box').innerHTML = `<div class="q-card"><div class="q-step">Tu auto actual</div><div class="q-title">${q.titulo}</div><div class="q-sub">${q.sub}</div>${c}</div>`;
+}
+function guardarModelo () {
+  const m = $('m-modelo').value.trim(), a = $('m-anio').value;
+  $('m-modelo').classList.toggle('bad', m.length < 2); $('m-anio').classList.toggle('bad', !a);
+  if (m.length < 2 || !a) { $('m-err').classList.add('on'); return; }
+  R.anio = a; responder(m);
+}
+function elegir (i) {
+  if (ocupado) return; ocupado = true;
+  const q = PREGUNTAS[paso], o = q.ops[i]; R[q.k + '_t'] = o.t || o.v;
+  document.querySelectorAll('#q-box .opt').forEach((b, j) => b.classList.toggle('sel', j === i));
+  setTimeout(() => { ocupado = false; responder(o.v); }, 240);
+}
+function responder (v) {
+  const q = PREGUNTAS[paso]; R[q.k] = v; paso++; contar('p' + paso);
+  xp(['¡Bien!', 'Vas muy bien', 'Sigue así', 'Ya casi', 'Casi listo', 'Última', '¡Listo!'][paso - 1] || '¡Bien!');
+  if (paso < PREGUNTAS.length) pintar(); else irGate();
+}
+function atras () { if (paso > 0 && !ocupado) { paso--; pintar(); } }
+const autoTxt = () => `${R.marca === 'Otra' ? '' : R.marca + ' '}${R.modelo} ${R.anio}`.trim();
+function irGate () {
+  R.tiempo = Math.round((Date.now() - T0) / 1000);
+  $('g-res').innerHTML = [['Auto', autoTxt()], ['Kilómetros', R.km], ['Estado', R.cond], ['Papeles', R.papeles]].map(([a, b]) => `<div><span>${a}</span><b>${b}</b></div>`).join('');
+  ir('s-gate'); contar('formulario');
+}
+
+// ══════════════════════════════════════════════════════════════
+// REGISTRO → CRM (abre su carpeta para las fotos del auto)
+// ══════════════════════════════════════════════════════════════
+function normTel (v) { let t = String(v || '').replace(/\D/g, ''); if (t.length === 13 && t.startsWith('521')) t = t.slice(3); else if (t.length === 12 && t.startsWith('52')) t = t.slice(2); return t; }
+function verAviso (e) { e.preventDefault(); $('aviso').classList.add('on'); }
+function cerrarAviso () { $('aviso').classList.remove('on'); }
+async function api (obj, ms) { const ctl = new AbortController(); const t = setTimeout(() => ctl.abort(), ms || 30000); try { const r = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(obj), signal: ctl.signal }); return await r.json(); } finally { clearTimeout(t); } }
+let EXP = null, NOMBRE = '';
+$('reg-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const err = $('f-err'); err.classList.remove('on');
+  NOMBRE = $('f-nombre').value.trim().replace(/\s+/g, ' '); const tel = normTel($('f-tel').value);
+  $('f-nombre').classList.toggle('bad', NOMBRE.length < 3); $('f-tel').classList.toggle('bad', tel.length !== 10);
+  if (NOMBRE.length < 3 || tel.length !== 10) { err.textContent = tel && tel.length !== 10 ? '⚠️ Tu WhatsApp debe tener 10 dígitos' : '⚠️ Escribe tu nombre y tu WhatsApp'; err.classList.add('on'); return; }
+  const cuandoTxt = { mes: 'este mes', trim: 'en 1 a 3 meses', luego: 'más adelante (solo quiere saber cuánto vale)' }[R.cuando];
+  const lead = {
+    fecha: new Date().toLocaleString('es-MX', { timeZone: 'America/Mexico_City' }), nombre: NOMBRE, telefono: tel, perfil: '—',
+    modelo: INTERES ? `${models[INTERES].name}` : 'Por definir', otros_modelos: '', ingreso: '', enganche: `Auto a cuenta: ${autoTxt()}`, historial: '', mensualidad: '',
+    acepto_privacidad: 'Sí', estado: R.estado, compra: R.cuando, auto: autoTxt(),
+    notas: `🚗 Auto a cuenta: ${autoTxt()}, ${R.km}, estado ${R.cond.toLowerCase()}, papeles: ${R.papeles.toLowerCase()}. Quiere cambiarlo ${cuandoTxt}.${INTERES ? ' Le interesa el ' + models[INTERES].name + '.' : ''} Se le prometió un rango de valuación por WhatsApp en menos de 24 h hábiles.`,
+    tiempo_seg: R.tiempo || '', ...ORIGEN
+  };
+  const btn = $('f-btn'); btn.classList.add('loading'); btn.disabled = true;
+  try {
+    const r = await api({ tipo: 'registro_auto', ...lead }, 25000);
+    if (r && r.ok) EXP = { e: r.e, k: r.k };
+  } catch (er) { if (er.name !== 'AbortError') { try { navigator.sendBeacon(SCRIPT_URL, new Blob([JSON.stringify({ ...lead, fuenteContacto: 'Auto a cuenta' })], { type: 'text/plain' })); } catch (x) {} } }
+  btn.classList.remove('loading'); btn.disabled = false;
+  contar('registro');
+  if (EXP) irFotos(); else terminar();
+});
+
+// ── Fotos del auto (opcional). Solo del auto: nada de documentos personales.
+const FOTOS = [['auto', 'Frente y costado', 'Una foto donde se vea el auto completo'], ['auto', 'Parte trasera', ''], ['auto', 'Interior', 'Asientos y volante'], ['auto', 'Tablero encendido', 'Que se vea el kilometraje']];
+function irFotos () {
+  $('d-list').innerHTML = FOTOS.map(([k, t, s], i) => `<div class="drow" id="dr-${i}"><div class="top"><div class="tx"><b>${t}</b>${s}</div><button type="button" class="up" onclick="elegirFoto(${i})">📷 Subir</button></div><div class="st" id="ds-${i}"></div></div>`).join('');
+  ir('s-fotos');
+}
+const inputFoto = Object.assign(document.createElement('input'), { type: 'file', accept: 'image/*' });
+inputFoto.style.display = 'none'; document.body.appendChild(inputFoto);
+let fotoActual = 0;
+function elegirFoto (i) { fotoActual = i; inputFoto.value = ''; inputFoto.click(); }
+inputFoto.addEventListener('change', () => { if (inputFoto.files[0]) subirFoto(fotoActual, inputFoto.files[0]); });
+function aBase64 (blob) { return new Promise((ok, no) => { const r = new FileReader(); r.onload = () => ok(String(r.result).split(',')[1]); r.onerror = no; r.readAsDataURL(blob); }); }
+function comprimir (file) {
+  return new Promise(ok => {
+    if (!/^image\/(jpeg|png|webp)$/.test(file.type)) return ok(file);
+    const url = URL.createObjectURL(file), img = new Image();
+    img.onload = () => { const f = Math.min(1, 1800 / Math.max(img.width, img.height)); const c = document.createElement('canvas'); c.width = Math.round(img.width * f); c.height = Math.round(img.height * f); c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); URL.revokeObjectURL(url); c.toBlob(b => ok(b && b.size < file.size ? b : file), 'image/jpeg', 0.82); };
+    img.onerror = () => { URL.revokeObjectURL(url); ok(file); }; img.src = url;
+  });
+}
+async function subirFoto (i, file) {
+  const st = $('ds-' + i), row = $('dr-' + i), btn = row.querySelector('.up');
+  btn.disabled = true; st.className = 'st on'; st.textContent = 'Subiendo…';
+  try {
+    const f = await comprimir(file), mime = f.type || file.type || 'image/jpeg';
+    if (f.size > 10 * 1024 * 1024) throw new Error('grande');
+    const r = await api({ tipo: 'exp_archivo', e: EXP.e, k: EXP.k, doc: FOTOS[i][0], mime, b64: await aBase64(f) }, 90000);
+    if (!r || !r.ok) throw new Error(r && r.error);
+    row.classList.add('ok'); btn.textContent = 'Cambiar'; st.className = 'st on good'; st.textContent = '✅ Recibida'; contar('fotos');
+  } catch (er) { st.className = 'st on bad'; st.textContent = er.message === 'grande' ? '⚠️ La foto pesa demasiado' : '⚠️ No se pudo subir. Intenta de nuevo.'; }
+  btn.disabled = false;
+}
+
+// ── Listo: siguiente paso es armar su plan con el auto como enganche
+function terminar () {
+  const local = LOCALES.includes(R.estado);
+  $('fin-head').innerHTML = `${NOMBRE.split(' ')[0]},<br><span class="hl">te escribimos hoy</span>`;
+  $('fin-sub').innerHTML = `Te mandamos por WhatsApp cuánto te damos por tu <b>${autoTxt()}</b> en menos de 24 horas hábiles.`;
+  $('fin-zona').classList.toggle('on', !local);
+  const lista = INTERES ? [INTERES].concat(GEELYS.filter(k => k !== INTERES)) : GEELYS;
+  $('fin-autos').innerHTML = lista.filter(k => models[k]).map(k => { const qs = new URLSearchParams(location.search); qs.set('auto', k); return `<a href="arma-tu-plan.html?${qs}" onclick="contar('plan')">${models[k].name}</a>`; }).join('');
+  ir('s-fin'); xp('¡Valuación solicitada!');
+}
+</script>
+</body>
+</html>
