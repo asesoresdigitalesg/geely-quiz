@@ -408,7 +408,11 @@ const PREGUNTAS = [
     { v: 24.5, i: '🟢', t: 'Magna', s: 'Alrededor de $24.50 por litro' }, { v: 26.5, i: '🔴', t: 'Premium', s: 'Alrededor de $26.50 por litro' }, { v: 24.5, i: '🤷', t: 'No sé', s: 'Usamos Magna como referencia' } ] },
   { k: 'carga', titulo: '¿Dónde la cargarías?', sub: 'Se conecta como un celular. Esto cambia cuánto pagas de luz.', ops: [
     { v: 'casa', i: '🏠', t: 'En mi casa', s: 'Tengo cochera o lugar con contacto' }, { v: 'trabajo', i: '🏢', t: 'En el trabajo o en plazas', s: 'Cargadores públicos o de la oficina' },
-    { v: 'nose', i: '🔌', t: 'Todavía no sé', s: 'Hacemos un cálculo conservador' } ] }
+    { v: 'nose', i: '🔌', t: 'Todavía no sé', s: 'Hacemos un cálculo conservador' } ] },
+  { k: 'presupuesto', titulo: '¿Cuánto podrías pagar al mes por tu auto?', sub: 'Así te decimos si te alcanza hoy o cuándo te conviene. Aproximado está bien.', ops: [
+    { v: 8000, i: '💼', t: 'Menos de $8,000', s: 'al mes' }, { v: 11000, i: '📈', t: '$8,000 a $11,000', s: 'al mes' },
+    { v: 14000, i: '💰', t: '$11,000 a $14,000', s: 'al mes' }, { v: 99999, i: '🏆', t: 'Más de $14,000', s: 'al mes' },
+    { v: 0, i: '🤷', t: 'Todavía no lo sé', s: 'Te enseñamos la mensualidad de cada una' } ] }
 ];
 const CARGA = { casa: { luz: 2.5, dias: 1 }, trabajo: { luz: 4.5, dias: 0.8 }, nose: { luz: 3.5, dias: 0.7 } };
 let paso = 0, T0 = 0, ocupado = false;
@@ -447,7 +451,7 @@ function elegir (i) {
 function responder (v, op) {
   const q = PREGUNTAS[paso]; R[q.k] = v; if (op) R[q.k + '_t'] = op.t;
   paso++; contar('p' + paso);
-  xp(['¡Bien!', 'Vas muy bien', 'Sigue así', 'Ya casi', 'Última', '¡Listo!'][paso - 1]);
+  xp(['¡Bien!', 'Vas muy bien', 'Sigue así', 'Ya casi', 'Casi listo', 'Última', '¡Listo!'][paso - 1] || '¡Bien!');
   if (paso < PREGUNTAS.length) pintarPregunta(); else analizar();
 }
 function atras () { if (paso > 0 && !ocupado) { paso--; pintarPregunta(); } }
@@ -494,38 +498,44 @@ function mostrar () {
     CS.map(c => `<div><div class="bar-l"><span>Con ${c.e.nombre} (luz + gasolina)</span><b>${pesos(c.emi)}/mes</b></div><div class="bar-t"><div class="bar-f emi" data-w="${Math.max(3, c.emi / max * 100)}"></div></div></div>`).join('');
   setTimeout(() => document.querySelectorAll('[data-w]').forEach(b => b.style.width = b.dataset.w + '%'), 200);
   $('r-supuestos').textContent = `Estimación con ${R.km} km al día, ${R.dias} días a la semana, gasolina a $${R.gas.toFixed(2)}/l y luz a $${C.luz.toFixed(2)}/kWh. Autonomía eléctrica y consumos según el fabricante.`;
-  // Una tarjeta por modelo: qué parte de la mensualidad se paga con el ahorro, y su siguiente paso
+  // Una tarjeta por modelo. Si su presupuesto alcanza → pasa a "Arma tu plan" (ahí se pre-califica y llega al asesor).
+  // Si no alcanza → "Avísame cuando baje": queda en espera y NO entra a la lista de los asesores.
+  const tope = Number(R.presupuesto) || 0;
+  const noAlcanza = c => tope && c.men && c.men > tope * 1.05;
+  const alertaPara = CS.filter(noAlcanza).sort((a, b) => a.men - b.men)[0];   // una sola alerta: la del modelo más accesible
   $('r-modelos').innerHTML = CS.map(c => {
     const p = precioDe(c.k);
-    if (p && c.men) {
-      const cubre = Math.min(100, Math.round(c.mes / c.men * 100));
-      const url = `arma-tu-plan.html?auto=${c.e.plan}${location.search ? '&' + location.search.slice(1) : ''}`;
-      return `<div class="result-card mcard"><div class="result-tag">${c.e.nombre} · desde ${pesos(p.precio)}</div>
-        <div class="cubre"><div class="big">${cubre}%</div><p>de su mensualidad aproximada (<b>${pesos(c.men)}/mes</b> con ${ENG_REF}% de enganche a ${PLAZO_REF} meses) <b>se pagaría con lo que dejas de gastar en gasolina</b>.</p></div>
+    if (!p || !c.men) return `<div class="result-card mcard"><div class="result-tag">${c.e.nombre}</div><p class="sub" style="margin:0;font-size:13.5px">Ahorrarías <b>${pesos(c.mes)} al mes</b> en gasolina.</p></div>`;
+    const cubre = Math.min(100, Math.round(c.mes / c.men * 100));
+    const url = `arma-tu-plan.html?auto=${c.e.plan}${location.search ? '&' + location.search.slice(1) : ''}`;
+    const base = `<div class="result-tag">${c.e.nombre} · desde ${pesos(p.precio)}</div>
+        <div class="cubre"><div class="big">${cubre}%</div><p>de su mensualidad aproximada (<b>${pesos(c.men)}/mes</b> con ${ENG_REF}% de enganche a ${PLAZO_REF} meses) <b>se pagaría con lo que dejas de gastar en gasolina</b>.</p></div>`;
+    if (!noAlcanza(c)) return `<div class="result-card mcard">${base}
         <a class="btn-main" style="display:flex;justify-content:center;margin-top:16px;text-decoration:none" href="${url}" onclick="contar('plan')">Ve tu mensualidad exacta y si te aprueban →</a></div>`;
-    }
-    return `<div class="result-card mcard"><div class="result-tag">${c.e.nombre} · precio oficial el 16 de octubre</div>
-      <p class="sub" style="margin:0 0 14px;font-size:13.5px">Ahorrarías <b>${pesos(c.mes)} al mes</b> en gasolina. Te avisamos por WhatsApp el precio oficial y la oferta de lanzamiento en cuanto salgan, con tu mensualidad calculada.</p>
+    const otraRuta = `<a class="otra-ruta" href="${url}" onclick="contar('plan')">¿Tienes más enganche o un auto a cuenta? <b>Ve si así te alcanza →</b></a>`;
+    if (c !== alertaPara) return `<div class="result-card mcard">${base}<p class="sub" style="margin:14px 0 0;font-size:13px">Con lo que podrías pagar hoy, todavía queda arriba de tu presupuesto.</p>${otraRuta}</div>`;
+    return `<div class="result-card mcard">${base}
+      <p class="sub" style="margin:14px 0 12px;font-size:13.5px">Con lo que podrías pagar (<b>hasta ${pesos(tope)} al mes</b>) todavía no te alcanza hoy. Cada mes cambian las promociones y las tasas: <b>te avisamos por WhatsApp cuando llegue a tu presupuesto.</b></p>
       <form id="av-form" novalidate>
         <div class="inp-wrap"><span>👤</span><input class="inp" id="av-nombre" placeholder="Nombre y apellido" autocomplete="name"></div>
         <div class="inp-wrap"><span>📱</span><input class="inp" id="av-tel" type="tel" inputmode="tel" placeholder="Tu WhatsApp (10 dígitos)" maxlength="20" autocomplete="tel"></div>
         <div class="q-sub" style="margin:2px 0 8px">¿Dónde vives?</div>
         <div class="chips" id="av-edo">${['Puebla', 'Tlaxcala', 'Veracruz', 'Hidalgo', 'CDMX', 'Estado de México', 'Otro'].map(e => `<button type="button" data-e="${e}">${e === 'Otro' ? 'Otro estado' : e}</button>`).join('')}</div>
         <div class="err" id="av-err"></div>
-        <button type="submit" class="btn-sec">Avísame el precio de la Monjaro EM-i</button>
-        <p class="consent">Al tocar el botón aceptas que te escribamos por WhatsApp sobre la Monjaro EM-i. <a href="#" onclick="verAviso(event)">Aviso de privacidad</a></p>
+        <button type="submit" class="btn-sec">🔔 Avísame cuando me alcance</button>
+        <p class="consent">Al tocar el botón aceptas que te escribamos por WhatsApp cuando haya una promoción para ti. <a href="#" onclick="verAviso(event)">Aviso de privacidad</a></p>
       </form>
-      <div class="ok-box" id="av-ok">✅ Listo. Te escribimos por WhatsApp en cuanto salga el precio oficial.</div></div>`;
+      <div class="ok-box" id="av-ok">✅ Alerta activada. Te escribimos cuando la ${c.e.nombre} llegue a tu presupuesto.</div>${otraRuta}</div>`;
   }).join('');
-  const f = $('av-form'); if (f) prepararAviso(f);
+  const f = $('av-form'); if (f) prepararAviso(f, alertaPara, tope);
   ir('s-reporte');
 }
 
-// ── "Avísame el precio" de la Monjaro EM-i → lead en el CRM
+// ── "Avísame cuando me alcance" → alerta de mensualidad en el CRM (queda en espera, fuera de la lista del asesor)
 function normTel (v) { let t = String(v || '').replace(/\D/g, ''); if (t.length === 13 && t.startsWith('521')) t = t.slice(3); else if (t.length === 12 && t.startsWith('52')) t = t.slice(2); return t; }
 function verAviso (e) { e.preventDefault(); $('aviso').classList.add('on'); }
 function cerrarAviso () { $('aviso').classList.remove('on'); }
-function prepararAviso (f) {
+function prepararAviso (f, c, tope) {
   let edo = '';
   $('av-edo').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; edo = b.dataset.e; document.querySelectorAll('#av-edo button').forEach(x => x.classList.toggle('sel', x === b)); });
   f.addEventListener('submit', e => {
@@ -534,17 +544,17 @@ function prepararAviso (f) {
     const nombre = $('av-nombre').value.trim().replace(/\s+/g, ' '), tel = normTel($('av-tel').value);
     $('av-nombre').classList.toggle('bad', nombre.length < 3); $('av-tel').classList.toggle('bad', tel.length !== 10);
     if (nombre.length < 3 || tel.length !== 10 || !edo) { err.textContent = tel && tel.length !== 10 ? '⚠️ Tu WhatsApp debe tener 10 dígitos' : !edo && nombre.length >= 3 && tel.length === 10 ? '⚠️ Toca el estado donde vives' : '⚠️ Escribe tu nombre y tu WhatsApp'; err.classList.add('on'); return; }
-    const c = CS.find(x => x.k === 'monjaro');
+    const m = models[c.e.plan], v = m.versions[0];
     const lead = {
-      fecha: new Date().toLocaleString('es-MX', { timeZone: 'America/Mexico_City' }), nombre, telefono: tel, perfil: '—', modelo: 'Geely Monjaro EM-i', otros_modelos: CS.length > 1 ? 'EX5 EM-i' : '',
-      ingreso: '', enganche: '', historial: '', mensualidad: '', acepto_privacidad: 'Sí', estado: edo, fuenteContacto: 'Calculadora EM-i',
-      notas: `⚡ Calculadora EM-i: quiere el precio oficial y la oferta de lanzamiento de la Monjaro EM-i. Maneja ~${R.km} km/día, ${R.dias} días/sem, hoy ${R.auto_t} con ${R.gas_t}; cargaría: ${R.carga_t}. Ahorro estimado: ${pesos(c.mes)}/mes.` + (CS.length > 1 ? ` También vio la EX5 EM-i (ahorro ${pesos(CS.find(x => x.k === 'ex5emi').mes)}/mes).` : ''),
+      fecha: new Date().toLocaleString('es-MX', { timeZone: 'America/Mexico_City' }), nombre, telefono: tel, perfil: '—', modelo: `${m.name} ${v.ver}`, otros_modelos: CS.length > 1 ? CS.filter(x => x !== c).map(x => x.e.nombre).join(', ') : '',
+      ingreso: '', enganche: '', historial: '', mensualidad: `${pesos(c.men)} a ${PLAZO_REF} meses`, acepto_privacidad: 'Sí', estado: edo, fuenteContacto: 'Alerta de mensualidad',
+      notas: `🔔 Calculadora EM-i: puede pagar hasta ${pesos(tope)}/mes y la ${c.e.nombre} sale en ~${pesos(c.men)}/mes (${ENG_REF}% de enganche a ${PLAZO_REF} meses). Avisarle cuando baje. Maneja ~${R.km} km/día, ${R.dias} días/sem; ahorraría ${pesos(c.mes)}/mes en gasolina. [alerta modelo=${c.e.plan} ver=0 eng=${ENG_REF} plazo=${PLAZO_REF} meta=${tope}]`,
       tiempo_seg: R.tiempo || '', ...ORIGEN
     };
     let ok = false; try { ok = navigator.sendBeacon(SCRIPT_URL, new Blob([JSON.stringify(lead)], { type: 'text/plain' })); } catch (er) {}
     if (!ok) { try { fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', keepalive: true, body: JSON.stringify(lead) }); ok = true; } catch (er) {} }
     if (!ok) { err.textContent = '⚠️ No se pudo enviar. Revisa tu internet.'; err.classList.add('on'); return; }
-    contar('registro'); f.style.display = 'none'; $('av-ok').classList.add('on'); xp('¡Te avisamos!');
+    contar('alerta'); f.style.display = 'none'; $('av-ok').classList.add('on'); xp('🔔 Alerta activada');
   });
 }
 </script>

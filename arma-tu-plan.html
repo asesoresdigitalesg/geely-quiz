@@ -1002,12 +1002,14 @@ function pintarCamino () {
     set('c-docs', docsOk, docsOk ? 'Ya la viste ✓' : 'Lo que vas a llevar a tu cita', docsOk ? 'Ver' : 'Ver →', 2);
     $('c-sol').style.display = 'none';
   }
+  const explora = EXP.snap.cuando === 'explora';   // "solo estoy explorando": sin cita, con alerta
+  $('c-cita').style.display = explora ? 'none' : '';
   $('c-cita-t').textContent = local && EXP.modo !== 'video' ? 'Agenda tu cita en la agencia' : 'Agenda tu videollamada';
   set('c-cita', !!EXP.cita, EXP.cita ? cuando(EXP.cita) + ' ✓' : (local ? 'Conoces tu auto, prueba de manejo y revisamos tu plan' : 'Revisamos tu plan con un asesor, sin salir de casa'), EXP.cita ? 'Cambiar' : 'Elegir →', EXPEDIENTE_ACTIVO ? 4 : 3);
   const solOk = EXP.sol || !EXPEDIENTE_ACTIVO;
-  const sig = !docsOk ? 'c-docs' : !solOk ? 'c-sol' : !EXP.cita ? 'c-cita' : '';
+  const sig = !docsOk ? 'c-docs' : !solOk ? 'c-sol' : (!EXP.cita && !explora) ? 'c-cita' : '';
   ['c-docs', 'c-sol', 'c-cita'].forEach(id => $(id).classList.toggle('next', id === sig));
-  $('r-listo').classList.toggle('on', docsOk && solOk && !!EXP.cita);
+  $('r-listo').classList.toggle('on', docsOk && solOk && !!EXP.cita && !explora);
   if (!EXPEDIENTE_ACTIVO) $('r-listo').innerHTML = '🎉 <b>¡Listo, ya tienes tu cita!</b><br>Lleva tu lista de documentos y tu asesor te confirma por WhatsApp.';
   const err = $('r-err');
   if (!hayClave() && !REG_PEND) { err.textContent = local ? 'No pudimos abrir tu expediente en línea. Toca "Prefiero que me ayude un asesor" y lo hacemos por WhatsApp.' : 'No pudimos abrir tu expediente en línea. Un asesor te va a escribir por WhatsApp para completarlo.'; err.classList.add('on'); }
@@ -1083,12 +1085,12 @@ function verListaDocs () {
   $('d-sub').textContent = 'Tenlos listos para tu cita. Tu asesor te dice si la financiera pide algo más según tu caso.';
   $('d-ok-w').style.display = 'none';
   $('d-list').innerHTML = docsDe().map(([k, t, s, req]) => `<div class="drow"><div class="top"><div class="tx"><b>${t}${req ? '' : '<span class="opc">opcional</span>'}</b>${s}</div></div></div>`).join('');
-  $('d-sig').textContent = EXP.cita ? 'Listo →' : 'Siguiente: agenda tu cita →';
+  $('d-sig').textContent = EXP.cita || EXP.snap.cuando === 'explora' ? 'Listo →' : 'Siguiente: agenda tu cita →';
   EXP.docsVisto = true; guardarEXP();
   ir('s-docs');
 }
 function trasDocs () {
-  if (!EXPEDIENTE_ACTIVO) { if (!EXP.cita) irCita(); else volverCamino(); return; } if (!EXP.sol) irSol(); else if (!EXP.cita) irCita(); else volverCamino(); }
+  if (!EXPEDIENTE_ACTIVO) { if (!EXP.cita && EXP.snap.cuando !== 'explora') irCita(); else volverCamino(); return; } if (!EXP.sol) irSol(); else if (!EXP.cita) irCita(); else volverCamino(); }
 
 // ── Solicitud
 const SOL = ['nombre', 'nacimiento', 'civil', 'correo', 'dependientes', 'calle', 'colonia', 'cp', 'municipio', 'estado', 'tiempoDom', 'vivienda', 'empresa', 'puesto', 'ingresoExacto', 'antiguedad', 'telTrabajo', 'ref1', 'ref1tel', 'ref1rel', 'ref2', 'ref2tel', 'ref2rel'];

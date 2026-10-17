@@ -986,8 +986,10 @@ const COLA = {
   frio:    {t:'Se están enfriando',     d:`Más de ${DIAS_ENFRIANDO} días sin contacto.`},
   sinplan: {t:'Sin siguiente paso',     d:'Ya hablaste con ellos pero no hay nada agendado.'},
 };
+// Alerta de mensualidad aún sin avisar: queda en espera (se trabaja desde Panel → Alertas, no en la lista diaria)
+const enEspera = l => S(l).fuenteContacto === 'Alerta de mensualidad' && !S(l).asignado && String(S(l).notas || '').includes('[alerta ');
 function clasificar(l){
-  if (!activo(l) || l.test) return null;
+  if (!activo(l) || l.test || enEspera(l)) return null;
   const s = S(l);
   const sp = siguientePaso(l);
   const cita = citaInfo(l);
@@ -1394,7 +1396,7 @@ function filtrarLeads(){
     if (LF.confianza && confNivel(l) !== LF.confianza) return false;
     if (LF.asesor) { if (LF.asesor === '__none') { if (s.asignado) return false; } else if (s.asignado !== LF.asesor) return false; }
     if (LF.origen) { const o = (s.origen || (s.fuenteContacto==='Asesoría Personalizada'?'landing':'sin etiqueta')).toLowerCase(); if (o !== LF.origen) return false; }
-    if (LF.sinAsignar && (s.asignado || !activo(l))) return false;
+    if (LF.sinAsignar && (s.asignado || !activo(l) || enEspera(l))) return false;
     if (LF.asesoria && s.fuenteContacto !== 'Asesoría Personalizada') return false;
     if (LF.calientes && !esCaliente(l)) return false;
     if (LF.precal && !esPrecal(l)) return false;
@@ -1980,7 +1982,7 @@ const PASOS_PAG = {
   quiz:   [['visita','Entraron al quiz'],['inicio','Empezaron el test'],['p1','Respondieron la pregunta 1'],['p2','Respondieron la pregunta 2'],['tel','Dieron su WhatsApp a la mitad'],['tel_omitido','Prefirieron no dar su WhatsApp a la mitad'],['p3','Respondieron la pregunta 3'],['p4','Respondieron la pregunta 4'],['p5','Respondieron la pregunta 5'],['formulario','Llegaron al formulario final'],['registro','Se registraron'],['whatsapp','Tocaron el botón de WhatsApp']],
   precal: [['visita','Entraron a la página'],['inicio','Tocaron "Armar mi plan"'],['modelo','Eligieron un auto'],['plan','Vieron su mensualidad'],['compara','Usaron el comparador Emgrand vs EX2'],['compara_cambio','Se cambiaron de modelo desde el comparador'],['p1','Pregunta 1 · estado'],['p2','Pregunta 2 · ingreso'],['p3','Pregunta 3 · cómo lo comprueba'],['p4','Pregunta 4 · historial'],['p5','Pregunta 5 · antigüedad'],['p6','Pregunta 6 · cuándo compra'],['formulario','Llegaron al registro'],['registro','Se registraron'],['docs','Abrieron "Sube tus documentos"'],['doc_subido','Subieron al menos un documento'],['solicitud','Enviaron su solicitud'],['cita','Agendaron cita o videollamada'],['alerta_abre','Abrieron "Avísame cuando baje"'],['alerta','Activaron su alerta de mensualidad'],['whatsapp','Tocaron el botón de WhatsApp']],
   valua:  [['visita','Entraron a ¿Cuánto vale tu auto?'],['inicio','Empezaron'],['p1','Marca'],['p2','Modelo y año'],['p3','Kilómetros'],['p4','Cómo está'],['p5','Papeles'],['p6','Cuándo lo cambia'],['p7','Estado'],['formulario','Llegaron al registro'],['registro','Pidieron su valuación'],['fotos','Subieron fotos'],['plan','Pasaron a Arma tu plan']],
-  emi:    [['visita','Entraron a la calculadora'],['inicio','Empezaron'],['p1','Eligieron modelo'],['p2','Kilómetros'],['p3','Días'],['p4','Qué manejan hoy'],['p5','Gasolina'],['p6','Dónde cargarían'],['resultado','Vieron su ahorro'],['plan','Pasaron a Arma tu plan (EX5 EM-i)'],['registro','Pidieron aviso del precio (Monjaro EM-i)']],
+  emi:    [['visita','Entraron a la calculadora'],['inicio','Empezaron'],['p1','Eligieron modelo'],['p2','Kilómetros'],['p3','Días'],['p4','Qué manejan hoy'],['p5','Gasolina'],['p6','Dónde cargarían'],['p7','Cuánto podrían pagar al mes'],['resultado','Vieron su ahorro'],['plan','Pasaron a Arma tu plan (les alcanza)'],['alerta','Activaron alerta (no les alcanza hoy)']],
   evento: [['visita','Entraron a la página'],['inicio','Empezaron la calculadora'],['p1','Pregunta 1'],['p2','Pregunta 2'],['p3','Pregunta 3'],['p4','Pregunta 4'],['p5','Pregunta 5'],['formulario','Llegaron al registro'],['registro','Se registraron'],['repetido','Intentaron registrarse otra vez'],['whatsapp','Tocaron el botón de WhatsApp']]
 };
 async function cargarMetricas(forzar){
@@ -2100,7 +2102,7 @@ function renderPanel(){
   // ── Atención ahora ──
   if (!esContenido()) {
     const activosLoc = reales.filter(l => l.local && activo(l));
-    const sinA = activosLoc.filter(l => !S(l).asignado);
+    const sinA = activosLoc.filter(l => !S(l).asignado && !enEspera(l));
     const calSinA = sinA.filter(esCaliente);
     const sinTocar = reales.filter(l => S(l).asignado && activo(l) && etapa(l)==='nuevo' && !tocado(l) && horasDesde(refAsignacion(l)) > HORAS_PRIMER_CONTACTO);
     const porAse = {}; sinTocar.forEach(l => { const n = nombreAsesor(S(l).asignado); porAse[n] = (porAse[n]||0)+1; });
