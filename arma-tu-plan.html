@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#080810">
+<title>Arma tu plan · Geely Serdán</title>
+<meta name="description" content="Tu mensualidad con la tasa de este mes, el enganche que necesitas, tu probabilidad de aprobación y tus documentos. En 2 minutos.">
+<meta property="og:title" content="Cuánto pagarías al mes por tu Geely y si te aprueban">
+<meta property="og:description" content="Enganche, mensualidad y probabilidad de aprobación en 2 minutos. Sin compromiso.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080810;
+    --surface: #0f0f1a;
+    --card: #13131f;
+    --border: #1c1c2e;
+    --border-hi: #26263d;
+    --accent: #00d4ff;
+    --accent2: #0055ff;
+    --gold: #f5c518;
+    --green: #00e59b;
+    --orange: #ff8c00;
+    --red: #ff4444;
+    --text: #eeeef8;
+    --muted: #5a5a7a;
+    --muted2: #8a8aa8;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+  button { font-family: inherit; color: inherit; }
+  .bg-grid { position: fixed; inset: 0; background-image: linear-gradient(rgba(0,212,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(0,212,255,0.025) 1px, transparent 1px); background-size: 44px 44px; pointer-events: none; z-index: 0; }
+  .bg-glow { position: fixed; top: -40vh; left: 50%; transform: translateX(-50%); width: 90vw; height: 70vh; background: radial-gradient(ellipse, rgba(0,60,200,0.13) 0%, transparent 70%); pointer-events: none; z-index: 0; }
+  .wrapper { position: relative; z-index: 1; max-width: 600px; margin: 0 auto; padding: 0 18px calc(60px + env(safe-area-inset-bottom)); }
+  .topbar { display: flex; align-items: center; justify-content: center; padding: 22px 0 0; gap: 10px; }
+  .topbar-logo { font-size: 11px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+  .topbar-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--muted); opacity: 0.4; }
+  .screen { display: none; }
+  .screen.on { display: block; animation: fadeUp 0.38s cubic-bezier(0.4,0,0.2,1); }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
+
+  /* ── INTRO ── */
+  .intro { text-align: center; padding: 40px 0 28px; }
+  .badge { display: inline-flex; align-items: center; gap: 7px; background: rgba(0,212,255,0.07); border: 1px solid rgba(0,212,255,0.18); border-radius: 100px; padding: 7px 18px; font-size: 11px; font-weight: 600; letter-spacing: 0.13em; text-transform: uppercase; color: var(--accent); margin-bottom: 24px; }
+  .badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: blink 2s infinite; }
+  @keyframes blink { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.3;transform:scale(1.5)} }
+  .headline { font-family: 'Bebas Neue', sans-serif; font-size: clamp(42px, 12vw, 70px); line-height: 0.93; letter-spacing: 0.02em; margin-bottom: 6px; }
+  .hl { background: linear-gradient(90deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .sub { color: var(--muted2); font-size: 15px; font-weight: 300; line-height: 1.65; margin-top: 18px; }
+  .sub b { color: var(--text); font-weight: 500; }
+  .perks { display: flex; justify-content: center; gap: 18px; margin-top: 22px; flex-wrap: wrap; }
+  .perk { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted2); }
+
+  .btn-main { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; background: linear-gradient(135deg, var(--accent2), var(--accent)); color: #000; font-size: 16px; font-weight: 700; letter-spacing: 0.04em; border: none; border-radius: 13px; padding: 18px 24px; cursor: pointer; transition: transform .2s, box-shadow .2s, opacity .2s; text-decoration: none; }
+  .btn-main:hover { transform: translateY(-2px); box-shadow: 0 14px 40px rgba(0,85,255,0.35); }
+  .btn-main:disabled { opacity: .35; pointer-events: none; }
+  .btn-main.pulse { animation: glowpulse 2.4s ease-in-out infinite; }
+  @keyframes glowpulse { 0%,100% { box-shadow: 0 0 0 rgba(0,212,255,0); } 50% { box-shadow: 0 0 28px rgba(0,212,255,0.35); } }
+
+  /* Escasez */
+  .cupo { margin-top: 16px; background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px 16px; }
+  .cupo-top { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; font-size: 12px; color: var(--muted2); margin-bottom: 9px; }
+  .cupo-top b { color: var(--text); font-weight: 700; }
+  .cupo-top .cupo-n { color: var(--gold); font-weight: 700; white-space: nowrap; }
+  .cupo-bar { height: 6px; border-radius: 6px; background: var(--border); overflow: hidden; }
+  .cupo-fill { height: 100%; width: 0; border-radius: 6px; background: linear-gradient(90deg, var(--gold), var(--orange)); transition: width 1.2s cubic-bezier(.4,0,.2,1); }
+  .cupo-foot { display: flex; justify-content: space-between; margin-top: 8px; font-size: 11px; color: var(--muted); }
+  .cupo-foot .live { display: inline-flex; align-items: center; gap: 6px; }
+  .cupo-foot .live::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: blink 2s infinite; }
+
+  .legal { text-align: center; font-size: 11px; color: var(--muted); margin-top: 18px; line-height: 1.55; }
+  .sec-label { font-size: 10px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin: 36px 0 12px; text-align: center; }
+  .specs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .spec { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px 8px; text-align: center; }
+  .spec-v { font-family: 'Bebas Neue', sans-serif; font-size: 28px; line-height: 1; color: var(--accent); letter-spacing: .02em; }
+  .spec-l { font-size: 10px; color: var(--muted2); text-transform: uppercase; letter-spacing: .08em; margin-top: 4px; font-weight: 600; }
+  .gets { display: grid; gap: 8px; }
+  .get { display: flex; gap: 14px; align-items: center; background: var(--card); border: 1px solid var(--border); border-radius: 13px; padding: 14px 16px; font-size: 13px; color: var(--muted2); line-height: 1.45; }
+  .get b { display: block; color: var(--text); font-weight: 500; font-size: 14px; margin-bottom: 1px; }
+  .get-ico { font-size: 22px; width: 32px; text-align: center; flex-shrink: 0; }
+
+  /* ── PREGUNTAS ── */
+  .progress-wrap { margin: 28px 0 22px; }
+  .progress-meta { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 9px; }
+  .progress-meta .xp { color: var(--gold); }
+  .progress-bar { height: 3px; background: var(--border); border-radius: 10px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent2), var(--accent)); border-radius: 10px; transition: width 0.55s cubic-bezier(0.4,0,0.2,1); }
+  .q-card { background: var(--card); border: 1px solid var(--border); border-radius: 22px; padding: 28px 24px 26px; margin-bottom: 14px; animation: fadeUp 0.38s cubic-bezier(0.4,0,0.2,1); }
+  .q-step { font-size: 10px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; }
+  .q-title { font-size: 21px; font-weight: 500; line-height: 1.3; margin-bottom: 6px; }
+  .q-sub { font-size: 13px; color: var(--muted2); font-weight: 300; margin-bottom: 24px; line-height: 1.5; }
+  .options { display: grid; gap: 11px; }
+  .opt { display: flex; align-items: center; gap: 14px; background: var(--surface); border: 1.5px solid var(--border); border-radius: 13px; padding: 15px 18px; cursor: pointer; transition: border-color 0.18s, background 0.18s, transform 0.15s; text-align: left; font-size: 14px; width: 100%; }
+  .opt:hover { border-color: rgba(0,212,255,0.35); transform: translateY(-1px); }
+  .opt.sel { border-color: var(--accent); background: rgba(0,212,255,0.05); }
+  .opt-icon { font-size: 22px; flex-shrink: 0; width: 32px; text-align: center; }
+  .opt-body { flex: 1; }
+  .opt-body strong { display: block; font-weight: 500; font-size: 14px; }
+  .opt-body small { font-size: 12px; color: var(--muted2); font-weight: 300; }
+  .opt-ring { width: 19px; height: 19px; border-radius: 50%; border: 1.5px solid var(--border-hi); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--bg); }
+  .opt.sel .opt-ring { background: var(--accent); border-color: var(--accent); }
+  .opt.sel .opt-ring::after { content: '✓'; font-weight: 800; }
+  .km-big { text-align: center; font-family: 'Bebas Neue', sans-serif; font-size: 72px; line-height: 1; letter-spacing: .02em; }
+  .km-big small { font-size: 26px; color: var(--muted2); margin-left: 4px; }
+  .km-tag { text-align: center; font-size: 13px; color: var(--accent); font-weight: 500; min-height: 20px; margin: 2px 0 18px; }
+  input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 32px; background: transparent; cursor: pointer; }
+  input[type=range]::-webkit-slider-runnable-track { height: 4px; border-radius: 4px; background: linear-gradient(90deg, var(--accent2), var(--accent) var(--p,15%), var(--border) var(--p,15%)); }
+  input[type=range]::-moz-range-track { height: 4px; border-radius: 4px; background: var(--border); }
+  input[type=range]::-moz-range-progress { height: 4px; border-radius: 4px; background: var(--accent); }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 28px; height: 28px; margin-top: -12px; border-radius: 50%; background: #fff; border: 5px solid var(--accent); box-shadow: 0 0 18px rgba(0,212,255,.55); }
+  input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; background: #fff; border: 5px solid var(--accent); }
+  .quick { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; margin: 14px 0 22px; }
+  .quick button { background: var(--surface); border: 1.5px solid var(--border); border-radius: 10px; padding: 10px 4px; font-size: 13px; font-weight: 500; cursor: pointer; color: var(--muted2); }
+  .quick button.sel { border-color: var(--accent); color: var(--text); }
+  .btn-back { background: none; border: none; color: var(--muted); font-size: 12px; cursor: pointer; text-decoration: underline; display: block; margin: 14px auto 0; }
+  .xp-pop { position: fixed; left: 50%; top: 22%; transform: translateX(-50%); font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: .04em; color: var(--gold); pointer-events: none; opacity: 0; z-index: 30; text-shadow: 0 0 20px rgba(245,197,24,.5); }
+  .xp-pop.go { animation: xp 0.9s ease-out; }
+  @keyframes xp { 0% { opacity: 0; transform: translate(-50%, 10px) scale(.8); } 25% { opacity: 1; transform: translate(-50%, 0) scale(1.05); } 100% { opacity: 0; transform: translate(-50%, -40px) scale(1); } }
+
+  /* ── ANALIZANDO ── */
+  .analiza { text-align: center; padding: 70px 0 30px; }
+  .radar { width: 120px; height: 120px; margin: 0 auto 28px; border-radius: 50%; border: 1.5px solid rgba(0,212,255,.25); position: relative; display: grid; place-items: center; }
+  .radar::before { content: ''; position: absolute; inset: 14px; border-radius: 50%; border: 1px solid rgba(0,212,255,.15); }
+  .radar::after { content: ''; position: absolute; inset: 0; border-radius: 50%; background: conic-gradient(from 0deg, rgba(0,212,255,.45), transparent 30%); animation: spin 1.4s linear infinite; }
+  .radar span { position: relative; z-index: 1; font-family: 'Bebas Neue', sans-serif; font-size: 34px; color: var(--accent); }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .a-list { display: grid; gap: 10px; max-width: 330px; margin: 0 auto; text-align: left; }
+  .a-item { display: flex; gap: 12px; align-items: center; font-size: 14px; color: var(--muted); transition: color .3s; }
+  .a-item i { width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--border-hi); flex-shrink: 0; display: grid; place-items: center; font-style: normal; font-size: 11px; color: var(--bg); }
+  .a-item.on { color: var(--text); }
+  .a-item.on i { background: var(--green); border-color: var(--green); }
+  .a-item.on i::after { content: '✓'; font-weight: 800; }
+
+  /* ── GATE ── */
+  .gate-head { text-align: center; padding: 30px 0 18px; }
+  .gate-head .headline { font-size: clamp(36px, 10vw, 54px); }
+  .lvl { display: inline-flex; align-items: center; gap: 8px; border-radius: 100px; padding: 7px 16px; font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 18px; }
+  .lvl.alto { background: rgba(0,229,155,0.1); border: 1px solid rgba(0,229,155,0.3); color: var(--green); }
+  .lvl.medio { background: rgba(0,212,255,0.08); border: 1px solid rgba(0,212,255,0.25); color: var(--accent); }
+  .lvl.base { background: rgba(245,197,24,0.08); border: 1px solid rgba(245,197,24,0.25); color: var(--gold); }
+  .result-card { background: var(--card); border: 1px solid var(--border); border-radius: 22px; padding: 26px 22px; margin-bottom: 14px; position: relative; overflow: hidden; }
+  .result-tag { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+  .big-save { font-family: 'Bebas Neue', sans-serif; font-size: clamp(60px, 18vw, 92px); line-height: .9; letter-spacing: .02em; background: linear-gradient(135deg, var(--text) 30%, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .big-save small { font-size: .32em; -webkit-text-fill-color: var(--muted2); margin-left: 6px; letter-spacing: .06em; }
+  .fin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 18px; }
+  .fin-item { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 15px 14px; }
+  .fin-item.wide { grid-column: 1 / -1; }
+  .fin-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; margin-bottom: 6px; }
+  .fin-val { font-family: 'Bebas Neue', sans-serif; font-size: 28px; color: var(--accent); letter-spacing: 0.02em; line-height: 1; }
+  .fin-val.green { color: var(--green); }
+  .fin-val.gold { color: var(--gold); }
+  .fin-sub { font-size: 11px; color: var(--muted2); margin-top: 4px; font-weight: 300; line-height: 1.4; }
+  .locked .lk { filter: blur(9px); user-select: none; }
+  .lock-over { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; background: rgba(19,19,31,.72); text-align: center; padding: 20px; }
+  .lock-over .ic { font-size: 30px; }
+  .lock-over b { font-size: 15px; font-weight: 700; }
+  .lock-over span { font-size: 12px; color: var(--muted2); }
+  .form-card { background: var(--card); border: 1px solid rgba(0,212,255,0.25); border-radius: 22px; padding: 26px 22px; box-shadow: 0 0 40px rgba(0,85,255,0.08); }
+  .form-title { font-size: 19px; font-weight: 500; margin-bottom: 4px; }
+  .form-sub { font-size: 13px; color: var(--muted2); font-weight: 300; margin-bottom: 20px; line-height: 1.5; }
+  .inp-wrap { position: relative; margin-bottom: 12px; }
+  .inp-wrap span { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); font-size: 16px; pointer-events: none; }
+  .inp { width: 100%; background: var(--surface); border: 1.5px solid var(--border); border-radius: 13px; padding: 16px 16px 16px 46px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 16px; outline: none; transition: border-color .2s; -webkit-appearance: none; appearance: none; }
+  .inp:focus { border-color: var(--accent); }
+  .inp.bad { border-color: var(--red); }
+  select.inp { padding-right: 40px; background-image: linear-gradient(45deg, transparent 50%, var(--muted2) 50%), linear-gradient(135deg, var(--muted2) 50%, transparent 50%); background-position: calc(100% - 22px) 50%, calc(100% - 16px) 50%; background-size: 6px 6px; background-repeat: no-repeat; }
+  select.inp option { background: var(--surface); }
+  .check { display: flex; gap: 10px; align-items: flex-start; margin: 6px 0 16px; font-size: 12px; color: var(--muted2); line-height: 1.5; cursor: pointer; }
+  .check input { width: 18px; height: 18px; margin-top: 1px; accent-color: var(--accent); flex-shrink: 0; }
+  .check a { color: var(--accent); text-decoration: none; }
+  .err { display: none; background: rgba(255,68,68,0.1); border: 1px solid rgba(255,68,68,0.3); border-radius: 10px; padding: 10px 14px; font-size: 12px; color: #ff6b6b; text-align: center; margin-bottom: 12px; }
+  .err.on { display: block; }
+  .spinner { width: 18px; height: 18px; border: 2.5px solid rgba(0,0,0,0.2); border-top-color: #000; border-radius: 50%; animation: spin .7s linear infinite; display: none; }
+  .loading .spinner { display: block; }
+  .loading .btn-t { display: none; }
+
+  /* ── REPORTE ── */
+  .pase { position: relative; margin: 28px 0 14px; border-radius: 20px; padding: 22px 22px 20px; background: linear-gradient(135deg, #0b1830 0%, #101028 55%, #1a1405 100%); border: 1px solid rgba(245,197,24,.35); overflow: hidden; box-shadow: 0 18px 50px rgba(0,0,0,.45), 0 0 30px rgba(245,197,24,.08); animation: paseIn .8s cubic-bezier(.2,.8,.2,1); }
+  @keyframes paseIn { from { opacity: 0; transform: translateY(24px) rotate(-2deg) scale(.96); } to { opacity: 1; transform: none; } }
+  .pase::before { content: ''; position: absolute; inset: 0; background: linear-gradient(115deg, transparent 35%, rgba(255,255,255,.07) 50%, transparent 65%); transform: translateX(-100%); animation: shine 3.5s ease-in-out 1s infinite; }
+  @keyframes shine { 0% { transform: translateX(-100%); } 40%,100% { transform: translateX(100%); } }
+  .pase::after { content: ''; position: absolute; left: -10px; right: -10px; top: 108px; border-top: 1.5px dashed rgba(245,197,24,.25); }
+  .pase-top { display: flex; justify-content: space-between; align-items: flex-start; height: 86px; }
+  .pase-k { font-size: 10px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--gold); }
+  .pase-t { font-family: 'Bebas Neue', sans-serif; font-size: 30px; line-height: 1; letter-spacing: .03em; margin-top: 6px; }
+  .pase-folio { text-align: right; }
+  .pase-folio b { display: block; font-family: 'Bebas Neue', sans-serif; font-size: 40px; line-height: 1; color: var(--gold); }
+  .pase-folio span { font-size: 10px; color: var(--muted2); letter-spacing: .1em; text-transform: uppercase; }
+  .pase-row { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 10px; margin-top: 26px; }
+  .pase-row div span { display: block; font-size: 9px; color: var(--muted2); letter-spacing: .12em; text-transform: uppercase; margin-bottom: 3px; }
+  .pase-row div b { font-size: 14px; font-weight: 500; overflow-wrap: anywhere; }
+  .bars { display: grid; gap: 12px; margin-top: 20px; }
+  .bar-l { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted2); margin-bottom: 6px; }
+  .bar-l b { color: var(--text); font-weight: 500; }
+  .bar-t { height: 10px; border-radius: 6px; background: var(--surface); overflow: hidden; }
+  .bar-f { height: 100%; width: 0; border-radius: 6px; transition: width 1.2s cubic-bezier(.4,0,.2,1); }
+  .bar-f.hoy { background: linear-gradient(90deg, var(--orange), var(--red)); }
+  .bar-f.emi { background: linear-gradient(90deg, var(--accent2), var(--accent)); }
+  .steps { display: grid; gap: 0; }
+  .step { display: flex; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--muted2); line-height: 1.5; }
+  .step:last-child { border-bottom: none; }
+  .step-d { flex-shrink: 0; width: 48px; text-align: center; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 6px 0; }
+  .step-d b { display: block; font-family: 'Bebas Neue', sans-serif; font-size: 22px; line-height: 1; color: var(--accent); }
+  .step-d span { font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .step strong { display: block; color: var(--text); font-weight: 500; font-size: 14px; }
+  .cta-wa { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; background: #22c55e; color: #fff; font-size: 15px; font-weight: 700; border: none; border-radius: 13px; padding: 18px 24px; cursor: pointer; text-decoration: none; margin: 18px 0 8px; transition: all 0.2s; animation: glowwa 2.4s ease-in-out infinite; }
+  @keyframes glowwa { 0%,100% { box-shadow: 0 0 0 rgba(34,197,94,0); } 50% { box-shadow: 0 0 28px rgba(34,197,94,.4); } }
+  .cta-wa:hover { transform: translateY(-2px); background: #16a34a; }
+  .cta-wa svg { width: 20px; height: 20px; fill: #fff; }
+  .note { font-size: 11px; color: var(--muted); line-height: 1.6; margin-top: 14px; }
+
+  .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 50; align-items: center; justify-content: center; padding: 20px; }
+  .modal.on { display: flex; }
+  .modal-box { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 28px 24px; max-width: 480px; width: 100%; max-height: 80vh; overflow-y: auto; }
+  .modal-box h3 { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: .04em; margin-bottom: 14px; }
+  .modal-box p { font-size: 13px; color: var(--muted2); line-height: 1.7; margin-bottom: 12px; }
+  .modal-box p b { color: var(--text); }
+  @media (max-width: 380px) { .q-card, .result-card, .form-card { padding: 22px 16px; } .pase-row { grid-template-columns: 1fr 1fr; } .pase-row div:first-child { grid-column: 1 / -1; } }
+</style>
+<style>
+  /* ── ARMA TU PLAN: piezas propias ── */
+  .grid-autos { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 10px; }
+  .auto { min-width: 0; overflow-wrap: anywhere; }
+  .auto { background: var(--surface); border: 1.5px solid var(--border); border-radius: 14px; padding: 14px 13px 12px; text-align: left; cursor: pointer; transition: border-color .18s, transform .15s; position: relative; min-height: 104px; }
+  .auto:hover { border-color: rgba(0,212,255,.35); transform: translateY(-1px); }
+  .auto.sel { border-color: var(--accent); background: rgba(0,212,255,0.05); }
+  .auto .tag { position: absolute; top: 10px; right: 10px; font-size: 9px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--gold); }
+  .auto .nm { font-family: 'Bebas Neue', sans-serif; font-size: 24px; line-height: .95; letter-spacing: .02em; margin-top: 14px; }
+  .auto .ty { font-size: 11px; color: var(--muted2); margin-top: 3px; }
+  .auto .pr { font-size: 12px; color: var(--accent); font-weight: 600; margin-top: 8px; }
+  .auto.off { opacity: .55; cursor: default; }
+  .vers { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+  .ver { background: var(--surface); border: 1.5px solid var(--border); border-radius: 100px; padding: 9px 14px; font-size: 13px; cursor: pointer; color: var(--muted2); }
+  .ver.sel { border-color: var(--accent); color: var(--text); }
+  .plan-big { text-align: center; padding: 6px 0 2px; }
+  .plan-big .lbl { font-size: 10px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  .plan-big .v { font-family: 'Bebas Neue', sans-serif; font-size: clamp(58px, 17vw, 80px); line-height: .95; letter-spacing: .02em; background: linear-gradient(135deg, var(--text) 30%, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .plan-big .v small { font-size: .32em; -webkit-text-fill-color: var(--muted2); margin-left: 6px; }
+  .plan-big .s { font-size: 12px; color: var(--muted2); }
+  .sl-row { margin-top: 20px; }
+  .sl-lab { display: flex; justify-content: space-between; align-items: baseline; font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+  .sl-lab b { font-size: 15px; color: var(--text); letter-spacing: 0; text-transform: none; }
+  .plazos { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; }
+  .plazos button { background: var(--surface); border: 1.5px solid var(--border); border-radius: 10px; padding: 11px 4px; font-size: 13px; font-weight: 500; cursor: pointer; color: var(--muted2); }
+  .plazos button.sel { border-color: var(--accent); color: var(--text); }
+  .need { margin-top: 18px; background: rgba(245,197,24,.06); border: 1px solid rgba(245,197,24,.22); border-radius: 12px; padding: 12px 14px; font-size: 13px; color: var(--muted2); line-height: 1.5; }
+  .need b { color: var(--gold); }
+  .noeng { display: flex; gap: 10px; align-items: center; margin-top: 12px; font-size: 13px; color: var(--muted2); cursor: pointer; }
+  .noeng input { width: 18px; height: 18px; accent-color: var(--accent); }
+  .trust { display: flex; flex-wrap: wrap; gap: 8px 16px; justify-content: center; margin-top: 14px; font-size: 11.5px; color: var(--muted2); }
+  .finrow { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 11px 0; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--muted2); }
+  .finrow:last-child { border-bottom: none; }
+  .finrow b { color: var(--text); font-weight: 600; }
+  .docs { display: grid; gap: 8px; margin-top: 8px; }
+  .doc { display: flex; gap: 12px; align-items: flex-start; font-size: 13px; color: var(--muted2); line-height: 1.45; }
+  .doc i { flex-shrink: 0; width: 20px; height: 20px; border-radius: 6px; border: 1.5px solid var(--border-hi); margin-top: 1px; }
+  .doc b { color: var(--text); font-weight: 500; }
+  .lvl.rev { background: rgba(255,140,0,0.08); border: 1px solid rgba(255,140,0,0.28); color: var(--orange); }
+  .fase2 { margin-top: 14px; border: 1px dashed rgba(0,212,255,.35); border-radius: 16px; padding: 18px; text-align: center; }
+  .fase2 p { font-size: 13px; color: var(--muted2); line-height: 1.55; margin: 6px 0 14px; }
+  .btn-sec { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; background: transparent; border: 1.5px solid var(--accent); color: var(--text); border-radius: 13px; padding: 15px 18px; font-size: 15px; font-weight: 600; cursor: pointer; }
+  .ok-box { display: none; margin-top: 12px; background: rgba(0,229,155,.08); border: 1px solid rgba(0,229,155,.3); color: var(--green); border-radius: 12px; padding: 12px 14px; font-size: 13px; line-height: 1.5; }
+  .ok-box.on { display: block; }
+  .help { position: fixed; right: 14px; bottom: calc(14px + env(safe-area-inset-bottom)); z-index: 20; display: flex; align-items: center; gap: 8px; background: var(--card); border: 1px solid var(--border-hi); border-radius: 100px; padding: 9px 14px 9px 10px; font-size: 12.5px; color: var(--text); text-decoration: none; box-shadow: 0 10px 30px rgba(0,0,0,.4); }
+  .help svg { width: 18px; height: 18px; fill: #22c55e; }
+  .help.hide { display: none; }
+  .otra-ruta { display: block; text-align: center; margin-top: 16px; padding: 13px 14px; border: 1px dashed rgba(245,197,24,0.35); border-radius: 13px; font-size: 13px; color: var(--muted2); text-decoration: none; line-height: 1.4; }
+  .otra-ruta b { color: var(--gold); font-weight: 600; }
+  button.otra-ruta { width: 100%; background: none; font-family: inherit; cursor: pointer; }
+  .alerta-box { display: none; margin-top: 14px; background: var(--surface); border: 1px solid var(--border-hi); border-radius: 14px; padding: 16px; }
+  .alerta-box.on { display: block; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 14px; }
+  .chips button { background: var(--card); border: 1.5px solid var(--border); border-radius: 100px; padding: 8px 12px; font-size: 12.5px; color: var(--muted2); cursor: pointer; font-family: inherit; }
+  .chips button.sel { border-color: var(--accent); color: var(--text); }
+  .alerta-res { display: none; gap: 12px; align-items: center; margin-top: 12px; font-size: 12.5px; color: var(--muted2); line-height: 1.45; background: var(--surface); border: 1px dashed var(--border-hi); border-radius: 12px; padding: 12px 14px; }
+  .alerta-res.on { display: flex; }
+  .alerta-res span { flex: 1; }
+  .cmp-row { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 4px 10px; padding: 11px 0; border-bottom: 1px solid var(--border); font-size: 12.5px; color: var(--muted2); }
+  .cmp-row:last-of-type { border-bottom: none; }
+  .cmp-row b { color: var(--text); font-size: 14px; }
+  .cmp-row .tot { font-family: 'Bebas Neue', sans-serif; font-size: 26px; color: var(--text); text-align: right; line-height: 1; }
+  .cmp-row.win .tot { color: var(--green); }
+  .cmp-res { margin-top: 10px; font-size: 13px; line-height: 1.5; color: var(--muted2); }
+  .cmp-res b { color: var(--text); }
+  /* ── Expediente: camino, documentos, solicitud y cita ── */
+  .camino { display: grid; gap: 10px; margin-top: 6px; }
+  .paso-c { display: flex; gap: 14px; align-items: center; background: var(--surface); border: 1.5px solid var(--border); border-radius: 14px; padding: 14px 14px; text-align: left; width: 100%; color: var(--text); font-family: inherit; cursor: pointer; }
+  .paso-c:disabled { cursor: default; }
+  .paso-c .n { flex-shrink: 0; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: 14px; background: rgba(0,212,255,.1); color: var(--accent); border: 1.5px solid rgba(0,212,255,.35); }
+  .paso-c.ok .n { background: rgba(0,229,155,.12); color: var(--green); border-color: rgba(0,229,155,.4); }
+  .paso-c .tx { flex: 1; min-width: 0; }
+  .paso-c .tx b { display: block; font-size: 14.5px; font-weight: 600; }
+  .paso-c .tx small { display: block; font-size: 12px; color: var(--muted2); margin-top: 2px; line-height: 1.4; }
+  .paso-c .go { font-size: 12px; font-weight: 700; color: var(--accent); white-space: nowrap; }
+  .paso-c.ok .go { color: var(--green); }
+  .paso-c.next { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0,212,255,.08); }
+  .listo { display: none; text-align: center; background: rgba(0,229,155,.07); border: 1px solid rgba(0,229,155,.3); border-radius: 14px; padding: 14px; margin-top: 14px; font-size: 13.5px; color: var(--text); line-height: 1.5; }
+  .listo.on { display: block; }
+  .dl { display: grid; gap: 10px; }
+  .drow { background: var(--surface); border: 1.5px solid var(--border); border-radius: 14px; padding: 14px; }
+  .drow.ok { border-color: rgba(0,229,155,.45); }
+  .drow .top { display: flex; gap: 12px; align-items: center; }
+  .drow .top .tx { flex: 1; min-width: 0; font-size: 13px; color: var(--muted2); line-height: 1.4; }
+  .drow .top .tx b { display: block; color: var(--text); font-size: 14.5px; font-weight: 600; }
+  .drow .opc { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-left: 6px; }
+  .up { flex-shrink: 0; display: inline-flex; align-items: center; gap: 6px; background: rgba(0,212,255,.1); border: 1.5px solid rgba(0,212,255,.4); color: var(--text); border-radius: 100px; padding: 9px 14px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; }
+  .up:disabled { opacity: .4; cursor: default; }
+  .drow.ok .up { background: transparent; border-color: var(--border-hi); font-weight: 500; color: var(--muted2); }
+  .drow .st { font-size: 12px; color: var(--muted2); margin-top: 8px; display: none; }
+  .drow .st.on { display: block; }
+  .drow .st.bad { color: #ff6b6b; }
+  .drow .st.good { color: var(--green); }
+  .sec-t { font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); margin: 4px 0 12px; }
+  .fld { margin-bottom: 12px; }
+  .fld label { display: block; font-size: 12px; color: var(--muted2); margin: 0 0 6px 2px; }
+  .fld .inp { padding-left: 16px; }
+  .fld .inp.bad + .fe { display: block; }
+  .fe { display: none; font-size: 11.5px; color: #ff6b6b; margin: 5px 0 0 2px; }
+  .fld2 { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 10px; }
+  .opt-tag { font-weight: 400; color: var(--muted); }
+  .dias { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; scrollbar-width: none; }
+  .dias::-webkit-scrollbar { display: none; }
+  .dia { flex-shrink: 0; width: 64px; background: var(--surface); border: 1.5px solid var(--border); border-radius: 12px; padding: 10px 4px; text-align: center; cursor: pointer; color: var(--muted2); font-family: inherit; }
+  .dia b { display: block; font-family: 'Bebas Neue', sans-serif; font-size: 26px; line-height: 1; color: var(--text); margin: 2px 0; letter-spacing: .02em; }
+  .dia span { font-size: 10.5px; text-transform: uppercase; letter-spacing: .06em; }
+  .dia.sel { border-color: var(--accent); background: rgba(0,212,255,.06); }
+  .horas { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 8px; margin-top: 14px; }
+  .horas button { background: var(--surface); border: 1.5px solid var(--border); border-radius: 10px; padding: 12px 4px; font-size: 14px; color: var(--muted2); cursor: pointer; font-family: inherit; }
+  .horas button.sel { border-color: var(--accent); color: var(--text); }
+  .lugar { display: flex; gap: 12px; align-items: flex-start; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; font-size: 13px; color: var(--muted2); line-height: 1.45; margin-bottom: 16px; }
+  .lugar b { color: var(--text); }
+  .link-sm { background: none; border: none; color: var(--accent); font-size: 12.5px; cursor: pointer; text-decoration: underline; padding: 0; font-family: inherit; }
+  .resume { display: none; margin: 0 0 14px; background: rgba(0,229,155,.07); border: 1px solid rgba(0,229,155,.3); border-radius: 14px; padding: 14px; text-align: center; font-size: 13.5px; line-height: 1.5; }
+  .resume.on { display: block; }
+  .resume button { margin-top: 10px; }
+  .consent { font-size: 11.5px; color: var(--muted); line-height: 1.55; text-align: center; margin-top: 12px; }
+  .consent a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<div class="bg-glow"></div>
+<div class="xp-pop" id="xp"></div>
+
+<div class="wrapper">
+  <div class="topbar">
+    <span class="topbar-logo">AsesoresDigitalesG</span>
+    <div class="topbar-dot"></div>
+    <span class="topbar-logo">Geely Serdán Puebla</span>
+  </div>
+
+  <!-- ═══════════ INTRO ═══════════ -->
+  <div class="screen on" id="s-intro">
+    <div class="intro">
+      <div class="badge" style="color:var(--green);background:rgba(0,229,155,0.07);border-color:rgba(0,229,155,0.28)"><div class="badge-dot" style="background:var(--green)"></div><span>Ya sé qué Geely quiero</span></div>
+      <div class="headline" id="i-head" style="font-size:clamp(40px,11.5vw,66px)">Cuánto pagarías<br>al mes <span class="hl">y si te<br>aprueban.</span></div>
+      <p class="sub" id="i-sub">Elige tu modelo, mueve el enganche y el plazo, y en 2 minutos ves tu mensualidad con el precio y la <b>tasa oficial de Geely de <span id="mes-badge">octubre</span></b>.</p>
+      <div class="perks">
+        <div class="perk">⚡ 2 minutos</div>
+        <div class="perk">🛡️ No consulta tu buró</div>
+        <div class="perk">✋ Sin compromiso</div>
+      </div>
+    </div>
+    <div class="resume" id="resume"><span id="resume-t"></span><br><button class="btn-main" onclick="retomar()">Continuar mi expediente →</button><button class="btn-back" onclick="this.parentNode.classList.remove('on')">Armar otro plan</button></div>
+    <button class="btn-main pulse" onclick="empezar()">Calcular mi plan →</button>
+    <a class="otra-ruta" href="index.html" onclick="this.href='index.html'+location.search">¿Todavía no sabes cuál? <b>Haz el test de 5 preguntas →</b></a>
+    <p class="sec-label">Lo que vas a saber al terminar</p>
+    <div class="gets">
+      <div class="get"><div class="get-ico">💳</div><div><b>1. Tu mensualidad</b>Con el precio, la promoción y la tasa vigentes este mes.</div></div>
+      <div class="get"><div class="get-ico">🎚️</div><div><b>2. Cuánto necesitas</b>De enganche y de ingreso mensual para ese plan.</div></div>
+      <div class="get"><div class="get-ico">✅</div><div><b>3. Qué tan probable es que te aprueben</b>Según tu ingreso, tu historial y tu estabilidad.</div></div>
+      <div class="get"><div class="get-ico">📋</div><div><b>4. Qué documentos llevar</b>Tu lista exacta, según cómo compruebas tus ingresos.</div></div>
+    </div>
+    <button class="btn-main" style="margin-top:22px" onclick="empezar()">Calcular mi plan →</button>
+    <p class="legal">AsesoresDigitalesG · Geely Serdán · Puebla<br>Estimación sin seguro ni comisión de apertura. La aprobación la da la financiera.</p>
+  </div>
+
+  <!-- ═══════════ 1. ELIGE ═══════════ -->
+  <div class="screen" id="s-auto">
+    <div class="progress-wrap">
+      <div class="progress-meta"><span>Paso 1 de 3 · Tu auto</span><span class="xp">33%</span></div>
+      <div class="progress-bar"><div class="progress-fill" style="width:15%"></div></div>
+    </div>
+    <div class="q-card">
+      <div class="q-step">Elige tu Geely</div>
+      <div class="q-title">¿Cuál te imaginas manejando?</div>
+      <div class="q-sub">Precios de este mes, con la promoción vigente.</div>
+      <div class="grid-autos" id="autos"></div>
+      <a class="otra-ruta" style="margin-top:14px" href="index.html" onclick="this.href='index.html'+location.search">¿No te decides? <b>Te ayudamos a elegir →</b></a>
+      <div id="vers-box" style="display:none">
+        <div class="q-sub" style="margin:18px 0 0">Elige la versión:</div>
+        <div class="vers" id="vers"></div>
+      </div>
+      <button class="btn-main" id="btn-auto" style="margin-top:20px" disabled onclick="irPlan()">Armar mi plan →</button>
+    </div>
+  </div>
+
+  <!-- ═══════════ 2. PLAN ═══════════ -->
+  <div class="screen" id="s-plan">
+    <div class="progress-wrap">
+      <div class="progress-meta"><span>Paso 2 de 3 · Tu plan</span><span class="xp">66%</span></div>
+      <div class="progress-bar"><div class="progress-fill" style="width:50%"></div></div>
+    </div>
+    <div class="q-card">
+      <div class="q-step" id="plan-auto">—</div>
+      <div class="vers" id="plan-vers" style="margin:0 0 14px"></div>
+      <div class="plan-big">
+        <div class="lbl">Tu mensualidad aproximada</div>
+        <div class="v" id="plan-m">$0<small>/mes</small></div>
+        <div class="s" id="plan-s"></div>
+      </div>
+
+      <div class="sl-row">
+        <div class="sl-lab"><span>Enganche</span><b id="eng-t">$0 · 10%</b></div>
+        <input type="range" id="eng" min="10" max="50" step="5" value="20" aria-label="Enganche">
+        <label class="noeng"><input type="checkbox" id="sin-eng"> Todavía no tengo el enganche</label>
+        <a class="otra-ruta" id="a-valua" style="margin-top:10px;padding:10px 12px" href="valua-tu-auto.html">🚗 ¿Tienes un auto para dar a cuenta? <b>Valúalo gratis →</b></a>
+      </div>
+
+      <div class="sl-row">
+        <div class="sl-lab"><span>Plazo</span><b id="plazo-t">60 meses</b></div>
+        <div class="plazos" id="plazos">
+          <button type="button" data-p="24">24 m</button><button type="button" data-p="36">36 m</button><button type="button" data-p="48">48 m</button><button type="button" data-p="60" class="sel">60 m</button>
+        </div>
+      </div>
+
+      <div class="need" id="need"></div>
+
+      <div class="result-card" style="margin:16px 0 0;padding:16px 16px 10px">
+        <div class="result-tag">Detalle del plan</div>
+        <div class="finrow"><span>Precio</span><b id="d-precio">—</b></div>
+        <div class="finrow"><span>Promoción del mes</span><b id="d-promo" style="text-align:right;font-weight:500;font-size:12px;max-width:62%">—</b></div>
+        <div class="finrow"><span>Financiera</span><b>Geely Financial</b></div>
+        <div class="finrow"><span>Tasa desde</span><b id="d-tasa">—</b></div>
+        <div class="finrow"><span>Monto a financiar</span><b id="d-fin">—</b></div>
+      </div>
+      <div class="result-card cmp" id="cmp" style="display:none;margin:14px 0 0;padding:16px">
+        <div class="result-tag">¿Gasolina o eléctrico? Lo que pagarías en total al mes</div>
+        <div class="q-sub" style="margin:0 0 8px;font-size:12.5px">¿Cuántos km manejas al día?</div>
+        <div class="plazos" id="cmp-km"><button type="button" data-km="20">20 km</button><button type="button" data-km="40" class="sel">40 km</button><button type="button" data-km="60">60 km</button><button type="button" data-km="100">100 km</button></div>
+        <div id="cmp-out" style="margin-top:12px"></div>
+      </div>
+      <p class="note" style="margin-top:10px">Estimación sin seguro ni comisiones, con la tasa promocional del mes. Tu asesor también te compara opciones con bancos. La tasa final depende de tu perfil y de la financiera.</p>
+
+      <button class="btn-main" style="margin-top:18px" onclick="irPre()">¿Me lo aprueban? Saberlo en 1 minuto →</button>
+      <button type="button" class="otra-ruta alerta-btn" id="al-abrir" onclick="abrirAlerta()">¿Se te sale del presupuesto? <b>Avísame cuando baje →</b></button>
+      <div class="alerta-box" id="al-box">
+        <div class="sec-t" style="margin:0 0 6px">🔔 Alerta de mensualidad</div>
+        <p class="q-sub" style="margin:0 0 12px;font-size:13px">Cada mes cambian las promociones y las tasas. Dinos cuánto sí podrías pagar y te avisamos por WhatsApp cuando este plan llegue a esa mensualidad.</p>
+        <div class="sl-lab"><span>Podría pagar al mes</span><b id="al-meta-t">$0</b></div>
+        <input type="range" id="al-meta" step="100" aria-label="Mensualidad que podrías pagar">
+        <div class="inp-wrap" style="margin-top:14px"><span>👤</span><input class="inp" id="al-nombre" placeholder="Nombre y apellido" autocomplete="name"></div>
+        <div class="inp-wrap"><span>📱</span><input class="inp" id="al-tel" type="tel" inputmode="tel" placeholder="Tu WhatsApp (10 dígitos)" maxlength="20" autocomplete="tel"></div>
+        <div class="q-sub" style="margin:2px 0 8px;font-size:12.5px">¿Dónde vives?</div>
+        <div class="chips" id="al-edo"></div>
+        <div class="err" id="al-err"></div>
+        <button type="button" class="btn-sec" onclick="enviarAlerta()">Activar mi alerta</button>
+        <p class="consent">Al activarla aceptas que te escribamos por WhatsApp cuando baje. <a href="#" onclick="verAviso(event)">Aviso de privacidad</a></p>
+      </div>
+      <div class="ok-box" id="al-ok">✅ Alerta activada. Si este plan llega a tu mensualidad, te escribimos por WhatsApp.</div>
+      <button class="btn-back" onclick="pintarAutos(); ir('s-auto')">← Cambiar de auto</button>
+    </div>
+  </div>
+
+  <!-- ═══════════ 3. PRE-CALIFICACIÓN ═══════════ -->
+  <div class="screen" id="s-quiz">
+    <div class="progress-wrap">
+      <div class="progress-meta"><span id="p-txt">Paso 3 de 3 · Pregunta 1 de 5</span><span class="xp" id="p-xp">66%</span></div>
+      <div class="progress-bar"><div class="progress-fill" id="p-fill" style="width:66%"></div></div>
+    </div>
+    <div id="q-box"></div>
+    <button class="btn-back" id="q-back" onclick="atras()">← Regresar</button>
+  </div>
+
+  <!-- ═══════════ ANALIZANDO ═══════════ -->
+  <div class="screen" id="s-analiza">
+    <div class="analiza">
+      <div class="radar"><span id="a-pct">0%</span></div>
+      <div class="q-title" style="margin-bottom:22px">Revisando tu perfil…</div>
+      <div class="a-list" id="a-list"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════ REGISTRO ═══════════ -->
+  <div class="screen" id="s-gate">
+    <div class="gate-head">
+      <div class="lvl medio">✅ Tu resultado está listo</div>
+      <div class="headline">Ya sabemos<br><span class="hl">tu probabilidad</span></div>
+      <p class="sub" id="g-sub"></p>
+    </div>
+    <div class="result-card locked">
+      <div class="result-tag">Probabilidad de aprobación</div>
+      <div class="big-save lk" style="font-size:56px">PROBABLE</div>
+      <div class="fin-grid">
+        <div class="fin-item"><div class="fin-label">Documentos que necesitas</div><div class="fin-val lk">4</div></div>
+        <div class="fin-item"><div class="fin-label">Siguiente paso</div><div class="fin-val gold lk">Cita</div></div>
+      </div>
+      <div class="lock-over"><div class="ic">🔒</div><b>Desbloquea tu resultado</b><span>Y te guardamos tu plan</span></div>
+    </div>
+    <div class="form-card">
+      <div class="form-title">¿A nombre de quién guardamos tu plan?</div>
+      <div class="form-sub">Así no lo tienes que armar otra vez y lo puedes avanzar desde tu celular.</div>
+      <form id="reg-form" novalidate>
+        <div class="inp-wrap"><span>👤</span><input class="inp" id="f-nombre" type="text" placeholder="Nombre y apellido" autocomplete="name"></div>
+        <div class="inp-wrap"><span>📱</span><input class="inp" id="f-tel" type="tel" inputmode="tel" placeholder="Tu WhatsApp (10 dígitos)" autocomplete="tel" maxlength="20"></div>
+        <div class="err" id="f-err"></div>
+        <button type="submit" class="btn-main" id="f-btn"><span class="btn-t">Ver mi resultado →</span><span class="spinner"></span></button>
+        <p class="consent">Al tocar "Ver mi resultado" autorizas a AsesoresDigitalesG a usar tus datos, incluidas tus respuestas sobre ingresos e historial, para enviarte tu plan y ayudarte con tu compra. <a href="#" onclick="verAviso(event)">Aviso de privacidad</a></p>
+      </form>
+    </div>
+  </div>
+
+  <!-- ═══════════ RESULTADO + CAMINO ═══════════ -->
+  <div class="screen" id="s-res">
+    <div class="gate-head" style="padding-top:26px">
+      <div class="lvl" id="r-lvl"></div>
+      <div class="headline" id="r-head"></div>
+      <p class="sub" id="r-sub"></p>
+    </div>
+    <div class="result-card">
+      <div class="result-tag">Tu plan</div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:40px;line-height:.95;letter-spacing:.02em" id="r-auto"></div>
+      <div class="fin-grid">
+        <div class="fin-item"><div class="fin-label">Mensualidad aprox.</div><div class="fin-val green" id="r-m">—</div><div class="fin-sub" id="r-plazo"></div></div>
+        <div class="fin-item"><div class="fin-label">Enganche</div><div class="fin-val" id="r-eng">—</div><div class="fin-sub" id="r-eng-s"></div></div>
+      </div>
+    </div>
+    <div class="result-card">
+      <div class="result-tag">Tu camino para estrenar</div>
+      <p class="sub" style="margin:0 0 12px;font-size:13.5px" id="r-sigue"></p>
+      <div class="camino">
+        <button class="paso-c ok" disabled><span class="n">✓</span><span class="tx"><b>Pre-calificación</b><small>Listo</small></span></button>
+        <button class="paso-c" id="c-docs" onclick="irDocs()"><span class="n">2</span><span class="tx"><b>Sube tus documentos</b><small id="c-docs-s">Fotos desde tu celular · 3 minutos</small></span><span class="go" id="c-docs-g">Empezar →</span></button>
+        <button class="paso-c" id="c-sol" onclick="irSol()"><span class="n">3</span><span class="tx"><b>Llena tu solicitud</b><small id="c-sol-s">Tus datos para la financiera · 5 minutos</small></span><span class="go" id="c-sol-g">Llenar →</span></button>
+        <button class="paso-c" id="c-cita" onclick="irCita()"><span class="n">4</span><span class="tx"><b id="c-cita-t">Agenda tu cita</b><small id="c-cita-s">Elige día y hora</small></span><span class="go" id="c-cita-g">Elegir →</span></button>
+      </div>
+      <div class="alerta-res" id="r-alerta"><span>🔔 ¿La mensualidad te queda justa? Te avisamos si baja con las promociones de cada mes.</span><button type="button" class="up" onclick="alertaRegistrado()">Avísame</button></div>
+      <div class="listo" id="r-listo">🎉 <b>¡Tu expediente está completo!</b><br>Tu asesor ya tiene todo para mover tu crédito. Te escribimos por WhatsApp para confirmar.</div>
+      <div class="err" id="r-err" style="margin-top:12px"></div>
+    </div>
+    <a class="cta-wa" id="r-wa" href="#" target="_blank" rel="noopener" onclick="contar('whatsapp')" style="margin-top:4px">
+      <svg viewBox="0 0 24 24"><path d="M17.5 14.4c-.3-.1-1.8-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.1-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.4-.5c.2-.2.2-.3.3-.5.1-.2 0-.4 0-.5l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.8-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.1-.3-.2-.6-.3zM12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2z"/></svg>
+      Prefiero que me ayude un asesor
+    </a>
+    <p class="legal">Pre-calificación informativa: no es una aprobación de crédito. La aprobación la da la financiera después de revisar tus documentos.</p>
+  </div>
+
+  <!-- ═══════════ DOCUMENTOS ═══════════ -->
+  <div class="screen" id="s-docs">
+    <div class="q-card">
+      <div class="q-step">Paso 2 · Tus documentos</div>
+      <div class="q-title">Sube tus documentos</div>
+      <div class="q-sub">Tómales foto con tu celular o sube el PDF. Sube lo que tengas ahora; lo que falte lo completas después con tu asesor.</div>
+      <label class="check" style="margin:0 0 16px"><input type="checkbox" id="d-ok"><span>Autorizo que se guarden mis documentos de forma privada para tramitar mi crédito con Geely Serdán y la financiera que yo elija. <a href="#" onclick="verAviso(event)">Aviso de privacidad</a></span></label>
+      <div class="dl" id="d-list"></div>
+      <button class="btn-main" style="margin-top:18px" onclick="trasDocs()">Siguiente: tu solicitud →</button>
+      <button class="btn-back" onclick="volverCamino()">← Regresar</button>
+    </div>
+  </div>
+
+  <!-- ═══════════ SOLICITUD ═══════════ -->
+  <div class="screen" id="s-sol">
+    <form class="q-card" id="sol-form" novalidate>
+      <div class="q-step">Paso 3 · Tu solicitud</div>
+      <div class="q-title">Tus datos para la financiera</div>
+      <div class="q-sub">Son los que te piden en la agencia. Si los llenas aquí, allá solo revisas y firmas. Se guardan solos mientras escribes.</div>
+
+      <div class="sec-t">Tú</div>
+      <div class="fld"><label for="s-nombre">Nombre completo (como en tu INE)</label><input class="inp" id="s-nombre" autocomplete="name" required><div class="fe">Escribe tu nombre completo</div></div>
+      <div class="fld2">
+        <div class="fld"><label for="s-nacimiento">Fecha de nacimiento</label><input class="inp" id="s-nacimiento" type="date" required><div class="fe">Falta tu fecha</div></div>
+        <div class="fld"><label for="s-civil">Estado civil</label><select class="inp" id="s-civil" required><option value="" disabled selected>Elige</option><option>Soltero(a)</option><option>Casado(a)</option><option>Unión libre</option><option>Divorciado(a)</option><option>Viudo(a)</option></select><div class="fe">Elige una opción</div></div>
+      </div>
+      <div class="fld2">
+        <div class="fld"><label for="s-correo">Correo</label><input class="inp" id="s-correo" type="email" inputmode="email" autocomplete="email" required><div class="fe">Revisa tu correo</div></div>
+        <div class="fld"><label for="s-dependientes">Dependientes económicos</label><select class="inp" id="s-dependientes" required><option value="" disabled selected>Elige</option><option>0</option><option>1</option><option>2</option><option>3</option><option>4 o más</option></select><div class="fe">Elige una opción</div></div>
+      </div>
+
+      <div class="sec-t" style="margin-top:10px">Tu domicilio</div>
+      <div class="fld"><label for="s-calle">Calle y número</label><input class="inp" id="s-calle" autocomplete="address-line1" required><div class="fe">Falta tu calle</div></div>
+      <div class="fld2">
+        <div class="fld"><label for="s-colonia">Colonia</label><input class="inp" id="s-colonia" required><div class="fe">Falta tu colonia</div></div>
+        <div class="fld"><label for="s-cp">Código postal</label><input class="inp" id="s-cp" inputmode="numeric" maxlength="5" autocomplete="postal-code" required><div class="fe">Son 5 números</div></div>
+      </div>
+      <div class="fld2">
+        <div class="fld"><label for="s-municipio">Municipio</label><input class="inp" id="s-municipio" required><div class="fe">Falta tu municipio</div></div>
+        <div class="fld"><label for="s-estado">Estado</label><input class="inp" id="s-estado" required><div class="fe">Falta tu estado</div></div>
+      </div>
+      <div class="fld2">
+        <div class="fld"><label for="s-tiempoDom">Tiempo viviendo ahí</label><select class="inp" id="s-tiempoDom" required><option value="" disabled selected>Elige</option><option>Menos de 1 año</option><option>1 a 2 años</option><option>3 a 5 años</option><option>Más de 5 años</option></select><div class="fe">Elige una opción</div></div>
+        <div class="fld"><label for="s-vivienda">La casa es</label><select class="inp" id="s-vivienda" required><option value="" disabled selected>Elige</option><option>Propia</option><option>Rentada</option><option>De mi familia</option><option>Hipotecada</option></select><div class="fe">Elige una opción</div></div>
+      </div>
+
+      <div class="sec-t" style="margin-top:10px">Tu trabajo o negocio</div>
+      <div class="fld"><label for="s-empresa">Empresa donde trabajas o nombre de tu negocio</label><input class="inp" id="s-empresa" required><div class="fe">Falta este dato</div></div>
+      <div class="fld2">
+        <div class="fld"><label for="s-puesto">Puesto o actividad</label><input class="inp" id="s-puesto" required><div class="fe">Falta este dato</div></div>
+        <div class="fld"><label for="s-ingresoExacto">Ingreso mensual libre</label><input class="inp" id="s-ingresoExacto" inputmode="numeric" placeholder="$" required><div class="fe">Escribe una cantidad</div></div>
+      </div>
+      <div class="fld2">
+        <div class="fld"><label for="s-antiguedad">Antigüedad</label><input class="inp" id="s-antiguedad" required><div class="fe">Falta este dato</div></div>
+        <div class="fld"><label for="s-telTrabajo">Teléfono del trabajo <span class="opt-tag">(opcional)</span></label><input class="inp" id="s-telTrabajo" type="tel" inputmode="tel"></div>
+      </div>
+
+      <div class="sec-t" style="margin-top:10px">Dos referencias personales</div>
+      <p class="q-sub" style="margin:-6px 0 12px;font-size:12.5px">Personas que te conozcan y no vivan contigo. La financiera puede llamarles.</p>
+      <div class="fld"><label for="s-ref1">Referencia 1 · nombre</label><input class="inp" id="s-ref1" required><div class="fe">Falta el nombre</div></div>
+      <div class="fld2">
+        <div class="fld"><label for="s-ref1tel">Teléfono</label><input class="inp" id="s-ref1tel" type="tel" inputmode="tel" required><div class="fe">Son 10 números</div></div>
+        <div class="fld"><label for="s-ref1rel">¿Qué es tuyo?</label><input class="inp" id="s-ref1rel" placeholder="Amigo, tía…" required><div class="fe">Falta este dato</div></div>
+      </div>
+      <div class="fld"><label for="s-ref2">Referencia 2 · nombre</label><input class="inp" id="s-ref2" required><div class="fe">Falta el nombre</div></div>
+      <div class="fld2">
+        <div class="fld"><label for="s-ref2tel">Teléfono</label><input class="inp" id="s-ref2tel" type="tel" inputmode="tel" required><div class="fe">Son 10 números</div></div>
+        <div class="fld"><label for="s-ref2rel">¿Qué es tuyo?</label><input class="inp" id="s-ref2rel" placeholder="Compañero, primo…" required><div class="fe">Falta este dato</div></div>
+      </div>
+
+      <div class="err" id="s-err"></div>
+      <button type="submit" class="btn-main" id="s-btn"><span class="btn-t">Enviar mi solicitud →</span><span class="spinner"></span></button>
+      <p class="consent">Tus datos se guardan de forma privada y solo los ve tu asesor para tramitar tu crédito. Enviarla no te compromete a comprar.</p>
+      <button type="button" class="btn-back" onclick="volverCamino()">← Regresar (lo que escribiste se queda guardado)</button>
+    </form>
+  </div>
+
+  <!-- ═══════════ CITA ═══════════ -->
+  <div class="screen" id="s-cita">
+    <div class="q-card">
+      <div class="q-step">Paso 4 · Tu cita</div>
+      <div class="q-title" id="ci-titulo">Agenda tu visita</div>
+      <div class="q-sub" id="ci-sub"></div>
+      <div class="lugar" id="ci-lugar"></div>
+      <div class="dias" id="ci-dias"></div>
+      <div class="horas" id="ci-horas"></div>
+      <div class="err" id="ci-err" style="margin-top:14px"></div>
+      <button class="btn-main" id="ci-btn" style="margin-top:18px" disabled onclick="agendar()"><span class="btn-t">Confirmar mi cita →</span><span class="spinner"></span></button>
+      <p class="consent" id="ci-alt"></p>
+      <button class="btn-back" onclick="volverCamino()">← Regresar</button>
+    </div>
+  </div>
+</div>
+
+<a class="help hide" id="help" href="#" target="_blank" rel="noopener" onclick="contar('whatsapp')"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2z"/></svg>¿Dudas? Escríbenos</a>
+
+<div class="modal" id="aviso" onclick="if(event.target===this)cerrarAviso()">
+  <div class="modal-box">
+    <h3>Aviso de privacidad</h3>
+    <p><b>Responsable:</b> AsesoresDigitalesG by Abel Zarate, asesor comercial autorizado de Geely Serdán, Puebla, México.</p>
+    <p><b>Datos que recopilamos:</b> nombre, WhatsApp, estado donde vives, el auto y plan que armaste, y tus respuestas sobre ingreso, forma de comprobarlo, historial crediticio y antigüedad laboral.</p>
+    <p><b>Finalidad:</b> enviarte tu plan, estimar tu probabilidad de aprobación, ayudarte a preparar tu solicitud y contactarte sobre tu compra. Tus datos financieros solo se usan para eso y no se venden ni se comparten con terceros ajenos a Geely Serdán y las financieras con las que tramites tu crédito, y eso solo si tú decides solicitarlo.</p>
+    <p><b>Tus derechos:</b> puedes pedir en cualquier momento acceder, corregir o borrar tus datos escribiéndonos por WhatsApp.</p>
+    <button class="btn-main" onclick="cerrarAviso()">Entendido</button>
+  </div>
+</div>
+
+<script src="precios.js"></script>
+<script>
+// ══════════════════════════════════════════════════════════════
+// AJUSTES — precios y tasas del mes (boletín Geely). Actualizar cada mes aquí.
+// ══════════════════════════════════════════════════════════════
+// Los precios y tasas viven en precios.js (se actualizan ahí cada mes)
+// Orden en que se muestran (los prioritarios primero). Monjaro EM-i: precio al anunciarse.
+const ORDEN = ['monjaroemi', 'emgrand', 'ex2', 'ex5emi', 'coolray_l', 'new_coolray', 'cityray', 'gx3pro', 'starray26', 'ex5', 'okavango'];
+const DESTACADOS = { monjaroemi: 'Nuevo', emgrand: 'Más vendido', ex2: 'Eléctrico', ex5emi: 'Híbrido' };
+
+const WA_CONTACTO = '522217729210';   // WhatsApp que atiende (cámbialo al número del coordinador cuando lo tengas)
+const LOCALES = ['Puebla', 'Tlaxcala', 'Hidalgo', 'Veracruz'];
+const FUENTE = 'Pre-calificación';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwB-ylsX33ZGE918Ty3s7YK0ZLXHv0en4aFbg_X4d7ac9iZ2C7s6JD6lTtRyi_yc1Po/exec';
+
+const $ = id => document.getElementById(id);
+const pesos = n => '$' + Math.round(n).toLocaleString('es-MX');
+const tasaDe = m => { const t = /([\d.]+)%/.exec(m.tasa || ''); return t ? parseFloat(t[1]) : 12; };
+
+// ── Origen (TikTok, video, campaña)
+const ORIGEN = (function () {
+  let o = {};
+  try { o = JSON.parse(sessionStorage.getItem('adg_origen') || '{}'); } catch (e) {}
+  const p = new URLSearchParams(location.search);
+  if (p.get('utm_source')) { o = { origen: p.get('utm_source').toLowerCase(), contenido: p.get('utm_content') || '', campana: p.get('utm_campaign') || '' }; try { sessionStorage.setItem('adg_origen', JSON.stringify(o)); } catch (e) {} }
+  if (!o.campana) o.campana = 'arma-tu-plan';
+  return o;
+})();
+
+// ── Contador de pasos (solo lo ve el administrador en el CRM)
+// ── Prueba A/B: a la mitad de la gente se le muestra la versión B y el contador mide cuál convierte más.
+// Para probar algo: pon un id corto y lo que cambia en la versión B. Para apagarla: const PRUEBA = null;
+// Ejemplo: const PRUEBA = { id: 'hook-nov', B: () => { $('i-head').innerHTML = '¿Te alcanza<br><span class="hl">para un Geely?</span>'; } };
+const PRUEBA = null;
+const VARIANTE = (function () {
+  if (!PRUEBA) return '';
+  let v = ''; try { v = localStorage.getItem('ab_' + PRUEBA.id) || ''; } catch (e) {}
+  if (v !== 'A' && v !== 'B') { v = Math.random() < 0.5 ? 'A' : 'B'; try { localStorage.setItem('ab_' + PRUEBA.id, v); } catch (e) {} }
+  return v;
+})();
+const MARCADOS = {};
+function contar (p) {
+  if (MARCADOS[p]) return; MARCADOS[p] = 1;
+  const d = { tipo: 'paso', pagina: 'precal', paso: p }; if (VARIANTE) d.v = PRUEBA.id + ':' + VARIANTE;
+  try { navigator.sendBeacon(SCRIPT_URL, new Blob([JSON.stringify(d)], { type: 'text/plain' })); } catch (e) {}
+}
+contar('visita');
+$('mes-badge').textContent = MES.split(' ')[0].toLowerCase();
+
+function ir (id) { document.querySelectorAll('.screen').forEach(s => s.classList.toggle('on', s.id === id)); window.scrollTo(0, 0); }
+function xp (txt) { const el = $('xp'); el.textContent = txt; el.classList.remove('go'); void el.offsetWidth; el.classList.add('go'); }
+
+// ══════════════════════════════════════════════════════════════
+// PASO 1 — ELEGIR AUTO
+// ══════════════════════════════════════════════════════════════
+const P = { modelo: null, ver: 0, eng: 20, sinEng: false, plazo: 60 };
+let T0 = 0, T1 = 0;
+function empezar () {
+  if (!T0) T0 = Date.now(); contar('inicio'); try { history.pushState({ p: 1 }, '', location.href); } catch (e) {}
+  if (AUTO_URL) { P.modelo = AUTO_URL; P.ver = 0; contar('modelo'); irPlan(); return; }   // link de un video de un solo modelo: directo a su plan
+  pintarAutos(); ir('s-auto');
+}
+// Link directo a un modelo: arma-tu-plan.html?auto=emgrand (para videos de un solo auto)
+const AUTO_URL = (k => k && models[k] ? k : '')(new URLSearchParams(location.search).get('auto'));
+if (AUTO_URL) {
+  const m = models[AUTO_URL];
+  $('i-head').innerHTML = `¿Te alcanza<br>el <span class="hl">${m.name}?</span>`;
+  $('i-sub').innerHTML = `Desde <b>${pesos(m.versions[0].price)}</b>. Mueve el enganche y el plazo, y en 2 minutos ves tu mensualidad con la tasa oficial de este mes y qué tan probable es que te aprueben.`;
+}
+function pintarAutos () {
+  const card = k => { const m = models[k]; const b = m.versions[0];
+    return `<button type="button" class="auto ${P.modelo === k ? 'sel' : ''}" onclick="elegirAuto('${k}')">${DESTACADOS[k] ? `<span class="tag">${DESTACADOS[k]}</span>` : ''}
+      <div class="nm">${m.name}</div><div class="ty">${m.full.split('·')[1] ? m.full.split('·')[1].trim() : ''}</div><div class="pr">Desde ${pesos(b.price)}</div></button>`; };
+  $('autos').innerHTML = ORDEN.filter(k => models[k]).map(card).join('');
+}
+function elegirAuto (k) {
+  P.modelo = k; P.ver = 0; pintarAutos();
+  const m = models[k];
+  $('vers-box').style.display = m.versions.length > 1 ? '' : 'none';
+  $('vers').innerHTML = m.versions.map((v, i) => `<button type="button" class="ver ${i === P.ver ? 'sel' : ''}" onclick="elegirVer(${i})">${v.ver} · ${pesos(v.price)}</button>`).join('');
+  $('btn-auto').disabled = false;
+  contar('modelo');
+}
+function elegirVer (i) { P.ver = i; ['#vers', '#plan-vers'].forEach(c => document.querySelectorAll(c + ' .ver').forEach((b, j) => b.classList.toggle('sel', j === i))); if ($('s-plan').classList.contains('on')) pintarPlan(); }
+function irPlan () { pintarPlan(); ir('s-plan'); contar('plan'); }
+
+// ══════════════════════════════════════════════════════════════
+// PASO 2 — PLAN (enganche y plazo)
+// ══════════════════════════════════════════════════════════════
+function mensualidad (monto, tasaAnual, meses) {
+  const r = tasaAnual / 100 / 12;
+  return r ? monto * r / (1 - Math.pow(1 + r, -meses)) : monto / meses;
+}
+function calcPlan () {
+  const m = models[P.modelo], v = m.versions[P.ver];
+  const pct = P.sinEng ? 10 : P.eng;
+  const eng = v.price * pct / 100;
+  const fin = v.price - eng;
+  const tasa = tasaDe(m);
+  const men = mensualidad(fin, tasa, P.plazo);
+  return { m, v, pct, eng, fin, tasa, men, ingresoMin: men / 0.30 };
+}
+// ── Comparador Emgrand vs EX2: mensualidad + gasolina o luz (referencia del fabricante, uso real aproximado)
+const CMP = { emgrand: { tipo: 'gas', kml: 15 }, ex2: { tipo: 'luz', kwhKm: 0.14 } }, CMP_PAR = { emgrand: 'ex2', ex2: 'emgrand' };
+const GAS_L = 24.5, LUZ_KWH = 2.5, DIAS_MES = 26;
+let CMP_KM = 40;
+function pintarComparador () {
+  const box = $('cmp'); if (!CMP[P.modelo]) { box.style.display = 'none'; return; }
+  box.style.display = '';
+  const pct = P.sinEng ? 10 : P.eng, kmMes = CMP_KM * DIAS_MES;
+  const fila = (k, ver) => { const m = models[k], v = m.versions[ver] || m.versions[0], fin = v.price * (1 - pct / 100);
+    const men = mensualidad(fin, tasaDe(m), P.plazo), e = CMP[k], energia = e.tipo === 'gas' ? kmMes / e.kml * GAS_L : kmMes * e.kwhKm * LUZ_KWH;
+    return { k, nombre: `${m.name} ${v.ver}`, men, energia, total: men + energia, tipo: e.tipo }; };
+  const a = fila(P.modelo, P.ver), b = fila(CMP_PAR[P.modelo], 0), gana = a.total <= b.total ? a.k : b.k;
+  const ex2 = a.k === 'ex2' ? a : b, emg = a.k === 'ex2' ? b : a, dif = ex2.total - emg.total;
+  const row = x => `<div class="cmp-row ${x.k === gana ? 'win' : ''}"><div><b>${x.nombre}</b><br>${pesos(x.men)} mensualidad + ${pesos(x.energia)} de ${x.tipo === 'gas' ? 'gasolina' : 'luz (carga en casa)'}</div><div class="tot">${pesos(x.total)}</div></div>`;
+  $('cmp-out').innerHTML = row(a) + row(b) +
+    `<p class="cmp-res">${Math.abs(dif) < 150 ? `Con ${CMP_KM} km al día <b>te cuestan prácticamente lo mismo al mes</b>, y con el EX2 dejas de pagar ${pesos(emg.energia - ex2.energia)} de gasolina.` : dif > 0 ? `Con ${CMP_KM} km al día el EX2 te cuesta <b>${pesos(dif)} más al mes</b> en total, pero dejas de pagar ${pesos(emg.energia - ex2.energia)} de gasolina.` : `Con ${CMP_KM} km al día <b>el EX2 te sale ${pesos(-dif)} más barato al mes</b> en total, porque dejas de pagar ${pesos(emg.energia - ex2.energia)} de gasolina.`}</p>
+     <button type="button" class="btn-sec" style="margin-top:10px;padding:12px" onclick="cambiarComparado()">Armar mi plan con el ${models[CMP_PAR[P.modelo]].name} →</button>
+     <p class="note" style="margin-top:8px">Gasolina a $${GAS_L}/l y ${CMP.emgrand.kml} km/l; luz a $${LUZ_KWH}/kWh y ${Math.round(CMP.ex2.kwhKm * 100)} kWh cada 100 km; ${DIAS_MES} días de manejo al mes.</p>`;
+}
+function cambiarComparado () { P.modelo = CMP_PAR[P.modelo]; P.ver = 0; contar('compara_cambio'); pintarPlan(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+$('cmp-km').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; CMP_KM = +b.dataset.km; document.querySelectorAll('#cmp-km button').forEach(x => x.classList.toggle('sel', x === b)); contar('compara'); pintarComparador(); });
+
+function pintarPlan () {
+  const c = calcPlan(), r = $('eng');
+  $('plan-vers').innerHTML = c.m.versions.length > 1 ? c.m.versions.map((v, i) => `<button type="button" class="ver ${i === P.ver ? 'sel' : ''}" onclick="elegirVer(${i})">${v.ver} · ${pesos(v.price)}</button>`).join('') : '';
+  $('plan-auto').textContent = `${c.m.name} ${c.v.ver} · ${MES}`;
+  $('plan-m').innerHTML = pesos(c.men) + '<small>/mes</small>';
+  $('plan-s').textContent = `a ${P.plazo} meses con ${c.pct}% de enganche`;
+  $('eng-t').textContent = `${pesos(c.eng)} · ${c.pct}%`;
+  r.style.setProperty('--p', ((P.eng - r.min) / (r.max - r.min) * 100) + '%');
+  r.disabled = P.sinEng;
+  $('plazo-t').textContent = P.plazo + ' meses';
+  $('need').innerHTML = P.sinEng
+    ? `Necesitarías juntar al menos <b>${pesos(c.eng)}</b> de enganche (10%). Te decimos cómo en tu resultado.`
+    : `Para esta mensualidad lo recomendable es ganar desde <b>${pesos(Math.ceil(c.ingresoMin / 500) * 500)}</b> al mes.`;
+  $('d-precio').textContent = pesos(c.v.price);
+  $('d-promo').textContent = c.m.bono || '—';
+  $('d-tasa').textContent = c.tasa + '% anual';
+  $('d-fin').textContent = pesos(c.fin);
+  pintarComparador();
+  { const qs = new URLSearchParams(location.search); qs.set('auto', P.modelo); $('a-valua').href = 'valua-tu-auto.html?' + qs; }
+}
+$('eng').addEventListener('input', e => { P.eng = +e.target.value; pintarPlan(); });
+$('sin-eng').addEventListener('change', e => { P.sinEng = e.target.checked; pintarPlan(); });
+$('plazos').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; P.plazo = +b.dataset.p; document.querySelectorAll('#plazos button').forEach(x => x.classList.toggle('sel', x === b)); pintarPlan(); });
+
+// ══════════════════════════════════════════════════════════════
+// PASO 3 — PRE-CALIFICACIÓN
+// ══════════════════════════════════════════════════════════════
+const PREGUNTAS = [
+  { k: 'estado', titulo: '¿En qué estado vives?', sub: 'Así sabemos si te atendemos en la agencia o a distancia.', ops: [
+    { v: 'Puebla', i: '📍', t: 'Puebla' }, { v: 'Tlaxcala', i: '📍', t: 'Tlaxcala' }, { v: 'Veracruz', i: '📍', t: 'Veracruz' }, { v: 'Hidalgo', i: '📍', t: 'Hidalgo' },
+    { v: 'CDMX', i: '🏙️', t: 'Ciudad de México' }, { v: 'Estado de México', i: '🏙️', t: 'Estado de México' }, { v: 'Otro', i: '🇲🇽', t: 'Otro estado' } ] },
+  { k: 'ingreso', titulo: '¿Cuánto ganas al mes?', sub: 'Lo que recibes libre, después de impuestos. Aproximado está bien.', ops: [
+    { v: 10000, i: '💼', t: 'Menos de $12,000', id: 'low' }, { v: 16000, i: '📈', t: '$12,000 a $20,000', id: 'mid_low' },
+    { v: 27000, i: '💰', t: '$20,000 a $35,000', id: 'mid_high' }, { v: 42000, i: '🏆', t: '$35,000 a $50,000', id: 'high' },
+    { v: 60000, i: '💎', t: 'Más de $50,000', id: 'high' } ] },
+  { k: 'compr', titulo: '¿Cómo compruebas tus ingresos?', sub: 'Esto define qué documentos te van a pedir.', ops: [
+    { v: 'nomina', i: '🧾', t: 'Recibos de nómina', s: 'Trabajo con un patrón' },
+    { v: 'edocta', i: '🏦', t: 'Estados de cuenta', s: 'Me depositan o deposito en el banco' },
+    { v: 'negocio', i: '🏪', t: 'Tengo negocio o facturo', s: 'Persona física con actividad empresarial' },
+    { v: 'efectivo', i: '💵', t: 'Me pagan en efectivo', s: 'No tengo cómo comprobarlo todavía' } ] },
+  { k: 'historial', titulo: '¿Cómo está tu historial de crédito?', sub: 'Tarjetas, préstamos, celulares a plazos…', ops: [
+    { v: 'clean', i: '✅', t: 'Limpio y al corriente' }, { v: 'ok', i: '🟡', t: 'Tengo deudas, pero al corriente' },
+    { v: 'zero', i: '⚪', t: 'Nunca he tenido crédito' }, { v: 'bad', i: '🔴', t: 'He tenido atrasos' } ] },
+  { k: 'antig', titulo: '¿Cuánto tiempo llevas en tu trabajo o negocio actual?', sub: 'Las financieras piden estabilidad.', ops: [
+    { v: 3, i: '🌱', t: 'Menos de 6 meses' }, { v: 9, i: '📅', t: '6 a 12 meses' }, { v: 18, i: '📆', t: '1 a 2 años' }, { v: 30, i: '🏛️', t: 'Más de 2 años' } ] },
+  { k: 'cuando', titulo: '¿Cuándo te gustaría estrenar?', sub: 'Así sabemos qué tan rápido moverte el trámite.', ops: [
+    { v: 'mes', i: '🔥', t: 'Este mes' }, { v: 'trim', i: '📅', t: 'En 1 a 3 meses' }, { v: 'luego', i: '⏳', t: 'En más de 3 meses' }, { v: 'explora', i: '👀', t: 'Solo estoy explorando' } ] }
+];
+const R = {}; let paso = 0;
+function irPre () { paso = 0; ir('s-quiz'); pintarPregunta(); }
+function pintarPregunta () {
+  const q = PREGUNTAS[paso];
+  $('p-txt').textContent = `Paso 3 de 3 · Pregunta ${paso + 1} de ${PREGUNTAS.length}`;
+  $('p-xp').textContent = Math.round(66 + paso / PREGUNTAS.length * 30) + '%';
+  $('p-fill').style.width = (66 + paso / PREGUNTAS.length * 30) + '%';
+  $('q-box').innerHTML = `<div class="q-card"><div class="q-step">Pre-calificación · no afecta tu buró</div><div class="q-title">${q.titulo}</div><div class="q-sub">${q.sub}</div>
+    <div class="options">${q.ops.map((o, i) => `<button type="button" class="opt ${R[q.k + '_i'] === i ? 'sel' : ''}" onclick="elegir(${i})"><span class="opt-icon">${o.i}</span><span class="opt-body"><strong>${o.t}</strong>${o.s ? `<small>${o.s}</small>` : ''}</span><span class="opt-ring"></span></button>`).join('')}</div></div>`;
+}
+let ocupado = false;   // evita que un doble toque se salte una pregunta
+function elegir (i) {
+  if (ocupado || paso >= PREGUNTAS.length) return;
+  ocupado = true;
+  const q = PREGUNTAS[paso]; const o = q.ops[i];
+  R[q.k] = o.v; R[q.k + '_t'] = o.t; R[q.k + '_i'] = i; if (o.id) R.ingreso_id = o.id;
+  document.querySelectorAll('#q-box .opt').forEach((b, j) => b.classList.toggle('sel', j === i));
+  contar('p' + (paso + 1));
+  setTimeout(() => { ocupado = false; paso++; xp(['¡Bien!', 'Vas muy bien', 'Sigue así', 'Ya casi', 'Última pregunta', '¡Listo!'][paso - 1]); if (paso < PREGUNTAS.length) pintarPregunta(); else analizar(); }, 240);
+}
+function atras () { if (ocupado) return; if (paso > 0) { paso--; pintarPregunta(); } else ir('s-plan'); }
+window.addEventListener('popstate', () => {
+  const en = id => $(id).classList.contains('on');
+  if (en('s-quiz')) { atras(); history.pushState({ p: 1 }, '', location.href); }
+  else if (en('s-plan')) { pintarAutos(); ir('s-auto'); history.pushState({ p: 1 }, '', location.href); }
+  else if (en('s-auto')) ir('s-intro');
+});
+
+// ── Cálculo del resultado (estimación, nunca aprobación)
+let RES = null;
+function evaluar () {
+  const c = calcPlan();
+  let pts = 0;
+  const carga = c.men / R.ingreso;
+  pts += carga <= 0.30 ? 3 : carga <= 0.40 ? 1 : -2;
+  pts += { nomina: 2, edocta: 1, negocio: 1, efectivo: -2 }[R.compr];
+  pts += { clean: 2, ok: 1, zero: 0, bad: -2 }[R.historial];
+  pts += R.antig >= 24 ? 2 : R.antig >= 12 ? 1 : R.antig >= 6 ? 0 : -1;
+  pts += P.sinEng ? -2 : P.eng >= 20 ? 1 : 0;
+  const nivel = pts >= 6 ? 'alta' : pts >= 2 ? 'media' : 'revisar';
+  // Perfil S/A/B/C con la misma lógica del quiz, para que el CRM lo lea igual
+  const engAbs = P.sinEng ? 0 : c.eng;
+  const engId = engAbs === 0 ? 'none' : engAbs < 30000 ? 'low' : engAbs <= 60000 ? 'mid' : 'high';
+  const okHist = ['clean', 'ok', 'zero'].includes(R.historial);
+  let perfil = 'B';
+  if (engId === 'none') perfil = 'C';
+  else if (R.ingreso_id === 'high' && R.historial === 'clean' && engId !== 'low') perfil = 'S';
+  else if (R.ingreso_id === 'mid_high' && okHist) perfil = 'A';
+  else if (R.ingreso_id === 'mid_low' && okHist) perfil = 'B';
+  else if (R.ingreso_id === 'low') perfil = 'C';
+  else if (R.historial === 'bad') perfil = (R.ingreso_id === 'high' || R.ingreso_id === 'mid_high') ? 'B' : 'C';
+  RES = { ...c, pts, nivel, carga, perfil, engAbs };
+  return RES;
+}
+function analizar () {
+  T1 = Date.now(); evaluar(); ir('s-analiza');
+  const pasos = ['Comparando tu mensualidad con tu ingreso', 'Revisando tu forma de comprobar ingresos', 'Considerando tu historial y estabilidad', 'Armando tu lista de documentos'];
+  $('a-list').innerHTML = pasos.map(t => `<div class="a-item"><i></i>${t}</div>`).join('');
+  const items = [...document.querySelectorAll('.a-item')]; let n = 0;
+  const t = setInterval(() => { if (n < items.length) items[n].classList.add('on'); n++; $('a-pct').textContent = Math.min(100, Math.round(n / items.length * 100)) + '%';
+    if (n > items.length) { clearInterval(t); $('g-sub').innerHTML = `Tu plan: <b>${RES.m.name} ${RES.v.ver}</b> con mensualidad de <b>${pesos(RES.men)}</b>. Déjanos tus datos para ver tu resultado y tu lista de documentos.`; ir('s-gate'); contar('formulario'); } }, 520);
+}
+
+// ══════════════════════════════════════════════════════════════
+// REGISTRO → CRM (regresa la clave de su expediente)
+// ══════════════════════════════════════════════════════════════
+function normTel (v) { let t = String(v || '').replace(/\D/g, ''); if (t.length === 13 && t.startsWith('521')) t = t.slice(3); else if (t.length === 12 && t.startsWith('52')) t = t.slice(2); return t; }
+function verAviso (e) { e.preventDefault(); $('aviso').classList.add('on'); }
+function cerrarAviso () { $('aviso').classList.remove('on'); }
+async function api (obj, ms) {
+  const ctl = new AbortController(); const t = setTimeout(() => ctl.abort(), ms || 30000);
+  try {
+    const r = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(obj), signal: ctl.signal });
+    return await r.json();
+  } finally { clearTimeout(t); }
+}
+
+// Lo que se guarda en el celular para poder retomar el expediente después
+const LS = 'adg_expediente';
+let EXP = null;            // { e, k, snap, docs:{ine:0,...}, sol:false, cita:'', modo:'' }
+let REG_PEND = null;       // promesa del registro mientras llega la clave
+function guardarEXP () { try { localStorage.setItem(LS, JSON.stringify({ ...EXP, t: Date.now() })); } catch (e) {} }
+
+$('reg-form').addEventListener('submit', e => {
+  e.preventDefault();
+  const err = $('f-err'); err.classList.remove('on');
+  const nombre = $('f-nombre').value.trim().replace(/\s+/g, ' ');
+  const tel = normTel($('f-tel').value);
+  $('f-nombre').classList.toggle('bad', nombre.length < 3);
+  $('f-tel').classList.toggle('bad', tel.length !== 10);
+  if (nombre.length < 3 || tel.length !== 10) { err.textContent = tel && tel.length !== 10 ? '⚠️ Tu WhatsApp debe tener 10 dígitos' : '⚠️ Escribe tu nombre y tu WhatsApp para ver tu resultado'; err.classList.add('on'); return; }
+  const nivelTxt = { alta: 'Muy probable', media: 'Probable', revisar: 'Hay que revisarlo juntos' }[RES.nivel];
+  const notas = `📋 Pre-calificación: ${nivelTxt} (${RES.pts} pts). Quiere comprar: ${R.cuando_t}. ` +
+    `Plan: ${RES.m.name} ${RES.v.ver} ${pesos(RES.v.price)}, enganche ${P.sinEng ? 'aún no lo tiene' : pesos(RES.eng) + ' (' + RES.pct + '%)'}, ${P.plazo} meses ≈ ${pesos(RES.men)}/mes (${Math.round(RES.carga * 100)}% de su ingreso). ` +
+    `Comprueba con: ${R.compr_t}. Antigüedad: ${R.antig_t}. Historial: ${R.historial_t}.` + (VARIANTE ? ` [Prueba ${PRUEBA.id}: versión ${VARIANTE}]` : '');
+  const lead = {
+    fecha: new Date().toLocaleString('es-MX', { timeZone: 'America/Mexico_City' }),
+    nombre, telefono: tel, perfil: RES.perfil,
+    modelo: `${RES.m.name} ${RES.v.ver}`, otros_modelos: '',
+    ingreso: R.ingreso_t, enganche: P.sinEng ? 'Sin enganche aún' : pesos(RES.eng), historial: R.historial_t,
+    mensualidad: `${pesos(RES.men)} a ${P.plazo} meses`, acepto_privacidad: 'Sí', estado: R.estado,
+    fuenteContacto: FUENTE, notas, compra: R.cuando, nivel: RES.nivel,
+    tiempo_seg: T0 && T1 ? Math.round((T1 - T0) / 1000) : '', ...ORIGEN
+  };
+  EXP = { e: null, k: null, docs: {}, sol: false, cita: '', modo: '',
+    snap: { nombre, tel, estado: R.estado, nivel: RES.nivel, modelo: `${RES.m.name} ${RES.v.ver}`, modeloKey: P.modelo, ver: P.ver, men: RES.men, plazo: P.plazo,
+            eng: RES.eng, pct: RES.pct, sinEng: P.sinEng, compr: R.compr, cuando: R.cuando, antig: R.antig_t, ingreso: R.ingreso_t } };
+  // Se registra con respuesta (para la clave del expediente). Si la red falla, se manda el registro sencillo.
+  let red = false;
+  REG_PEND = api({ tipo: 'registro_precal', ...lead }, 25000)
+    .then(r => { if (r && r.ok) { EXP.e = r.e; EXP.k = r.k; guardarEXP(); } return r; })
+    .catch(er => { if (er.name !== 'AbortError') { red = true; try { navigator.sendBeacon(SCRIPT_URL, new Blob([JSON.stringify(lead)], { type: 'text/plain' })); } catch (x) {} } return null; })
+    .finally(() => { REG_PEND = null; pintarCamino(); });
+  contar('registro');
+  guardarEXP();
+  mostrarResultado();
+});
+
+function mostrarResultado () {
+  const s = EXP.snap, local = LOCALES.includes(s.estado);
+  const lv = { alta: ['✅ Muy probable', 'alto', 'Vas muy bien', 'Tu perfil se ve sólido para este plan.'],
+               media: ['🟡 Probable', 'medio', 'Vas por buen camino', 'Con tus documentos en orden, tienes buenas posibilidades.'],
+               revisar: ['🧭 Hay que revisarlo juntos', 'rev', 'Sí hay opciones', 'Tu caso necesita una revisión personal: puede ser otro plazo, más enganche o una financiera distinta.'] }[s.nivel];
+  $('r-lvl').textContent = lv[0]; $('r-lvl').className = 'lvl ' + lv[1];
+  $('r-head').innerHTML = `${esc(s.nombre.split(' ')[0])},<br><span class="hl">${lv[2].toLowerCase()}</span>`;
+  $('r-sub').textContent = lv[3];
+  $('r-auto').textContent = s.modelo;
+  $('r-m').textContent = pesos(s.men); $('r-plazo').textContent = `a ${s.plazo} meses`;
+  $('r-eng').textContent = pesos(s.eng);
+  $('r-eng-s').textContent = s.sinEng ? 'por juntar (10%)' : s.pct + '% del precio';
+  const cuandoTxt = { mes: 'Como quieres estrenar este mes, avanza aquí mismo y en la agencia solo firmas.', trim: 'Avánzalo ahora con calma y llegas con todo listo.', luego: 'Puedes avanzarlo cuando quieras; tu plan queda guardado en este celular.', explora: 'Puedes avanzarlo cuando quieras; tu plan queda guardado en este celular.' }[s.cuando];
+  $('r-sigue').textContent = cuandoTxt;
+  const msg = `Hola, soy ${s.nombre}. Armé mi plan para el ${s.modelo}: ${s.sinEng ? 'aún sin enganche' : 'enganche de ' + pesos(s.eng)}, ${s.plazo} meses, mensualidad aprox. de ${pesos(s.men)}. ¿Me ayudas con el siguiente paso?`;
+  const wa = `https://wa.me/${WA_CONTACTO}?text=${encodeURIComponent(msg)}`;
+  $('r-wa').href = wa; $('r-wa').style.display = local ? '' : 'none';
+  $('help').href = wa; $('help').classList.toggle('hide', !local);
+  $('r-alerta').classList.toggle('on', !EXP.alerta && !!s.modeloKey && (s.cuando === 'luego' || s.cuando === 'explora' || s.nivel === 'revisar'));
+  pintarCamino();
+  ir('s-res');
+  setTimeout(() => xp(`¡Listo, ${s.nombre.split(' ')[0]}!`), 300);
+}
+const esc = t => String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+// ══════════════════════════════════════════════════════════════
+// EL CAMINO: documentos → solicitud → cita
+// ══════════════════════════════════════════════════════════════
+const DOCS_POR = {
+  nomina:  [['ine', 'INE vigente', 'Foto de frente y de atrás', 1], ['domicilio', 'Comprobante de domicilio', 'Luz, agua o teléfono, de menos de 3 meses', 1], ['ingresos', 'Recibos de nómina y estados de cuenta', 'Tus últimos 3 recibos y 3 estados de cuenta', 1]],
+  edocta:  [['ine', 'INE vigente', 'Foto de frente y de atrás', 1], ['domicilio', 'Comprobante de domicilio', 'De menos de 3 meses', 1], ['ingresos', 'Estados de cuenta', 'Los últimos 6 meses, donde se vean tus ingresos', 1], ['otro', 'Constancia de situación fiscal', 'Si la tienes', 0]],
+  negocio: [['ine', 'INE vigente', 'Foto de frente y de atrás', 1], ['domicilio', 'Comprobante de domicilio', 'De menos de 3 meses', 1], ['ingresos', 'Estados de cuenta y declaración anual', '6 meses de estados de cuenta y tu última declaración', 1], ['otro', 'Constancia de situación fiscal', '', 1]],
+  efectivo:[['ine', 'INE vigente', 'Foto de frente y de atrás', 1], ['domicilio', 'Comprobante de domicilio', 'De menos de 3 meses', 1], ['ingresos', 'Algo que muestre tus ingresos', 'Estados de cuenta, notas o lo que tengas; tu asesor te dice qué opciones hay', 0]]
+};
+const docsDe = () => DOCS_POR[EXP.snap.compr] || DOCS_POR.nomina;
+const listoDocs = () => docsDe().filter(d => d[3] && !(EXP.docs[d[0]] > 0)).length === 0;
+const hayClave = () => EXP && EXP.e !== null && EXP.e !== undefined && EXP.k;
+
+function pintarCamino () {
+  if (!EXP) return;
+  const req = docsDe().filter(d => d[3]), hechos = req.filter(d => EXP.docs[d[0]] > 0).length;
+  const docsOk = listoDocs(), local = LOCALES.includes(EXP.snap.estado);
+  const set = (id, ok, s, g, n) => { $(id).classList.toggle('ok', ok); $(id + '-s').textContent = s; $(id + '-g').textContent = g; $(id).querySelector('.n').textContent = ok ? '✓' : n; };
+  set('c-docs', docsOk, docsOk ? 'Listos ✓ (puedes agregar más)' : hechos ? `${hechos} de ${req.length} listos` : 'Fotos desde tu celular · 3 minutos', docsOk ? 'Ver' : hechos ? 'Seguir →' : 'Empezar →', 2);
+  set('c-sol', EXP.sol, EXP.sol ? 'Enviada ✓' : 'Tus datos para la financiera · 5 minutos', EXP.sol ? 'Editar' : 'Llenar →', 3);
+  $('c-cita-t').textContent = local && EXP.modo !== 'video' ? 'Agenda tu cita en la agencia' : 'Agenda tu videollamada';
+  set('c-cita', !!EXP.cita, EXP.cita ? cuando(EXP.cita) + ' ✓' : (local ? 'Conoces tu auto, prueba de manejo y revisamos tu plan' : 'Revisamos tu plan con un asesor, sin salir de casa'), EXP.cita ? 'Cambiar' : 'Elegir →', 4);
+  const sig = !docsOk ? 'c-docs' : !EXP.sol ? 'c-sol' : !EXP.cita ? 'c-cita' : '';
+  ['c-docs', 'c-sol', 'c-cita'].forEach(id => $(id).classList.toggle('next', id === sig));
+  $('r-listo').classList.toggle('on', docsOk && EXP.sol && !!EXP.cita);
+  const err = $('r-err');
+  if (!hayClave() && !REG_PEND) { err.textContent = local ? 'No pudimos abrir tu expediente en línea. Toca "Prefiero que me ayude un asesor" y lo hacemos por WhatsApp.' : 'No pudimos abrir tu expediente en línea. Un asesor te va a escribir por WhatsApp para completarlo.'; err.classList.add('on'); }
+  else err.classList.remove('on');
+}
+function volverCamino () { pintarCamino(); ir('s-res'); }
+async function conClave () {
+  if (hayClave()) return true;
+  if (REG_PEND) { const er = $('r-err'); er.textContent = 'Preparando tu expediente…'; er.classList.add('on'); await REG_PEND; }
+  pintarCamino();
+  return hayClave();
+}
+
+// ── Documentos
+async function irDocs () {
+  if (!(await conClave())) return;
+  contar('docs');
+  $('d-list').innerHTML = docsDe().map(([k, t, s, req]) => `<div class="drow ${EXP.docs[k] > 0 ? 'ok' : ''}" id="dr-${k}">
+    <div class="top"><div class="tx"><b>${t}${req ? '' : '<span class="opc">opcional</span>'}</b>${s}</div>
+    <button type="button" class="up" onclick="elegirArchivo('${k}')" ${$('d-ok').checked ? '' : 'disabled'}>${EXP.docs[k] > 0 ? '+ Agregar' : '📷 Subir'}</button></div>
+    <div class="st ${EXP.docs[k] > 0 ? 'on good' : ''}" id="ds-${k}">${EXP.docs[k] > 0 ? `✅ ${EXP.docs[k]} archivo${EXP.docs[k] > 1 ? 's' : ''} recibido${EXP.docs[k] > 1 ? 's' : ''}` : ''}</div></div>`).join('');
+  ir('s-docs');
+}
+$('d-ok').addEventListener('change', e => document.querySelectorAll('#d-list .up').forEach(b => b.disabled = !e.target.checked));
+const inputArchivo = Object.assign(document.createElement('input'), { type: 'file', accept: 'image/*,application/pdf', multiple: true });
+inputArchivo.style.display = 'none'; document.body.appendChild(inputArchivo);
+let docActual = '';
+function elegirArchivo (k) { docActual = k; inputArchivo.value = ''; inputArchivo.click(); }
+inputArchivo.addEventListener('change', () => subirArchivos(docActual, [...inputArchivo.files]));
+
+function aBase64 (blob) { return new Promise((ok, no) => { const r = new FileReader(); r.onload = () => ok(String(r.result).split(',')[1]); r.onerror = no; r.readAsDataURL(blob); }); }
+// Las fotos se achican antes de subirlas (más rápido y sin gastar datos)
+function comprimir (file) {
+  return new Promise(ok => {
+    if (!/^image\/(jpeg|png|webp)$/.test(file.type)) return ok(file);
+    const url = URL.createObjectURL(file), img = new Image();
+    img.onload = () => {
+      const max = 1800, f = Math.min(1, max / Math.max(img.width, img.height));
+      const c = document.createElement('canvas'); c.width = Math.round(img.width * f); c.height = Math.round(img.height * f);
+      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); URL.revokeObjectURL(url);
+      c.toBlob(b => ok(b && b.size < file.size ? b : file), 'image/jpeg', 0.82);
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); ok(file); };
+    img.src = url;
+  });
+}
+async function subirArchivos (k, files) {
+  if (!files.length) return;
+  const st = $('ds-' + k), row = $('dr-' + k), btn = row.querySelector('.up');
+  btn.disabled = true; st.className = 'st on';
+  let ok = 0, fallo = '';
+  for (let i = 0; i < files.length; i++) {
+    st.textContent = `Subiendo ${files.length > 1 ? (i + 1) + ' de ' + files.length : ''}…`;
+    try {
+      const f = await comprimir(files[i]);
+      const mime = f.type || files[i].type || (/\.pdf$/i.test(files[i].name) ? 'application/pdf' : '');
+      if (f.size > 10 * 1024 * 1024) { fallo = 'Ese archivo pesa más de 10 MB. Prueba con una foto.'; continue; }
+      const r = await api({ tipo: 'exp_archivo', e: EXP.e, k: EXP.k, doc: k, mime, b64: await aBase64(f) }, 90000);
+      if (r && r.ok) { ok++; EXP.docs[k] = (EXP.docs[k] || 0) + 1; guardarEXP(); contar('doc_subido'); }
+      else fallo = { archivo: 'Ese tipo de archivo no se puede subir. Usa foto o PDF.', grande: 'El archivo es muy pesado.', limite: 'Ya subiste muchos archivos; tu asesor te ayuda con el resto.' }[r && r.error] || 'No se pudo subir. Intenta de nuevo.';
+    } catch (er) { fallo = 'Se cortó la conexión. Intenta de nuevo.'; }
+  }
+  btn.disabled = !$('d-ok').checked;
+  if (EXP.docs[k] > 0) { row.classList.add('ok'); btn.textContent = '+ Agregar'; }
+  st.className = 'st on ' + (fallo ? 'bad' : 'good');
+  st.textContent = fallo ? (ok ? `✅ ${ok} subido(s). ` : '⚠️ ') + fallo : `✅ ${EXP.docs[k]} archivo${EXP.docs[k] > 1 ? 's' : ''} recibido${EXP.docs[k] > 1 ? 's' : ''}`;
+}
+function trasDocs () { if (!EXP.sol) irSol(); else if (!EXP.cita) irCita(); else volverCamino(); }
+
+// ── Solicitud
+const SOL = ['nombre', 'nacimiento', 'civil', 'correo', 'dependientes', 'calle', 'colonia', 'cp', 'municipio', 'estado', 'tiempoDom', 'vivienda', 'empresa', 'puesto', 'ingresoExacto', 'antiguedad', 'telTrabajo', 'ref1', 'ref1tel', 'ref1rel', 'ref2', 'ref2tel', 'ref2rel'];
+const LS_SOL = 'adg_solicitud';
+async function irSol () {
+  if (!(await conClave())) return;
+  let g = {}; try { g = JSON.parse(localStorage.getItem(LS_SOL) || '{}'); } catch (e) {}
+  const pre = { nombre: EXP.snap.nombre, estado: EXP.snap.estado === 'Otro' ? '' : EXP.snap.estado, antiguedad: EXP.snap.antig };
+  SOL.forEach(k => { const el = $('s-' + k); if (!el.value) el.value = g[k] || pre[k] || ''; });
+  ir('s-sol');
+}
+$('sol-form').addEventListener('input', () => { const g = {}; SOL.forEach(k => g[k] = $('s-' + k).value); try { localStorage.setItem(LS_SOL, JSON.stringify(g)); } catch (e) {} });
+$('sol-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const err = $('s-err'); err.classList.remove('on');
+  let primero = null;
+  const malo = (k, cond) => { $('s-' + k).classList.toggle('bad', cond); if (cond && !primero) primero = $('s-' + k); };
+  SOL.forEach(k => { const el = $('s-' + k); if (el.required) malo(k, !el.value.trim()); });
+  malo('correo', !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test($('s-correo').value.trim()));
+  malo('cp', !/^\d{5}$/.test($('s-cp').value.trim()));
+  malo('ref1tel', normTel($('s-ref1tel').value).length !== 10);
+  malo('ref2tel', normTel($('s-ref2tel').value).length !== 10);
+  malo('ingresoExacto', !/\d/.test($('s-ingresoExacto').value));
+  if (primero) { err.textContent = '⚠️ Revisa los campos marcados en rojo'; err.classList.add('on'); primero.scrollIntoView({ block: 'center', behavior: 'smooth' }); return; }
+  const datos = {}; SOL.forEach(k => datos[k] = $('s-' + k).value.trim());
+  const s = EXP.snap;
+  datos.plan = `${s.modelo} · enganche ${s.sinEng ? 'por juntar' : pesos(s.eng)} · ${s.plazo} meses · ≈ ${pesos(s.men)}/mes · comprueba ingresos con: ${s.compr}`;
+  const btn = $('s-btn'); btn.classList.add('loading'); btn.disabled = true;
+  try {
+    const r = await api({ tipo: 'exp_solicitud', e: EXP.e, k: EXP.k, datos }, 60000);
+    if (!r || !r.ok) throw new Error(r && r.error);
+    EXP.sol = true; guardarEXP(); contar('solicitud'); xp('¡Solicitud enviada!');
+    if (!EXP.cita) irCita(); else volverCamino();
+  } catch (er) { err.textContent = '⚠️ No se pudo enviar. Revisa tu internet e intenta de nuevo.'; err.classList.add('on'); }
+  btn.classList.remove('loading'); btn.disabled = false;
+});
+
+// ── Cita (agencia para la zona local; videollamada para fuera)
+const HORARIO = { 1: ['10:00', '11:00', '12:00', '13:00', '16:00', '17:00', '18:00'], 2: ['10:00', '11:00', '12:00', '13:00', '16:00', '17:00', '18:00'], 3: ['10:00', '11:00', '12:00', '13:00', '16:00', '17:00', '18:00'],
+                  4: ['10:00', '11:00', '12:00', '13:00', '16:00', '17:00', '18:00'], 5: ['10:00', '11:00', '12:00', '13:00', '16:00', '17:00', '18:00'], 6: ['10:00', '11:00', '12:00', '13:00'], 0: [] };
+const AGENCIA = 'Geely Serdán · Blvd. Hermanos Serdán 788, San Rafael Oriente, Puebla';
+const DIAS = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'], MESES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+const pad = n => String(n).padStart(2, '0');
+const isoLocal = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+function cuando (iso) { const [f, h] = iso.split('T'); const d = new Date(f + 'T12:00'); return `${DIAS[d.getDay()]} ${d.getDate()} ${MESES[d.getMonth()]} · ${h}`; }
+const CI = { dia: '', hora: '' };
+function horasDe (d) { const ahora = new Date(), mismo = isoLocal(d) === isoLocal(ahora); return (HORARIO[d.getDay()] || []).filter(h => !mismo || (new Date(isoLocal(d) + 'T' + h) - ahora) > 2 * 3600000); }
+async function irCita () {
+  if (!(await conClave())) return;
+  const local = LOCALES.includes(EXP.snap.estado), video = !local || EXP.modo === 'video';
+  $('ci-titulo').textContent = video ? 'Agenda tu videollamada' : 'Agenda tu visita a la agencia';
+  $('ci-sub').textContent = video ? 'Un asesor revisa contigo tu plan y tus documentos por videollamada, sin que salgas de casa.' : 'Conoces tu auto, haces tu prueba de manejo y revisamos tu plan. Te esperamos con todo listo.';
+  $('ci-lugar').innerHTML = video ? '<span>📹</span><div><b>Videollamada por WhatsApp</b><br>Te mandamos el link antes de la hora.</div>' : `<span>📍</span><div><b>${AGENCIA.split(' · ')[0]}</b><br>${AGENCIA.split(' · ')[1]}</div>`;
+  $('ci-alt').innerHTML = local ? (video ? '<button class="link-sm" onclick="cambiarModo(\'\')">Prefiero ir a la agencia</button>' : '<button class="link-sm" onclick="cambiarModo(\'video\')">Prefiero una videollamada</button>') : 'Horario del centro de México.';
+  const dias = []; const d = new Date(); d.setHours(12, 0, 0, 0);
+  for (let i = 0; dias.length < 7 && i < 14; i++) { const x = new Date(d.getTime() + i * 86400000); if (horasDe(x).length) dias.push(x); }
+  if (!dias.find(x => isoLocal(x) === CI.dia)) { CI.dia = isoLocal(dias[0]); CI.hora = ''; }
+  $('ci-dias').innerHTML = dias.map(x => `<button type="button" class="dia ${isoLocal(x) === CI.dia ? 'sel' : ''}" onclick="elegirDia('${isoLocal(x)}')"><span>${i0(x) === 0 ? 'Hoy' : i0(x) === 1 ? 'Mañana' : DIAS[x.getDay()]}</span><b>${x.getDate()}</b><span>${MESES[x.getMonth()]}</span></button>`).join('');
+  pintarHoras();
+  $('ci-err').classList.remove('on');
+  ir('s-cita');
+}
+const i0 = x => Math.round((new Date(isoLocal(x) + 'T12:00') - new Date(isoLocal(new Date()) + 'T12:00')) / 86400000);
+function cambiarModo (m) { EXP.modo = m; guardarEXP(); irCita(); }
+function elegirDia (iso) { CI.dia = iso; CI.hora = ''; document.querySelectorAll('.dia').forEach(b => b.classList.toggle('sel', b.getAttribute('onclick').includes(iso))); pintarHoras(); }
+function pintarHoras () {
+  const hs = horasDe(new Date(CI.dia + 'T12:00'));
+  $('ci-horas').innerHTML = hs.map(h => `<button type="button" class="${h === CI.hora ? 'sel' : ''}" onclick="elegirHora('${h}')">${h}</button>`).join('');
+  $('ci-btn').disabled = !CI.hora;
+}
+function elegirHora (h) { CI.hora = h; pintarHoras(); }
+async function agendar () {
+  const local = LOCALES.includes(EXP.snap.estado), modo = !local || EXP.modo === 'video' ? 'video' : 'agencia';
+  const fecha = CI.dia + 'T' + CI.hora, btn = $('ci-btn'), err = $('ci-err');
+  btn.classList.add('loading'); btn.disabled = true; err.classList.remove('on');
+  try {
+    const r = await api({ tipo: 'exp_cita', e: EXP.e, k: EXP.k, fecha, modo }, 40000);
+    if (!r || !r.ok) throw new Error();
+    EXP.cita = fecha; guardarEXP(); contar('cita'); xp('¡Cita agendada!');
+    volverCamino();
+  } catch (er) { err.textContent = '⚠️ No se pudo agendar. Intenta de nuevo.'; err.classList.add('on'); }
+  btn.classList.remove('loading'); btn.disabled = !CI.hora;
+}
+
+if (VARIANTE === 'B') { try { PRUEBA.B(); } catch (e) {} }
+
+// ══════════════════════════════════════════════════════════════
+// ALERTA DE MENSUALIDAD — "avísame cuando baje". La etiqueta [alerta …] la lee el CRM cada mes
+// con los precios nuevos y le dice al asesor a quién ya le alcanza.
+// ══════════════════════════════════════════════════════════════
+const etiquetaAlerta = meta => `[alerta modelo=${P.modelo} ver=${P.ver} eng=${P.sinEng ? 10 : P.eng} plazo=${P.plazo} meta=${Math.round(meta)}]`;
+let AL_EDO = '';
+function abrirAlerta () {
+  const c = calcPlan(), r = $('al-meta');
+  r.min = Math.max(1000, Math.floor(c.men * 0.4 / 100) * 100); r.max = Math.floor(c.men / 100) * 100; r.value = Math.floor(c.men * 0.8 / 100) * 100;
+  const pintar = () => { $('al-meta-t').textContent = pesos(+r.value); r.style.setProperty('--p', ((r.value - r.min) / (r.max - r.min) * 100) + '%'); };
+  r.oninput = pintar; pintar();
+  $('al-edo').innerHTML = ['Puebla', 'Tlaxcala', 'Veracruz', 'Hidalgo', 'CDMX', 'Estado de México', 'Otro'].map(e => `<button type="button" data-e="${e}">${e === 'Otro' ? 'Otro estado' : e}</button>`).join('');
+  $('al-edo').onclick = e => { const b = e.target.closest('button'); if (!b) return; AL_EDO = b.dataset.e; document.querySelectorAll('#al-edo button').forEach(x => x.classList.toggle('sel', x === b)); };
+  $('al-box').classList.add('on'); $('al-abrir').style.display = 'none'; contar('alerta_abre');
+}
+function enviarAlerta () {
+  const err = $('al-err'); err.classList.remove('on');
+  const nombre = $('al-nombre').value.trim().replace(/\s+/g, ' '), tel = normTel($('al-tel').value), meta = +$('al-meta').value;
+  $('al-nombre').classList.toggle('bad', nombre.length < 3); $('al-tel').classList.toggle('bad', tel.length !== 10);
+  if (nombre.length < 3 || tel.length !== 10 || !AL_EDO) { err.textContent = tel && tel.length !== 10 ? '⚠️ Tu WhatsApp debe tener 10 dígitos' : nombre.length >= 3 && tel.length === 10 ? '⚠️ Toca el estado donde vives' : '⚠️ Escribe tu nombre y tu WhatsApp'; err.classList.add('on'); return; }
+  const c = calcPlan();
+  const lead = {
+    fecha: new Date().toLocaleString('es-MX', { timeZone: 'America/Mexico_City' }), nombre, telefono: tel, perfil: '—',
+    modelo: `${c.m.name} ${c.v.ver}`, otros_modelos: '', ingreso: '', enganche: P.sinEng ? 'Sin enganche aún' : pesos(c.eng), historial: '',
+    mensualidad: `${pesos(c.men)} a ${P.plazo} meses`, acepto_privacidad: 'Sí', estado: AL_EDO, fuenteContacto: 'Alerta de mensualidad',
+    notas: `🔔 Quiere que le avisen cuando el ${c.m.name} ${c.v.ver} baje a ${pesos(meta)}/mes (hoy ${pesos(c.men)} con ${c.pct}% de enganche a ${P.plazo} meses, ${MES}). ${etiquetaAlerta(meta)}`,
+    tiempo_seg: T0 ? Math.round((Date.now() - T0) / 1000) : '', ...ORIGEN
+  };
+  let ok = false; try { ok = navigator.sendBeacon(SCRIPT_URL, new Blob([JSON.stringify(lead)], { type: 'text/plain' })); } catch (e) {}
+  if (!ok) { try { fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', keepalive: true, body: JSON.stringify(lead) }); ok = true; } catch (e) {} }
+  if (!ok) { err.textContent = '⚠️ No se pudo enviar. Revisa tu internet.'; err.classList.add('on'); return; }
+  contar('alerta'); $('al-box').classList.remove('on'); $('al-ok').classList.add('on'); xp('🔔 Alerta activada');
+}
+// Ya registrado: un toque agrega la alerta a su lead (meta: 85% de su mensualidad actual)
+async function alertaRegistrado () {
+  const b = document.querySelector('#r-alerta .up'); b.disabled = true; b.textContent = '…';
+  const meta = Math.floor(EXP.snap.men * 0.85 / 100) * 100;
+  try {
+    const r = await api({ tipo: 'exp_alerta', e: EXP.e, k: EXP.k, etiqueta: etiquetaAlertaSnap(meta), meta }, 20000);
+    if (!r || !r.ok) throw new Error();
+    EXP.alerta = meta; guardarEXP(); contar('alerta');
+    $('r-alerta').innerHTML = `<span>✅ Listo. Si baja a <b>${pesos(meta)}/mes</b> o menos, te escribimos por WhatsApp.</span>`;
+  } catch (e) { b.disabled = false; b.textContent = 'Avísame'; }
+}
+const etiquetaAlertaSnap = meta => { const s = EXP.snap; return `[alerta modelo=${s.modeloKey} ver=${s.ver} eng=${s.sinEng ? 10 : s.pct} plazo=${s.plazo} meta=${Math.round(meta)}]`; };
+
+// ── Retomar: si ya armó su plan en este celular, puede seguir donde se quedó
+(function () {
+  let g = null; try { g = JSON.parse(localStorage.getItem(LS) || 'null'); } catch (e) {}
+  if (!g || !g.k || !g.snap || Date.now() - (g.t || 0) > 45 * 86400000) return;
+  EXP = g;
+  $('resume-t').textContent = `${g.snap.nombre.split(' ')[0]}, tu plan del ${g.snap.modelo} está guardado.`;
+  $('resume').classList.add('on');
+})();
+function retomar () { mostrarResultado(); }
+</script>
+</body>
+</html>

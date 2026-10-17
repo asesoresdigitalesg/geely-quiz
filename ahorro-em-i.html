@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#080810">
+<title>¿Cuánto ahorrarías con una Geely EM-i? | Geely Serdán Puebla</title>
+<meta name="description" content="Calcula cuánto dejarías de gastar en gasolina con la EX5 EM-i o la Monjaro EM-i, y qué parte de tu mensualidad se paga sola con ese ahorro.">
+<meta property="og:title" content="¿Cuánto dejarías de gastar en gasolina? · Calculadora EM-i">
+<meta property="og:description" content="EX5 EM-i y Monjaro EM-i: tu ahorro al mes y cuánto de tu mensualidad se paga solo. 60 segundos, sin registrarte.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080810;
+    --surface: #0f0f1a;
+    --card: #13131f;
+    --border: #1c1c2e;
+    --border-hi: #26263d;
+    --accent: #00d4ff;
+    --accent2: #0055ff;
+    --gold: #f5c518;
+    --green: #00e59b;
+    --orange: #ff8c00;
+    --red: #ff4444;
+    --text: #eeeef8;
+    --muted: #5a5a7a;
+    --muted2: #8a8aa8;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+  button { font-family: inherit; color: inherit; }
+  .bg-grid { position: fixed; inset: 0; background-image: linear-gradient(rgba(0,212,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(0,212,255,0.025) 1px, transparent 1px); background-size: 44px 44px; pointer-events: none; z-index: 0; }
+  .bg-glow { position: fixed; top: -40vh; left: 50%; transform: translateX(-50%); width: 90vw; height: 70vh; background: radial-gradient(ellipse, rgba(0,60,200,0.13) 0%, transparent 70%); pointer-events: none; z-index: 0; }
+  .wrapper { position: relative; z-index: 1; max-width: 600px; margin: 0 auto; padding: 0 18px calc(60px + env(safe-area-inset-bottom)); }
+  .topbar { display: flex; align-items: center; justify-content: center; padding: 22px 0 0; gap: 10px; }
+  .topbar-logo { font-size: 11px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+  .topbar-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--muted); opacity: 0.4; }
+  .screen { display: none; }
+  .screen.on { display: block; animation: fadeUp 0.38s cubic-bezier(0.4,0,0.2,1); }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
+
+  /* ── INTRO ── */
+  .intro { text-align: center; padding: 40px 0 28px; }
+  .badge { display: inline-flex; align-items: center; gap: 7px; background: rgba(0,212,255,0.07); border: 1px solid rgba(0,212,255,0.18); border-radius: 100px; padding: 7px 18px; font-size: 11px; font-weight: 600; letter-spacing: 0.13em; text-transform: uppercase; color: var(--accent); margin-bottom: 24px; }
+  .badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: blink 2s infinite; }
+  @keyframes blink { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.3;transform:scale(1.5)} }
+  .headline { font-family: 'Bebas Neue', sans-serif; font-size: clamp(42px, 12vw, 70px); line-height: 0.93; letter-spacing: 0.02em; margin-bottom: 6px; }
+  .hl { background: linear-gradient(90deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .sub { color: var(--muted2); font-size: 15px; font-weight: 300; line-height: 1.65; margin-top: 18px; }
+  .sub b { color: var(--text); font-weight: 500; }
+  .perks { display: flex; justify-content: center; gap: 18px; margin-top: 22px; flex-wrap: wrap; }
+  .perk { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted2); }
+
+  .btn-main { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; background: linear-gradient(135deg, var(--accent2), var(--accent)); color: #000; font-size: 16px; font-weight: 700; letter-spacing: 0.04em; border: none; border-radius: 13px; padding: 18px 24px; cursor: pointer; transition: transform .2s, box-shadow .2s, opacity .2s; text-decoration: none; }
+  .btn-main:hover { transform: translateY(-2px); box-shadow: 0 14px 40px rgba(0,85,255,0.35); }
+  .btn-main:disabled { opacity: .35; pointer-events: none; }
+  .btn-main.pulse { animation: glowpulse 2.4s ease-in-out infinite; }
+  @keyframes glowpulse { 0%,100% { box-shadow: 0 0 0 rgba(0,212,255,0); } 50% { box-shadow: 0 0 28px rgba(0,212,255,0.35); } }
+
+  /* Escasez */
+  .cupo { margin-top: 16px; background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px 16px; }
+  .cupo-top { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; font-size: 12px; color: var(--muted2); margin-bottom: 9px; }
+  .cupo-top b { color: var(--text); font-weight: 700; }
+  .cupo-top .cupo-n { color: var(--gold); font-weight: 700; white-space: nowrap; }
+  .cupo-bar { height: 6px; border-radius: 6px; background: var(--border); overflow: hidden; }
+  .cupo-fill { height: 100%; width: 0; border-radius: 6px; background: linear-gradient(90deg, var(--gold), var(--orange)); transition: width 1.2s cubic-bezier(.4,0,.2,1); }
+  .cupo-foot { display: flex; justify-content: space-between; margin-top: 8px; font-size: 11px; color: var(--muted); }
+  .cupo-foot .live { display: inline-flex; align-items: center; gap: 6px; }
+  .cupo-foot .live::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: blink 2s infinite; }
+
+  .legal { text-align: center; font-size: 11px; color: var(--muted); margin-top: 18px; line-height: 1.55; }
+  .sec-label { font-size: 10px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin: 36px 0 12px; text-align: center; }
+  .specs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .spec { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px 8px; text-align: center; }
+  .spec-v { font-family: 'Bebas Neue', sans-serif; font-size: 28px; line-height: 1; color: var(--accent); letter-spacing: .02em; }
+  .spec-l { font-size: 10px; color: var(--muted2); text-transform: uppercase; letter-spacing: .08em; margin-top: 4px; font-weight: 600; }
+  .gets { display: grid; gap: 8px; }
+  .get { display: flex; gap: 14px; align-items: center; background: var(--card); border: 1px solid var(--border); border-radius: 13px; padding: 14px 16px; font-size: 13px; color: var(--muted2); line-height: 1.45; }
+  .get b { display: block; color: var(--text); font-weight: 500; font-size: 14px; margin-bottom: 1px; }
+  .get-ico { font-size: 22px; width: 32px; text-align: center; flex-shrink: 0; }
+
+  /* ── PREGUNTAS ── */
+  .progress-wrap { margin: 28px 0 22px; }
+  .progress-meta { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 9px; }
+  .progress-meta .xp { color: var(--gold); }
+  .progress-bar { height: 3px; background: var(--border); border-radius: 10px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent2), var(--accent)); border-radius: 10px; transition: width 0.55s cubic-bezier(0.4,0,0.2,1); }
+  .q-card { background: var(--card); border: 1px solid var(--border); border-radius: 22px; padding: 28px 24px 26px; margin-bottom: 14px; animation: fadeUp 0.38s cubic-bezier(0.4,0,0.2,1); }
+  .q-step { font-size: 10px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; }
+  .q-title { font-size: 21px; font-weight: 500; line-height: 1.3; margin-bottom: 6px; }
+  .q-sub { font-size: 13px; color: var(--muted2); font-weight: 300; margin-bottom: 24px; line-height: 1.5; }
+  .options { display: grid; gap: 11px; }
+  .opt { display: flex; align-items: center; gap: 14px; background: var(--surface); border: 1.5px solid var(--border); border-radius: 13px; padding: 15px 18px; cursor: pointer; transition: border-color 0.18s, background 0.18s, transform 0.15s; text-align: left; font-size: 14px; width: 100%; }
+  .opt:hover { border-color: rgba(0,212,255,0.35); transform: translateY(-1px); }
+  .opt.sel { border-color: var(--accent); background: rgba(0,212,255,0.05); }
+  .opt-icon { font-size: 22px; flex-shrink: 0; width: 32px; text-align: center; }
+  .opt-body { flex: 1; }
+  .opt-body strong { display: block; font-weight: 500; font-size: 14px; }
+  .opt-body small { font-size: 12px; color: var(--muted2); font-weight: 300; }
+  .opt-ring { width: 19px; height: 19px; border-radius: 50%; border: 1.5px solid var(--border-hi); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--bg); }
+  .opt.sel .opt-ring { background: var(--accent); border-color: var(--accent); }
+  .opt.sel .opt-ring::after { content: '✓'; font-weight: 800; }
+  .km-big { text-align: center; font-family: 'Bebas Neue', sans-serif; font-size: 72px; line-height: 1; letter-spacing: .02em; }
+  .km-big small { font-size: 26px; color: var(--muted2); margin-left: 4px; }
+  .km-tag { text-align: center; font-size: 13px; color: var(--accent); font-weight: 500; min-height: 20px; margin: 2px 0 18px; }
+  input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 32px; background: transparent; cursor: pointer; }
+  input[type=range]::-webkit-slider-runnable-track { height: 4px; border-radius: 4px; background: linear-gradient(90deg, var(--accent2), var(--accent) var(--p,15%), var(--border) var(--p,15%)); }
+  input[type=range]::-moz-range-track { height: 4px; border-radius: 4px; background: var(--border); }
+  input[type=range]::-moz-range-progress { height: 4px; border-radius: 4px; background: var(--accent); }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 28px; height: 28px; margin-top: -12px; border-radius: 50%; background: #fff; border: 5px solid var(--accent); box-shadow: 0 0 18px rgba(0,212,255,.55); }
+  input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; background: #fff; border: 5px solid var(--accent); }
+  .quick { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; margin: 14px 0 22px; }
+  .quick button { background: var(--surface); border: 1.5px solid var(--border); border-radius: 10px; padding: 10px 4px; font-size: 13px; font-weight: 500; cursor: pointer; color: var(--muted2); }
+  .quick button.sel { border-color: var(--accent); color: var(--text); }
+  .btn-back { background: none; border: none; color: var(--muted); font-size: 12px; cursor: pointer; text-decoration: underline; display: block; margin: 14px auto 0; }
+  .xp-pop { position: fixed; left: 50%; top: 22%; transform: translateX(-50%); font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: .04em; color: var(--gold); pointer-events: none; opacity: 0; z-index: 30; text-shadow: 0 0 20px rgba(245,197,24,.5); }
+  .xp-pop.go { animation: xp 0.9s ease-out; }
+  @keyframes xp { 0% { opacity: 0; transform: translate(-50%, 10px) scale(.8); } 25% { opacity: 1; transform: translate(-50%, 0) scale(1.05); } 100% { opacity: 0; transform: translate(-50%, -40px) scale(1); } }
+
+  /* ── ANALIZANDO ── */
+  .analiza { text-align: center; padding: 70px 0 30px; }
+  .radar { width: 120px; height: 120px; margin: 0 auto 28px; border-radius: 50%; border: 1.5px solid rgba(0,212,255,.25); position: relative; display: grid; place-items: center; }
+  .radar::before { content: ''; position: absolute; inset: 14px; border-radius: 50%; border: 1px solid rgba(0,212,255,.15); }
+  .radar::after { content: ''; position: absolute; inset: 0; border-radius: 50%; background: conic-gradient(from 0deg, rgba(0,212,255,.45), transparent 30%); animation: spin 1.4s linear infinite; }
+  .radar span { position: relative; z-index: 1; font-family: 'Bebas Neue', sans-serif; font-size: 34px; color: var(--accent); }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .a-list { display: grid; gap: 10px; max-width: 330px; margin: 0 auto; text-align: left; }
+  .a-item { display: flex; gap: 12px; align-items: center; font-size: 14px; color: var(--muted); transition: color .3s; }
+  .a-item i { width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--border-hi); flex-shrink: 0; display: grid; place-items: center; font-style: normal; font-size: 11px; color: var(--bg); }
+  .a-item.on { color: var(--text); }
+  .a-item.on i { background: var(--green); border-color: var(--green); }
+  .a-item.on i::after { content: '✓'; font-weight: 800; }
+
+  /* ── GATE ── */
+  .gate-head { text-align: center; padding: 30px 0 18px; }
+  .gate-head .headline { font-size: clamp(36px, 10vw, 54px); }
+  .lvl { display: inline-flex; align-items: center; gap: 8px; border-radius: 100px; padding: 7px 16px; font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 18px; }
+  .lvl.alto { background: rgba(0,229,155,0.1); border: 1px solid rgba(0,229,155,0.3); color: var(--green); }
+  .lvl.medio { background: rgba(0,212,255,0.08); border: 1px solid rgba(0,212,255,0.25); color: var(--accent); }
+  .lvl.base { background: rgba(245,197,24,0.08); border: 1px solid rgba(245,197,24,0.25); color: var(--gold); }
+  .result-card { background: var(--card); border: 1px solid var(--border); border-radius: 22px; padding: 26px 22px; margin-bottom: 14px; position: relative; overflow: hidden; }
+  .result-tag { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+  .big-save { font-family: 'Bebas Neue', sans-serif; font-size: clamp(60px, 18vw, 92px); line-height: .9; letter-spacing: .02em; background: linear-gradient(135deg, var(--text) 30%, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .big-save small { font-size: .32em; -webkit-text-fill-color: var(--muted2); margin-left: 6px; letter-spacing: .06em; }
+  .fin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 18px; }
+  .fin-item { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 15px 14px; }
+  .fin-item.wide { grid-column: 1 / -1; }
+  .fin-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; margin-bottom: 6px; }
+  .fin-val { font-family: 'Bebas Neue', sans-serif; font-size: 28px; color: var(--accent); letter-spacing: 0.02em; line-height: 1; }
+  .fin-val.green { color: var(--green); }
+  .fin-val.gold { color: var(--gold); }
+  .fin-sub { font-size: 11px; color: var(--muted2); margin-top: 4px; font-weight: 300; line-height: 1.4; }
+  .locked .lk { filter: blur(9px); user-select: none; }
+  .lock-over { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; background: rgba(19,19,31,.72); text-align: center; padding: 20px; }
+  .lock-over .ic { font-size: 30px; }
+  .lock-over b { font-size: 15px; font-weight: 700; }
+  .lock-over span { font-size: 12px; color: var(--muted2); }
+  .form-card { background: var(--card); border: 1px solid rgba(0,212,255,0.25); border-radius: 22px; padding: 26px 22px; box-shadow: 0 0 40px rgba(0,85,255,0.08); }
+  .form-title { font-size: 19px; font-weight: 500; margin-bottom: 4px; }
+  .form-sub { font-size: 13px; color: var(--muted2); font-weight: 300; margin-bottom: 20px; line-height: 1.5; }
+  .inp-wrap { position: relative; margin-bottom: 12px; }
+  .inp-wrap span { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); font-size: 16px; pointer-events: none; }
+  .inp { width: 100%; background: var(--surface); border: 1.5px solid var(--border); border-radius: 13px; padding: 16px 16px 16px 46px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 16px; outline: none; transition: border-color .2s; -webkit-appearance: none; appearance: none; }
+  .inp:focus { border-color: var(--accent); }
+  .inp.bad { border-color: var(--red); }
+  select.inp { padding-right: 40px; background-image: linear-gradient(45deg, transparent 50%, var(--muted2) 50%), linear-gradient(135deg, var(--muted2) 50%, transparent 50%); background-position: calc(100% - 22px) 50%, calc(100% - 16px) 50%; background-size: 6px 6px; background-repeat: no-repeat; }
+  select.inp option { background: var(--surface); }
+  .check { display: flex; gap: 10px; align-items: flex-start; margin: 6px 0 16px; font-size: 12px; color: var(--muted2); line-height: 1.5; cursor: pointer; }
+  .check input { width: 18px; height: 18px; margin-top: 1px; accent-color: var(--accent); flex-shrink: 0; }
+  .check a { color: var(--accent); text-decoration: none; }
+  .err { display: none; background: rgba(255,68,68,0.1); border: 1px solid rgba(255,68,68,0.3); border-radius: 10px; padding: 10px 14px; font-size: 12px; color: #ff6b6b; text-align: center; margin-bottom: 12px; }
+  .err.on { display: block; }
+  .spinner { width: 18px; height: 18px; border: 2.5px solid rgba(0,0,0,0.2); border-top-color: #000; border-radius: 50%; animation: spin .7s linear infinite; display: none; }
+  .loading .spinner { display: block; }
+  .loading .btn-t { display: none; }
+
+  /* ── REPORTE ── */
+  .pase { position: relative; margin: 28px 0 14px; border-radius: 20px; padding: 22px 22px 20px; background: linear-gradient(135deg, #0b1830 0%, #101028 55%, #1a1405 100%); border: 1px solid rgba(245,197,24,.35); overflow: hidden; box-shadow: 0 18px 50px rgba(0,0,0,.45), 0 0 30px rgba(245,197,24,.08); animation: paseIn .8s cubic-bezier(.2,.8,.2,1); }
+  @keyframes paseIn { from { opacity: 0; transform: translateY(24px) rotate(-2deg) scale(.96); } to { opacity: 1; transform: none; } }
+  .pase::before { content: ''; position: absolute; inset: 0; background: linear-gradient(115deg, transparent 35%, rgba(255,255,255,.07) 50%, transparent 65%); transform: translateX(-100%); animation: shine 3.5s ease-in-out 1s infinite; }
+  @keyframes shine { 0% { transform: translateX(-100%); } 40%,100% { transform: translateX(100%); } }
+  .pase::after { content: ''; position: absolute; left: -10px; right: -10px; top: 108px; border-top: 1.5px dashed rgba(245,197,24,.25); }
+  .pase-top { display: flex; justify-content: space-between; align-items: flex-start; height: 86px; }
+  .pase-k { font-size: 10px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--gold); }
+  .pase-t { font-family: 'Bebas Neue', sans-serif; font-size: 30px; line-height: 1; letter-spacing: .03em; margin-top: 6px; }
+  .pase-folio { text-align: right; }
+  .pase-folio b { display: block; font-family: 'Bebas Neue', sans-serif; font-size: 40px; line-height: 1; color: var(--gold); }
+  .pase-folio span { font-size: 10px; color: var(--muted2); letter-spacing: .1em; text-transform: uppercase; }
+  .pase-row { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 10px; margin-top: 26px; }
+  .pase-row div span { display: block; font-size: 9px; color: var(--muted2); letter-spacing: .12em; text-transform: uppercase; margin-bottom: 3px; }
+  .pase-row div b { font-size: 14px; font-weight: 500; overflow-wrap: anywhere; }
+  .bars { display: grid; gap: 12px; margin-top: 20px; }
+  .bar-l { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted2); margin-bottom: 6px; }
+  .bar-l b { color: var(--text); font-weight: 500; }
+  .bar-t { height: 10px; border-radius: 6px; background: var(--surface); overflow: hidden; }
+  .bar-f { height: 100%; width: 0; border-radius: 6px; transition: width 1.2s cubic-bezier(.4,0,.2,1); }
+  .bar-f.hoy { background: linear-gradient(90deg, var(--orange), var(--red)); }
+  .bar-f.emi { background: linear-gradient(90deg, var(--accent2), var(--accent)); }
+  .steps { display: grid; gap: 0; }
+  .step { display: flex; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--muted2); line-height: 1.5; }
+  .step:last-child { border-bottom: none; }
+  .step-d { flex-shrink: 0; width: 48px; text-align: center; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 6px 0; }
+  .step-d b { display: block; font-family: 'Bebas Neue', sans-serif; font-size: 22px; line-height: 1; color: var(--accent); }
+  .step-d span { font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .step strong { display: block; color: var(--text); font-weight: 500; font-size: 14px; }
+  .cta-wa { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; background: #22c55e; color: #fff; font-size: 15px; font-weight: 700; border: none; border-radius: 13px; padding: 18px 24px; cursor: pointer; text-decoration: none; margin: 18px 0 8px; transition: all 0.2s; animation: glowwa 2.4s ease-in-out infinite; }
+  @keyframes glowwa { 0%,100% { box-shadow: 0 0 0 rgba(34,197,94,0); } 50% { box-shadow: 0 0 28px rgba(34,197,94,.4); } }
+  .cta-wa:hover { transform: translateY(-2px); background: #16a34a; }
+  .cta-wa svg { width: 20px; height: 20px; fill: #fff; }
+  .note { font-size: 11px; color: var(--muted); line-height: 1.6; margin-top: 14px; }
+
+  .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 50; align-items: center; justify-content: center; padding: 20px; }
+  .modal.on { display: flex; }
+  .modal-box { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 28px 24px; max-width: 480px; width: 100%; max-height: 80vh; overflow-y: auto; }
+  .modal-box h3 { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: .04em; margin-bottom: 14px; }
+  .modal-box p { font-size: 13px; color: var(--muted2); line-height: 1.7; margin-bottom: 12px; }
+  .modal-box p b { color: var(--text); }
+  @media (max-width: 380px) { .q-card, .result-card, .form-card { padding: 22px 16px; } .pase-row { grid-template-columns: 1fr 1fr; } .pase-row div:first-child { grid-column: 1 / -1; } }
+</style>
+<style>
+  /* ── Calculadora EM-i: piezas propias ── */
+  .duo { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 10px; }
+  .duo-c { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px 13px; }
+  .duo-c .nm { font-family: 'Bebas Neue', sans-serif; font-size: 24px; line-height: 1; letter-spacing: .02em; }
+  .duo-c .ty { font-size: 11px; color: var(--muted2); margin: 3px 0 10px; }
+  .duo-c .ln { display: flex; justify-content: space-between; gap: 6px; font-size: 12px; color: var(--muted2); padding: 5px 0; border-top: 1px solid var(--border); }
+  .duo-c .ln b { color: var(--text); font-weight: 600; text-align: right; }
+  .cubre { margin-top: 16px; background: rgba(0,229,155,.06); border: 1px solid rgba(0,229,155,.28); border-radius: 14px; padding: 16px; }
+  .cubre .big { font-family: 'Bebas Neue', sans-serif; font-size: 46px; line-height: 1; color: var(--green); }
+  .cubre p { font-size: 13px; color: var(--muted2); line-height: 1.55; margin-top: 6px; }
+  .cubre p b { color: var(--text); }
+  .mcard { margin-top: 14px; }
+  .mcard + .mcard { margin-top: 12px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 14px; }
+  .chips button { background: var(--surface); border: 1.5px solid var(--border); border-radius: 100px; padding: 9px 13px; font-size: 13px; color: var(--muted2); cursor: pointer; font-family: inherit; }
+  .chips button.sel { border-color: var(--accent); color: var(--text); }
+  .consent { font-size: 11.5px; color: var(--muted); line-height: 1.55; text-align: center; margin-top: 12px; }
+  .consent a { color: var(--accent); text-decoration: none; }
+  .ok-box { display: none; margin-top: 12px; background: rgba(0,229,155,.08); border: 1px solid rgba(0,229,155,.3); color: var(--green); border-radius: 12px; padding: 12px 14px; font-size: 13px; line-height: 1.5; }
+  .ok-box.on { display: block; }
+  .btn-sec { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; background: transparent; border: 1.5px solid var(--accent); color: var(--text); border-radius: 13px; padding: 15px 18px; font-size: 15px; font-weight: 600; cursor: pointer; text-decoration: none; font-family: inherit; }
+  .otra-ruta { display: block; text-align: center; margin-top: 14px; font-size: 13px; color: var(--muted2); text-decoration: none; }
+  .otra-ruta b { color: var(--accent); font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<div class="bg-glow"></div>
+<div class="xp-pop" id="xp"></div>
+
+<div class="wrapper">
+  <div class="topbar">
+    <span class="topbar-logo">AsesoresDigitalesG</span>
+    <div class="topbar-dot"></div>
+    <span class="topbar-logo">Geely Serdán Puebla</span>
+  </div>
+
+  <!-- ═══════════ INTRO ═══════════ -->
+  <div class="screen on" id="s-intro">
+    <div class="intro">
+      <div class="badge"><div class="badge-dot"></div><span>Calculadora híbridos enchufables EM-i</span></div>
+      <div class="headline">¿Cuánto dejarías<br>de gastar en<br><span class="hl">gasolina?</span></div>
+      <p class="sub">Con tu forma de manejar, calcula cuánto ahorrarías con la <b>EX5 EM-i</b> o la nueva <b>Monjaro EM-i</b>, y qué parte de tu mensualidad se paga sola con ese ahorro.</p>
+      <div class="perks">
+        <div class="perk">⚡ 60 segundos</div>
+        <div class="perk">👀 Ves tu resultado sin registrarte</div>
+      </div>
+    </div>
+    <button class="btn-main pulse" onclick="empezar()">Calcular mi ahorro →</button>
+
+    <p class="sec-label">Al terminar vas a saber</p>
+    <div class="gets">
+      <div class="get"><div class="get-ico">⛽</div><div><b>Cuánto dejas de gastar</b>Al mes, al año y en 5 años, según tus kilómetros y tu gasolina.</div></div>
+      <div class="get"><div class="get-ico">💳</div><div><b>Qué parte de tu mensualidad se paga sola</b>Comparamos tu ahorro con la mensualidad de la EM-i.</div></div>
+      <div class="get"><div class="get-ico">🔌</div><div><b>Cuántos de tus días serían 100% eléctricos</b>Y cuánto pagarías de luz por cargarla.</div></div>
+    </div>
+
+    <p class="sec-label">Las dos híbridas enchufables de Geely</p>
+    <div class="duo" id="duo"></div>
+
+    <button class="btn-main" style="margin-top:22px" onclick="empezar()">Calcular mi ahorro →</button>
+    <p class="legal">AsesoresDigitalesG · Geely Serdán · Puebla<br>Estimación de referencia con datos del fabricante.</p>
+  </div>
+
+  <!-- ═══════════ PREGUNTAS ═══════════ -->
+  <div class="screen" id="s-quiz">
+    <div class="progress-wrap">
+      <div class="progress-meta"><span id="p-txt">Paso 1 de 6</span><span class="xp" id="p-xp">0%</span></div>
+      <div class="progress-bar"><div class="progress-fill" id="p-fill" style="width:0%"></div></div>
+    </div>
+    <div id="q-box"></div>
+    <button class="btn-back" id="q-back" onclick="atras()">← Regresar</button>
+  </div>
+
+  <!-- ═══════════ ANALIZANDO ═══════════ -->
+  <div class="screen" id="s-analiza">
+    <div class="analiza">
+      <div class="radar"><span id="a-pct">0%</span></div>
+      <div class="q-title" style="margin-bottom:22px">Calculando tu ahorro…</div>
+      <div class="a-list" id="a-list"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════ RESULTADO ═══════════ -->
+  <div class="screen" id="s-reporte">
+    <div class="gate-head" style="padding-top:26px">
+      <div class="lvl" id="r-lvl"></div>
+      <div class="headline" id="r-head">Tu ahorro</div>
+      <p class="sub" id="r-sub"></p>
+    </div>
+
+    <div class="result-card">
+      <div class="result-tag" id="r-tag">Dejarías de gastar aprox.</div>
+      <div class="big-save" id="r-mes">$0<small>al mes</small></div>
+      <div class="fin-grid">
+        <div class="fin-item"><div class="fin-label">Al año</div><div class="fin-val green" id="r-anio">$0</div></div>
+        <div class="fin-item"><div class="fin-label">En 5 años</div><div class="fin-val gold" id="r-5">$0</div></div>
+        <div class="fin-item"><div class="fin-label">Litros que no compras</div><div class="fin-val" id="r-litros">0</div><div class="fin-sub">al año</div></div>
+        <div class="fin-item"><div class="fin-label">Días 100% eléctricos</div><div class="fin-val green" id="r-elec">0%</div><div class="fin-sub" id="r-elec-sub"></div></div>
+      </div>
+      <div class="bars" id="r-bars"></div>
+      <p class="note" id="r-supuestos"></p>
+    </div>
+
+    <div id="r-modelos"></div>
+
+    <a class="otra-ruta" href="index.html" onclick="this.href='index.html'+location.search">¿Prefieres ver otros Geely? <b>Te ayudamos a elegir →</b></a>
+    <p class="legal">Estimación de referencia. El ahorro real depende de cómo manejes, del precio de la gasolina y de tu tarifa de luz.</p>
+  </div>
+</div>
+
+<div class="modal" id="aviso" onclick="if(event.target===this)cerrarAviso()">
+  <div class="modal-box">
+    <h3>Aviso de privacidad</h3>
+    <p><b>Responsable:</b> AsesoresDigitalesG by Abel Zarate, asesor comercial autorizado de Geely Serdán, Puebla, México.</p>
+    <p><b>Datos que recopilamos:</b> nombre, número de WhatsApp, estado donde vives y tus respuestas de la calculadora.</p>
+    <p><b>Finalidad:</b> avisarte el precio oficial y la oferta de lanzamiento de la Monjaro EM-i, mandarte información de los modelos EM-i y agendar tu visita o prueba de manejo. Tus datos no se venden ni se comparten con terceros ajenos a Geely Serdán.</p>
+    <p><b>Tus derechos:</b> puedes pedir en cualquier momento que borremos tus datos escribiendo por WhatsApp.</p>
+    <button class="btn-main" onclick="cerrarAviso()">Entendido</button>
+  </div>
+</div>
+
+<script src="precios.js"></script>
+<script>
+// ══════════════════════════════════════════════════════════════
+// AJUSTES
+// ══════════════════════════════════════════════════════════════
+// Los precios y tasas viven en precios.js (se actualizan ahí cada mes)
+// Datos del fabricante. Monjaro EM-i: cuando se anuncie el precio oficial, ponlo en "precio" (ej. 849990)
+// y agrégala también a los modelos del quiz para que "Arma tu plan" la pueda calcular.
+const EMIS = {
+  ex5emi:  { nombre: 'EX5 EM-i', tipo: 'SUV familiar híbrida enchufable', kmElec: 105, kwhKm: 0.19, kml: 18, tanque: 50, plan: 'ex5emi', extra: 'Wallbox incluido' },
+  monjaro: { nombre: 'Monjaro EM-i', tipo: 'SUV premium híbrida enchufable · hasta 335 hp', kmElec: 92, kmTxt: '92 a 130 km', kwhKm: 0.21, kml: 17, tanque: 50, plan: 'monjaroemi', extra: '$20,000 de descuento de lanzamiento' }
+};
+const LOCALES = ['Puebla', 'Tlaxcala', 'Hidalgo', 'Veracruz'];
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwB-ylsX33ZGE918Ty3s7YK0ZLXHv0en4aFbg_X4d7ac9iZ2C7s6JD6lTtRyi_yc1Po/exec';
+const SEMANAS_MES = 4.33;
+const ENG_REF = 20, PLAZO_REF = 60;   // supuestos de la mensualidad de referencia
+
+const $ = id => document.getElementById(id);
+const pesos = n => '$' + Math.round(n).toLocaleString('es-MX');
+const miles = n => Math.round(n).toLocaleString('es-MX');
+const tasaDe = m => { const t = /([\d.]+)%/.exec(m.tasa || ''); return t ? parseFloat(t[1]) : 12; };
+const mensualidad = (monto, tasa, n) => { const r = tasa / 100 / 12; return r ? monto * r / (1 - Math.pow(1 + r, -n)) : monto / n; };
+function precioDe (k) { const e = EMIS[k]; if (e.plan && models[e.plan]) return { precio: models[e.plan].versions[0].price, tasa: tasaDe(models[e.plan]), ver: models[e.plan].versions[0].ver }; return e.precio ? { precio: e.precio, tasa: e.tasa, ver: '' } : null; }
+function menRef (k) { const p = precioDe(k); return p ? mensualidad(p.precio * (1 - ENG_REF / 100), p.tasa, PLAZO_REF) : null; }
+
+// ── Contador de pasos (solo lo ve el administrador en el CRM)
+const MARCADOS = {};
+function contar (p) { if (MARCADOS[p]) return; MARCADOS[p] = 1; try { navigator.sendBeacon(SCRIPT_URL, new Blob([JSON.stringify({ tipo: 'paso', pagina: 'emi', paso: p })], { type: 'text/plain' })); } catch (e) {} }
+const ORIGEN = (function () {
+  let o = {}; try { o = JSON.parse(sessionStorage.getItem('adg_origen') || '{}'); } catch (e) {}
+  const p = new URLSearchParams(location.search);
+  if (p.get('utm_source')) { o = { origen: p.get('utm_source').toLowerCase(), contenido: p.get('utm_content') || '', campana: p.get('utm_campaign') || '' }; try { sessionStorage.setItem('adg_origen', JSON.stringify(o)); } catch (e) {} }
+  if (!o.campana) o.campana = 'calculadora-em-i';
+  return o;
+})();
+contar('visita');
+
+// Tarjetas de las dos EM-i en la portada
+$('duo').innerHTML = Object.keys(EMIS).map(k => { const e = EMIS[k], p = precioDe(k);
+  return `<div class="duo-c"><div class="nm">${e.nombre}</div><div class="ty">${e.tipo}</div>
+    <div class="ln"><span>Eléctricos</span><b>${e.kmTxt || e.kmElec + ' km'}</b></div>
+    <div class="ln"><span>Precio</span><b>${p ? 'Desde ' + pesos(p.precio) : 'Se anuncia el 16 oct'}</b></div>
+    <div class="ln"><span>Extra</span><b>${e.extra}</b></div></div>`; }).join('');
+
+// ══════════════════════════════════════════════════════════════
+// PREGUNTAS
+// ══════════════════════════════════════════════════════════════
+const R = { km: 40, modelo: null, dias: null, auto: null, gas: null, carga: null };
+const PREGUNTAS = [
+  { k: 'modelo', titulo: '¿Cuál te interesa más?', sub: 'Si no sabes, compáralas: te mostramos las dos.', ops: [
+    { v: 'ex5emi', i: '🚙', t: 'EX5 EM-i', s: 'SUV familiar · ' + (precioDe('ex5emi') ? 'desde ' + pesos(precioDe('ex5emi').precio) : '') },
+    { v: 'monjaro', i: '🏔️', t: 'Monjaro EM-i', s: 'SUV premium · ' + (precioDe('monjaro') ? 'desde ' + pesos(precioDe('monjaro').precio) + ' · ' : '') + 'hasta 130 km eléctricos' },
+    { v: 'las2', i: '⚖️', t: 'Compárame las dos', s: 'Te enseñamos el ahorro de cada una' } ] },
+  { k: 'km', tipo: 'km', titulo: '¿Cuántos kilómetros manejas en un día normal?', sub: 'Cuenta ida y vuelta. Si no sabes exacto, aproxima.' },
+  { k: 'dias', titulo: '¿Cuántos días a la semana manejas?', sub: 'Así sabemos cuánto recorres al mes.', ops: [
+    { v: 5, i: '💼', t: 'Entre semana', s: 'Lunes a viernes' }, { v: 6, i: '📅', t: '6 días', s: 'Casi toda la semana' }, { v: 7, i: '🔁', t: 'Todos los días', s: 'Incluye fines de semana' } ] },
+  { k: 'auto', titulo: '¿Qué manejas hoy?', sub: 'Con esto calculamos cuánto gastas ahora en gasolina.', ops: [
+    { v: 14, i: '🚗', t: 'Sedán o compacto', s: 'Rinde alrededor de 14 km/l' }, { v: 10, i: '🚙', t: 'SUV mediana', s: 'Rinde alrededor de 10 km/l' },
+    { v: 7, i: '🛻', t: 'SUV grande o pickup', s: 'Rinde alrededor de 7 km/l' }, { v: 20, i: '🍃', t: 'Híbrido (sin enchufe)', s: 'Rinde alrededor de 20 km/l' },
+    { v: 10, i: '🤷', t: 'No tengo auto / no sé', s: 'Usamos una SUV mediana como referencia' } ] },
+  { k: 'gas', titulo: '¿Qué gasolina le pones?', sub: 'Precio promedio por litro en Puebla.', ops: [
+    { v: 24.5, i: '🟢', t: 'Magna', s: 'Alrededor de $24.50 por litro' }, { v: 26.5, i: '🔴', t: 'Premium', s: 'Alrededor de $26.50 por litro' }, { v: 24.5, i: '🤷', t: 'No sé', s: 'Usamos Magna como referencia' } ] },
+  { k: 'carga', titulo: '¿Dónde la cargarías?', sub: 'Se conecta como un celular. Esto cambia cuánto pagas de luz.', ops: [
+    { v: 'casa', i: '🏠', t: 'En mi casa', s: 'Tengo cochera o lugar con contacto' }, { v: 'trabajo', i: '🏢', t: 'En el trabajo o en plazas', s: 'Cargadores públicos o de la oficina' },
+    { v: 'nose', i: '🔌', t: 'Todavía no sé', s: 'Hacemos un cálculo conservador' } ] }
+];
+const CARGA = { casa: { luz: 2.5, dias: 1 }, trabajo: { luz: 4.5, dias: 0.8 }, nose: { luz: 3.5, dias: 0.7 } };
+let paso = 0, T0 = 0, ocupado = false;
+
+function empezar () { if (!T0) T0 = Date.now(); contar('inicio'); paso = 0; try { history.pushState({ calc: 1 }, '', location.href); } catch (e) {} ir('s-quiz'); pintarPregunta(); }
+window.addEventListener('popstate', () => { if (!$('s-quiz').classList.contains('on')) return; if (paso > 0) { atras(); history.pushState({ calc: 1 }, '', location.href); } else ir('s-intro'); });
+function ir (id) { document.querySelectorAll('.screen').forEach(s => s.classList.toggle('on', s.id === id)); window.scrollTo(0, 0); }
+function xp (txt) { const el = $('xp'); el.textContent = txt; el.classList.remove('go'); void el.offsetWidth; el.classList.add('go'); }
+function etiquetaKm (km) { return km <= 20 ? 'Trayectos cortos en la ciudad' : km <= 50 ? 'Ida y vuelta al trabajo' : km <= 100 ? 'Te mueves bastante' : 'Mucho camino: carretera seguido'; }
+
+function pintarPregunta () {
+  const q = PREGUNTAS[paso], pct = Math.round(paso / PREGUNTAS.length * 100);
+  $('p-txt').textContent = `Paso ${paso + 1} de ${PREGUNTAS.length}`; $('p-xp').textContent = pct + '%'; $('p-fill').style.width = pct + '%';
+  $('q-back').style.visibility = paso === 0 ? 'hidden' : 'visible';
+  const cuerpo = q.tipo === 'km'
+    ? `<div class="km-big" id="km-v">${R.km}<small>km</small></div><div class="km-tag" id="km-t">${etiquetaKm(R.km)}</div>
+       <input type="range" id="km-r" min="5" max="200" step="5" value="${R.km}" aria-label="Kilómetros al día">
+       <div class="quick">${[20, 40, 60, 100].map(v => `<button type="button" data-km="${v}">${v} km</button>`).join('')}</div>
+       <button class="btn-main" onclick="responder(R.km)">Continuar →</button>`
+    : `<div class="options">${q.ops.map((o, i) => `<button type="button" class="opt ${R[q.k + '_i'] === i ? 'sel' : ''}" onclick="elegir(${i})"><span class="opt-icon">${o.i}</span><span class="opt-body"><strong>${o.t}</strong><small>${o.s}</small></span><span class="opt-ring"></span></button>`).join('')}</div>`;
+  $('q-box').innerHTML = `<div class="q-card"><div class="q-step">Pregunta ${paso + 1}</div><div class="q-title">${q.titulo}</div><div class="q-sub">${q.sub}</div>${cuerpo}</div>`;
+  if (q.tipo === 'km') {
+    const r = $('km-r');
+    const pintar = () => { r.style.setProperty('--p', ((R.km - r.min) / (r.max - r.min) * 100) + '%'); $('km-v').innerHTML = R.km + '<small>km</small>'; $('km-t').textContent = etiquetaKm(R.km); document.querySelectorAll('[data-km]').forEach(b => b.classList.toggle('sel', +b.dataset.km === R.km)); };
+    r.addEventListener('input', () => { R.km = +r.value; pintar(); });
+    document.querySelectorAll('[data-km]').forEach(b => b.addEventListener('click', () => { R.km = +b.dataset.km; r.value = R.km; pintar(); }));
+    pintar();
+  }
+}
+function elegir (i) {
+  if (ocupado) return; ocupado = true;
+  const q = PREGUNTAS[paso]; R[q.k + '_i'] = i;
+  document.querySelectorAll('#q-box .opt').forEach((b, j) => b.classList.toggle('sel', j === i));
+  setTimeout(() => { ocupado = false; responder(q.ops[i].v, q.ops[i]); }, 240);
+}
+function responder (v, op) {
+  const q = PREGUNTAS[paso]; R[q.k] = v; if (op) R[q.k + '_t'] = op.t;
+  paso++; contar('p' + paso);
+  xp(['¡Bien!', 'Vas muy bien', 'Sigue así', 'Ya casi', 'Última', '¡Listo!'][paso - 1]);
+  if (paso < PREGUNTAS.length) pintarPregunta(); else analizar();
+}
+function atras () { if (paso > 0 && !ocupado) { paso--; pintarPregunta(); } }
+
+// ══════════════════════════════════════════════════════════════
+// CÁLCULO
+// ══════════════════════════════════════════════════════════════
+function calcular (k) {
+  const e = EMIS[k], carga = CARGA[R.carga] || CARGA.nose;
+  const kmMes = R.km * R.dias * SEMANAS_MES;
+  const litrosHoy = kmMes / R.auto, hoy = litrosHoy * R.gas;
+  const elecDia = Math.min(R.km, e.kmElec) * carga.dias, gasDia = R.km - elecDia;
+  const litrosEmi = gasDia / e.kml * R.dias * SEMANAS_MES;
+  const emi = elecDia * e.kwhKm * carga.luz * R.dias * SEMANAS_MES + litrosEmi * R.gas;
+  const mes = Math.max(0, hoy - emi);
+  return { k, e, hoy, emi, mes, anio: mes * 12, cinco: mes * 60, litrosAnio: Math.max(0, (litrosHoy - litrosEmi) * 12), diasElec: R.km <= e.kmElec ? Math.round(carga.dias * 100) : 0, luz: carga.luz, men: menRef(k) };
+}
+let CS = [];
+function analizar () {
+  const T1 = Date.now(); R.tiempo = Math.round((T1 - T0) / 1000);
+  CS = (R.modelo === 'las2' ? ['ex5emi', 'monjaro'] : [R.modelo]).map(calcular);
+  ir('s-analiza');
+  const pasos = ['Calculando tu gasto actual en gasolina', 'Simulando tus kilómetros en modo eléctrico', 'Aplicando la tarifa de luz para tu carga', 'Comparando con la mensualidad'];
+  $('a-list').innerHTML = pasos.map(t => `<div class="a-item"><i></i>${t}</div>`).join('');
+  const items = [...document.querySelectorAll('.a-item')]; let n = 0;
+  const t = setInterval(() => { if (n < items.length) items[n].classList.add('on'); n++; $('a-pct').textContent = Math.min(100, Math.round(n / items.length * 100)) + '%'; if (n > items.length) { clearInterval(t); mostrar(); } }, 480);
+}
+function animarNum (el, fin, fmt) { const t0 = performance.now(), dur = 1100; const f = t => { const p = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - p, 3); el.innerHTML = fmt(fin * e); if (p < 1) requestAnimationFrame(f); }; requestAnimationFrame(f); }
+
+function mostrar () {
+  contar('resultado');
+  const C = CS.slice().sort((a, b) => b.mes - a.mes)[0];      // la de mayor ahorro arriba
+  const nv = C.mes >= 3000 ? ['🔥 Ahorro alto', 'alto'] : C.mes >= 1500 ? ['⚡ Ahorro medio', 'medio'] : ['🌱 Ahorro inicial', 'base'];
+  $('r-lvl').textContent = nv[0]; $('r-lvl').className = 'lvl ' + nv[1];
+  $('r-head').innerHTML = CS.length > 1 ? 'Tu ahorro con<br><span class="hl">una EM-i</span>' : `Tu ahorro con la<br><span class="hl">${C.e.nombre}</span>`;
+  $('r-sub').innerHTML = C.diasElec >= 100 ? `Con <b>${R.km} km al día</b>, tu manejo diario cabe completo en modo eléctrico.` : C.diasElec > 0 ? `Con <b>${R.km} km al día</b>, la mayoría de tus días serían eléctricos.` : `Con <b>${R.km} km al día</b>, los primeros ${C.e.kmElec} km de cada día serían eléctricos.`;
+  $('r-tag').textContent = CS.length > 1 ? `Dejarías de gastar (${C.e.nombre})` : 'Dejarías de gastar aprox.';
+  animarNum($('r-mes'), C.mes, n => pesos(n) + '<small>al mes</small>');
+  animarNum($('r-anio'), C.anio, pesos); animarNum($('r-5'), C.cinco, pesos); animarNum($('r-litros'), C.litrosAnio, miles);
+  $('r-elec').textContent = C.diasElec + '%';
+  $('r-elec-sub').textContent = C.diasElec >= 100 ? 'Tu día normal sin gasolina' : C.diasElec > 0 ? 'Depende de qué tan seguido cargues' : 'El resto lo hace en modo híbrido';
+  const max = Math.max(...CS.map(c => c.hoy), 1);
+  $('r-bars').innerHTML = `<div><div class="bar-l"><span>Hoy en gasolina</span><b>${pesos(C.hoy)}/mes</b></div><div class="bar-t"><div class="bar-f hoy" data-w="${C.hoy / max * 100}"></div></div></div>` +
+    CS.map(c => `<div><div class="bar-l"><span>Con ${c.e.nombre} (luz + gasolina)</span><b>${pesos(c.emi)}/mes</b></div><div class="bar-t"><div class="bar-f emi" data-w="${Math.max(3, c.emi / max * 100)}"></div></div></div>`).join('');
+  setTimeout(() => document.querySelectorAll('[data-w]').forEach(b => b.style.width = b.dataset.w + '%'), 200);
+  $('r-supuestos').textContent = `Estimación con ${R.km} km al día, ${R.dias} días a la semana, gasolina a $${R.gas.toFixed(2)}/l y luz a $${C.luz.toFixed(2)}/kWh. Autonomía eléctrica y consumos según el fabricante.`;
+  // Una tarjeta por modelo: qué parte de la mensualidad se paga con el ahorro, y su siguiente paso
+  $('r-modelos').innerHTML = CS.map(c => {
+    const p = precioDe(c.k);
+    if (p && c.men) {
+      const cubre = Math.min(100, Math.round(c.mes / c.men * 100));
+      const url = `arma-tu-plan.html?auto=${c.e.plan}${location.search ? '&' + location.search.slice(1) : ''}`;
+      return `<div class="result-card mcard"><div class="result-tag">${c.e.nombre} · desde ${pesos(p.precio)}</div>
+        <div class="cubre"><div class="big">${cubre}%</div><p>de su mensualidad aproximada (<b>${pesos(c.men)}/mes</b> con ${ENG_REF}% de enganche a ${PLAZO_REF} meses) <b>se pagaría con lo que dejas de gastar en gasolina</b>.</p></div>
+        <a class="btn-main" style="display:flex;justify-content:center;margin-top:16px;text-decoration:none" href="${url}" onclick="contar('plan')">Ve tu mensualidad exacta y si te aprueban →</a></div>`;
+    }
+    return `<div class="result-card mcard"><div class="result-tag">${c.e.nombre} · precio oficial el 16 de octubre</div>
+      <p class="sub" style="margin:0 0 14px;font-size:13.5px">Ahorrarías <b>${pesos(c.mes)} al mes</b> en gasolina. Te avisamos por WhatsApp el precio oficial y la oferta de lanzamiento en cuanto salgan, con tu mensualidad calculada.</p>
+      <form id="av-form" novalidate>
+        <div class="inp-wrap"><span>👤</span><input class="inp" id="av-nombre" placeholder="Nombre y apellido" autocomplete="name"></div>
+        <div class="inp-wrap"><span>📱</span><input class="inp" id="av-tel" type="tel" inputmode="tel" placeholder="Tu WhatsApp (10 dígitos)" maxlength="20" autocomplete="tel"></div>
+        <div class="q-sub" style="margin:2px 0 8px">¿Dónde vives?</div>
+        <div class="chips" id="av-edo">${['Puebla', 'Tlaxcala', 'Veracruz', 'Hidalgo', 'CDMX', 'Estado de México', 'Otro'].map(e => `<button type="button" data-e="${e}">${e === 'Otro' ? 'Otro estado' : e}</button>`).join('')}</div>
+        <div class="err" id="av-err"></div>
+        <button type="submit" class="btn-sec">Avísame el precio de la Monjaro EM-i</button>
+        <p class="consent">Al tocar el botón aceptas que te escribamos por WhatsApp sobre la Monjaro EM-i. <a href="#" onclick="verAviso(event)">Aviso de privacidad</a></p>
+      </form>
+      <div class="ok-box" id="av-ok">✅ Listo. Te escribimos por WhatsApp en cuanto salga el precio oficial.</div></div>`;
+  }).join('');
+  const f = $('av-form'); if (f) prepararAviso(f);
+  ir('s-reporte');
+}
+
+// ── "Avísame el precio" de la Monjaro EM-i → lead en el CRM
+function normTel (v) { let t = String(v || '').replace(/\D/g, ''); if (t.length === 13 && t.startsWith('521')) t = t.slice(3); else if (t.length === 12 && t.startsWith('52')) t = t.slice(2); return t; }
+function verAviso (e) { e.preventDefault(); $('aviso').classList.add('on'); }
+function cerrarAviso () { $('aviso').classList.remove('on'); }
+function prepararAviso (f) {
+  let edo = '';
+  $('av-edo').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; edo = b.dataset.e; document.querySelectorAll('#av-edo button').forEach(x => x.classList.toggle('sel', x === b)); });
+  f.addEventListener('submit', e => {
+    e.preventDefault();
+    const err = $('av-err'); err.classList.remove('on');
+    const nombre = $('av-nombre').value.trim().replace(/\s+/g, ' '), tel = normTel($('av-tel').value);
+    $('av-nombre').classList.toggle('bad', nombre.length < 3); $('av-tel').classList.toggle('bad', tel.length !== 10);
+    if (nombre.length < 3 || tel.length !== 10 || !edo) { err.textContent = tel && tel.length !== 10 ? '⚠️ Tu WhatsApp debe tener 10 dígitos' : !edo && nombre.length >= 3 && tel.length === 10 ? '⚠️ Toca el estado donde vives' : '⚠️ Escribe tu nombre y tu WhatsApp'; err.classList.add('on'); return; }
+    const c = CS.find(x => x.k === 'monjaro');
+    const lead = {
+      fecha: new Date().toLocaleString('es-MX', { timeZone: 'America/Mexico_City' }), nombre, telefono: tel, perfil: '—', modelo: 'Geely Monjaro EM-i', otros_modelos: CS.length > 1 ? 'EX5 EM-i' : '',
+      ingreso: '', enganche: '', historial: '', mensualidad: '', acepto_privacidad: 'Sí', estado: edo, fuenteContacto: 'Calculadora EM-i',
+      notas: `⚡ Calculadora EM-i: quiere el precio oficial y la oferta de lanzamiento de la Monjaro EM-i. Maneja ~${R.km} km/día, ${R.dias} días/sem, hoy ${R.auto_t} con ${R.gas_t}; cargaría: ${R.carga_t}. Ahorro estimado: ${pesos(c.mes)}/mes.` + (CS.length > 1 ? ` También vio la EX5 EM-i (ahorro ${pesos(CS.find(x => x.k === 'ex5emi').mes)}/mes).` : ''),
+      tiempo_seg: R.tiempo || '', ...ORIGEN
+    };
+    let ok = false; try { ok = navigator.sendBeacon(SCRIPT_URL, new Blob([JSON.stringify(lead)], { type: 'text/plain' })); } catch (er) {}
+    if (!ok) { try { fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', keepalive: true, body: JSON.stringify(lead) }); ok = true; } catch (er) {} }
+    if (!ok) { err.textContent = '⚠️ No se pudo enviar. Revisa tu internet.'; err.classList.add('on'); return; }
+    contar('registro'); f.style.display = 'none'; $('av-ok').classList.add('on'); xp('¡Te avisamos!');
+  });
+}
+</script>
+</body>
+</html>

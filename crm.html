@@ -586,7 +586,9 @@ const CAMPOS = [
   ['motivoPerdida',47-1,'text'],
   ['bitacora',48-1,'json'],
   ['fechaCierre',49-1,'date'],
-  ['confianza',50-1,'text'],   // semáforo que pone el Apps Script al llegar el lead (solo lectura)
+  ['confianza',50-1,'text'],
+  ['prioridad',51-1,'text'],
+  ['carpeta',52-1,'text'],     // link a la carpeta de Drive con sus documentos y solicitud (Arma tu plan)   // 🔥/🟠/⚪ de los leads de "Arma tu plan" (lo pone el Apps Script)   // semáforo que pone el Apps Script al llegar el lead (solo lectura)
 ];
 const CAMPO_TIPO = Object.fromEntries(CAMPOS.map(c=>[c[0],c[2]]));
 const CAMPO_KEY  = Object.fromEntries(CAMPOS.map(c=>[c[0],c[3]||c[0]]));
@@ -935,10 +937,27 @@ function telHTML(l){
   if (n === 'rojo') return `<span class="chip bad" data-tip="${esc(motivo)}">🔴 Prob. falso</span>`;
   const tc = S(l).telefonoConsistente; return tc==='No' ? `<span class="chip bad" data-tip="El teléfono del inicio del test no coincide con el del final">Tel. sin verificar</span>` : '';
 }
+const esPrecal = l => S(l).fuenteContacto === 'Pre-calificación';
+const esCaliente = l => String(S(l).prioridad || '').startsWith('🔥');
+function precalHTML(l){
+  if (S(l).fuenteContacto === 'Auto a cuenta') return ' <span class="chip warn" data-tip="Pidió valuación de su auto para darlo a cuenta. Prometimos respuesta en menos de 24 h hábiles.">🚗 auto a cuenta</span>' + (S(l).carpeta ? ' <span class="chip good" data-tip="Subió fotos de su auto">📸 fotos</span>' : '');
+  if (S(l).fuenteContacto === 'Alerta de mensualidad') return ' <span class="chip brand" data-tip="Quiere que le avisen cuando baje la mensualidad">🔔 alerta</span>';
+  if (S(l).fuenteContacto === 'Calculadora EM-i') return ' <span class="chip brand" data-tip="Usó la calculadora EM-i y pidió el precio de la Monjaro EM-i">⚡ calculadora EM-i</span>';
+  if (!esPrecal(l)) return '';
+  const p = String(S(l).prioridad || ''), sol = String(S(l).notas || '').includes('📝'), docs = !!S(l).carpeta;
+  return (p.startsWith('🔥') ? ' <span class="chip bad" data-tip="Vive en la zona, buen perfil, quiere comprar este mes y su teléfono es confiable. Escríbele ya.">🔥 Caliente</span>'
+        : p.startsWith('🟠') ? ' <span class="chip warn" data-tip="Vive en la zona y quiere comprar en los próximos 3 meses">🟠 Tibio</span>'
+        : ' <span class="chip brand" data-tip="Llegó desde Arma tu plan (pre-calificación)">armó su plan</span>')
+    + (sol ? ' <span class="chip good" data-tip="Llenó su solicitud de crédito desde su celular">📝 solicitud lista</span>' : docs ? ' <span class="chip good" data-tip="Subió documentos desde su celular">📎 subió documentos</span>' : '');
+}
 function origenTexto(l){
   const s = S(l);
   if (s.origen) return redNombre(s.origen.toLowerCase()) + (s.contenido ? ` · ${s.contenido}` : '');
   if (s.fuenteContacto === 'Asesoría Personalizada') return 'Landing Asesoría';
+  if (s.fuenteContacto === 'Pre-calificación') return 'Arma tu plan';
+  if (s.fuenteContacto === 'Auto a cuenta') return 'Valúa tu auto';
+  if (s.fuenteContacto === 'Alerta de mensualidad') return 'Alerta de mensualidad';
+  if (s.fuenteContacto === 'Calculadora EM-i') return 'Calculadora EM-i';
   return '';
 }
 function telLimpio(l){ const t = String(l.telefono||'').replace(/\D/g,''); return t.length === 10 ? '52'+t : t; }
@@ -988,7 +1007,7 @@ function clasificar(l){
 function colaDe(leads){
   const grupos = {primer:[],vencido:[],cita:[],hoy:[],frio:[],sinplan:[]};
   leads.forEach(l => { const c = clasificar(l); if (c) grupos[c.k].push({l, ...c}); });
-  grupos.primer.sort((a,b) => (a.h??1e9) - (b.h??1e9));
+  grupos.primer.sort((a,b) => (esCaliente(b.l) - esCaliente(a.l)) || ((a.h??1e9) - (b.h??1e9)));   // 🔥 primero
   grupos.vencido.sort((a,b) => (siguientePaso(a.l)?.d||0) - (siguientePaso(b.l)?.d||0));
   grupos.cita.sort((a,b) => citaInfo(a.l).d - citaInfo(b.l).d);
   grupos.frio.sort((a,b) => (ultimoToque(a.l)||a.l.dt||0) - (ultimoToque(b.l)||b.l.dt||0));
@@ -1350,7 +1369,7 @@ function renderHoy(){
 // ══════════════════════════════════════════════════════════════
 // PANTALLA: LEADS
 // ══════════════════════════════════════════════════════════════
-const LF0 = () => ({q:'', zona: 'local', etapa:'', perfil:'', confianza:'', asesor:'', origen:'', sinAsignar:false, asesoria:false, sinPlan:false, test:false, cola:'', vista:'lista', orden:'reciente', limite:60});
+const LF0 = () => ({q:'', zona: 'local', etapa:'', perfil:'', confianza:'', asesor:'', origen:'', sinAsignar:false, asesoria:false, sinPlan:false, calientes:false, precal:false, test:false, cola:'', vista:'lista', orden:'reciente', limite:60});
 let LF = LF0();
 let SEL = new Set();
 let leadsShell = '';
@@ -1377,6 +1396,8 @@ function filtrarLeads(){
     if (LF.origen) { const o = (s.origen || (s.fuenteContacto==='Asesoría Personalizada'?'landing':'sin etiqueta')).toLowerCase(); if (o !== LF.origen) return false; }
     if (LF.sinAsignar && (s.asignado || !activo(l))) return false;
     if (LF.asesoria && s.fuenteContacto !== 'Asesoría Personalizada') return false;
+    if (LF.calientes && !esCaliente(l)) return false;
+    if (LF.precal && !esPrecal(l)) return false;
     if (LF.sinPlan && (!activo(l) || siguientePaso(l))) return false;
     if (q) {
       const hay = (l.nombre + ' ' + l.telefono + ' ' + l.modelo + ' ' + l.estado + ' ' + (s.contenido||'')).toLowerCase();
@@ -1415,6 +1436,8 @@ function renderLeads(){
       </div>
       <div class="filters">
         ${admin ? chip('sinAsignar','Sin asignar') : ''}
+        ${chip('calientes','🔥 Calientes','De Arma tu plan: viven en la zona, buen perfil, quieren comprar este mes y su teléfono es confiable')}
+        ${chip('precal','Armaron su plan','Llegaron desde la página Arma tu plan (pre-calificación)')}
         ${chip('asesoria','Pidió asesoría','Llegaron desde la landing de Asesoría Personalizada')}
         ${chip('sinPlan','Sin siguiente paso','Activos sin nada agendado')}
         ${LF.cola ? `<button class="fchip on" onclick="setLF('cola','')">${COLA[LF.cola].t} ✕</button>` : ''}
@@ -1430,7 +1453,7 @@ function renderLeadsResults(){
   const box = $('leads-results'); if (!box) return;
   const arr = ordenar(filtrarLeads());
   const admin = esAdmin();
-  const resumen = `<div class="result-line"><span>${plural(arr.length,'lead')}${LF.zona==='local'&&admin?' en zona local':''}</span>${(LF.q||LF.etapa||LF.perfil||LF.confianza||LF.asesor||LF.origen||LF.sinAsignar||LF.asesoria||LF.sinPlan||LF.cola)?`<button class="btn btn-sm btn-ghost" onclick="LF={...LF0(),vista:LF.vista};leadsShell='';render()">Quitar filtros</button>`:''}</div>`;
+  const resumen = `<div class="result-line"><span>${plural(arr.length,'lead')}${LF.zona==='local'&&admin?' en zona local':''}</span>${(LF.q||LF.etapa||LF.perfil||LF.confianza||LF.asesor||LF.origen||LF.sinAsignar||LF.asesoria||LF.calientes||LF.precal||LF.sinPlan||LF.cola)?`<button class="btn btn-sm btn-ghost" onclick="LF={...LF0(),vista:LF.vista};leadsShell='';render()">Quitar filtros</button>`:''}</div>`;
   const bulk = admin && SEL.size ? `<div class="bulk"><b>${plural(SEL.size,'seleccionado')}</b>
     <select class="inp" id="bulk-asesor" aria-label="Asesor"><option value="">Asignar a…</option>${asesores().map(u=>`<option value="${u.user}">${esc(u.nombre)} (${LEADS.filter(l=>S(l).asignado===u.user&&activo(l)).length} activos)</option>`).join('')}</select>
     <button class="btn btn-sm btn-primary" onclick="bulkAsignar()">Asignar y avisar por WhatsApp</button>
@@ -1469,7 +1492,7 @@ function renderLeadsResults(){
     </tr></thead><tbody>
       ${page.map(l => `<tr onclick="openFicha(${l.id})">
         ${admin ? `<td onclick="event.stopPropagation()"><input type="checkbox" ${SEL.has(l.id)?'checked':''} onchange="selUno(${l.id},this.checked)" aria-label="Seleccionar ${esc(l.nombre)}"></td>` : ''}
-        <td><div class="cell-name">${esc(l.nombre)}${l.test?' <span class="chip">prueba</span>':''}${S(l).fuenteContacto==='Asesoría Personalizada'?' <span class="chip brand">pidió asesoría</span>':''}${telHTML(l)}</div><div class="cell-sub">${sub(l)}</div></td>
+        <td><div class="cell-name">${esc(l.nombre)}${l.test?' <span class="chip">prueba</span>':''}${S(l).fuenteContacto==='Asesoría Personalizada'?' <span class="chip brand">pidió asesoría</span>':''}${precalHTML(l)}${telHTML(l)}</div><div class="cell-sub">${sub(l)}</div></td>
         <td class="c">${pfHTML(l.perfil)}</td>
         <td class="${l.local?'zone-l':'zone-f'}">${esc(l.estado||'—')}</td>
         <td>${laneHTML(l)}<div class="cell-sub">${ETAPAS[ETAPA_IDX[etapa(l)]].label}</div></td>
@@ -1573,6 +1596,7 @@ function renderFicha(){
     pfHTML(l.perfil),
     `<span class="chip ${l.local?'good':''}">${esc(l.estado || 'Sin estado')}${l.local?'':' · fuera de zona'}</span>`,
     origenTexto(l) ? `<span class="chip brand">${esc(origenTexto(l))}</span>` : '',
+    precalHTML(l).trim(),
     telHTML(l),
     s.telefonoConsistente==='Sí' ? `<span class="chip good" data-tip="El teléfono coincide en ambas veces que lo dio">Tel. verificado</span>` : '',
     `<span class="chip">Llegó ${hace(l.dt)}</span>`,
@@ -1617,6 +1641,7 @@ function renderFicha(){
       ${s.fechaAsignacion?`<p class="hint" style="margin-top:6px">Asignado ${hace(fromISO(s.fechaAsignacion))}${s.primerContacto?` · primer contacto en ${horasTexto(tiempoPrimerContacto(l))}`:' · aún sin primer contacto'}</p>`:''}
     </div>` : (ase ? '' : '')}
 
+    ${s.carpeta ? `<div class="f-sec"><div class="h2">Expediente del cliente</div><p class="hint" style="margin-bottom:8px">Subió sus documentos${String(s.notas||'').includes('📝')?' y llenó su solicitud':''} desde Arma tu plan.</p><a class="btn btn-primary" href="${esc(s.carpeta)}" target="_blank" rel="noopener">📁 Abrir expediente en Drive</a></div>` : ''}
     <div class="f-sec">
       <div class="h2">Lo que respondió en el test</div>
       <dl class="kv">
@@ -1951,17 +1976,22 @@ function embudoHTML(steps){
 // ══════════════════════════════════════════════════════════════
 let METRICAS = null, METRICAS_T = 0, METRICAS_CARGANDO = false;
 const PASOS_PAG = {
+  hub:    [['visita','Entraron al link de la bio (hub)'],['quiz','Eligieron "Ayúdame a elegir" (quiz)'],['plan','Eligieron "Ya sé cuál" (Arma tu plan)'],['evento','Tocaron el evento Monjaro EM-i'],['emi','Tocaron la calculadora EM-i'],['valua','Tocaron "¿Cuánto vale tu auto?"'],['asesoria','Tocaron Asesoría personalizada']],
   quiz:   [['visita','Entraron al quiz'],['inicio','Empezaron el test'],['p1','Respondieron la pregunta 1'],['p2','Respondieron la pregunta 2'],['tel','Dieron su WhatsApp a la mitad'],['tel_omitido','Prefirieron no dar su WhatsApp a la mitad'],['p3','Respondieron la pregunta 3'],['p4','Respondieron la pregunta 4'],['p5','Respondieron la pregunta 5'],['formulario','Llegaron al formulario final'],['registro','Se registraron'],['whatsapp','Tocaron el botón de WhatsApp']],
+  precal: [['visita','Entraron a la página'],['inicio','Tocaron "Armar mi plan"'],['modelo','Eligieron un auto'],['plan','Vieron su mensualidad'],['compara','Usaron el comparador Emgrand vs EX2'],['compara_cambio','Se cambiaron de modelo desde el comparador'],['p1','Pregunta 1 · estado'],['p2','Pregunta 2 · ingreso'],['p3','Pregunta 3 · cómo lo comprueba'],['p4','Pregunta 4 · historial'],['p5','Pregunta 5 · antigüedad'],['p6','Pregunta 6 · cuándo compra'],['formulario','Llegaron al registro'],['registro','Se registraron'],['docs','Abrieron "Sube tus documentos"'],['doc_subido','Subieron al menos un documento'],['solicitud','Enviaron su solicitud'],['cita','Agendaron cita o videollamada'],['alerta_abre','Abrieron "Avísame cuando baje"'],['alerta','Activaron su alerta de mensualidad'],['whatsapp','Tocaron el botón de WhatsApp']],
+  valua:  [['visita','Entraron a ¿Cuánto vale tu auto?'],['inicio','Empezaron'],['p1','Marca'],['p2','Modelo y año'],['p3','Kilómetros'],['p4','Cómo está'],['p5','Papeles'],['p6','Cuándo lo cambia'],['p7','Estado'],['formulario','Llegaron al registro'],['registro','Pidieron su valuación'],['fotos','Subieron fotos'],['plan','Pasaron a Arma tu plan']],
+  emi:    [['visita','Entraron a la calculadora'],['inicio','Empezaron'],['p1','Eligieron modelo'],['p2','Kilómetros'],['p3','Días'],['p4','Qué manejan hoy'],['p5','Gasolina'],['p6','Dónde cargarían'],['resultado','Vieron su ahorro'],['plan','Pasaron a Arma tu plan (EX5 EM-i)'],['registro','Pidieron aviso del precio (Monjaro EM-i)']],
   evento: [['visita','Entraron a la página'],['inicio','Empezaron la calculadora'],['p1','Pregunta 1'],['p2','Pregunta 2'],['p3','Pregunta 3'],['p4','Pregunta 4'],['p5','Pregunta 5'],['formulario','Llegaron al registro'],['registro','Se registraron'],['repetido','Intentaron registrarse otra vez'],['whatsapp','Tocaron el botón de WhatsApp']]
 };
 async function cargarMetricas(forzar){
   if (!esAdmin() || METRICAS_CARGANDO) return;
   if (!forzar && METRICAS && Date.now() - METRICAS_T < 5*60*1000) return;
   METRICAS_CARGANDO = true;
-  try { const r = await api({tipo:'metricas', sesion: SESION, dias: 30}); if (r.ok) { METRICAS = r.datos || {}; METRICAS_T = Date.now(); } else if (r.error === 'sesion') sesionVencida(); }
+  try { const r = await api({tipo:'metricas', sesion: SESION, dias: 120}); if (r.ok) { METRICAS = r.datos || {}; METRICAS_T = Date.now(); } else if (r.error === 'sesion') sesionVencida(); }
   catch (e) { dbg('Embudo no cargado: ' + e.message, 'warn'); }
   METRICAS_CARGANDO = false;
   if (pantalla === 'panel' && $('embudo-paginas')) $('embudo-paginas').innerHTML = embudoPaginasHTML();
+  if (pantalla === 'contenido' && $('embudo-venta')) renderContenido();
 }
 function sumaPasos(pagina, dias){
   const out = {}; const datos = (METRICAS || {})[pagina] || {};
@@ -1986,9 +2016,69 @@ function embudoPaginasHTML(){
     return `<div class="h2" style="font-size:15px;margin:4px 0 8px">${titulo}</div>
       <div style="overflow-x:auto"><table class="tbl" style="min-width:520px"><thead><tr><th>Paso</th><th class="r">Hoy</th><th class="r">7 días</th><th class="r">30 días</th><th>De los que entraron (30 días)</th></tr></thead><tbody>${filas}</tbody></table></div>`;
   };
+  // Pruebas A/B: compara la versión A contra la B de cada página
+  const pruebas = pagina => {
+    const datos = (METRICAS || {})[pagina] || {}, t = {};
+    Object.values(datos).forEach(o => Object.entries(o).forEach(([k, n]) => { const m = /^(\w+)\|([\w-]+):([AB])$/.exec(k); if (!m) return; const [, paso, id, v] = m; t[id] = t[id] || {A:{}, B:{}}; t[id][v][paso] = (t[id][v][paso] || 0) + n; }));
+    return Object.entries(t).map(([id, x]) => {
+      const fila = v => { const vis = x[v].visita || 0, reg = x[v].registro || 0; return `<tr style="cursor:default"><td>Versión ${v}</td><td class="r num">${vis}</td><td class="r num">${reg}</td><td class="r num"><b>${vis ? Math.round(reg / vis * 1000) / 10 + '%' : '—'}</b></td></tr>`; };
+      const tot = (x.A.visita || 0) + (x.B.visita || 0);
+      return `<div class="h2" style="font-size:14px;margin:14px 0 6px">Prueba A/B "${esc(id)}" · ${esc(pagina)}</div><table class="tbl" style="max-width:520px"><thead><tr><th>Versión</th><th class="r">Visitas</th><th class="r">Registros</th><th class="r">Conversión</th></tr></thead><tbody>${fila('A')}${fila('B')}</tbody></table>
+        <p class="hint" style="margin-top:6px">${tot < 200 ? `Todavía son pocas visitas (${tot}). Espera a tener al menos 100 por versión antes de decidir.` : 'Ya hay suficientes visitas para decidir: quédate con la versión que convierte más.'}</p>`;
+    }).join('');
+  };
+  const pruebasHTML = Object.keys(METRICAS || {}).map(pruebas).join('');
   const vacio = !Object.keys(METRICAS).length;
   return (vacio ? '<p class="hint" style="margin-bottom:10px">Todavía no hay datos: se empiezan a contar desde que subas las páginas nuevas.</p>' : '') +
-    tabla('quiz', 'Quiz') + '<div style="height:18px"></div>' + tabla('evento', 'Página del evento Monjaro EM-i');
+    tabla('hub', 'Link de la bio (hub): a dónde se va la gente') + '<div style="height:18px"></div>' + tabla('quiz', 'Quiz') + '<div style="height:18px"></div>' + tabla('precal', 'Arma tu plan (pre-calificación)') + '<div style="height:18px"></div>' + tabla('emi', 'Calculadora EM-i') + '<div style="height:18px"></div>' + tabla('valua', '¿Cuánto vale tu auto?') + '<div style="height:18px"></div>' + tabla('evento', 'Página del evento Monjaro EM-i') + (pruebasHTML ? '<div style="height:18px"></div><div class="h2" style="font-size:15px">Pruebas A/B en curso</div>' + pruebasHTML : '');
+}
+
+// ══════════════════════════════════════════════════════════════
+// ALERTAS DE MENSUALIDAD — lee los precios del mes de precios.js
+// (los mismos que actualizas con el boletín) y te dice a quién ya le alcanza.
+// ══════════════════════════════════════════════════════════════
+let PRECIOS = null, PRECIOS_MES = '', PRECIOS_CARGANDO = false;
+async function cargarPrecios(){
+  if (PRECIOS || PRECIOS_CARGANDO) return; PRECIOS_CARGANDO = true;
+  try {
+    const t = await (await fetch('precios.js?nc=' + Date.now())).text();
+    const r = new Function(t + '\n;return { MES, models };')();
+    PRECIOS = r.models; PRECIOS_MES = r.MES;
+  } catch (e) { PRECIOS = {}; dbg('No se pudieron leer los precios (precios.js): ' + e.message, 'warn'); }
+  PRECIOS_CARGANDO = false;
+  if (pantalla === 'panel' && $('alertas-mens')) $('alertas-mens').innerHTML = alertasHTML();
+}
+const RE_ALERTA = /\[alerta modelo=(\w+) ver=(\d+) eng=(\d+) plazo=(\d+) meta=(\d+)\]/;
+function mensualidadDe(modelo, ver, eng, plazo){
+  const m = (PRECIOS || {})[modelo]; if (!m) return null;
+  const v = m.versions[ver] || m.versions[0];
+  const t = /([\d.]+)%/.exec(m.tasa || ''), tasa = t ? parseFloat(t[1]) : 12, r = tasa / 1200, monto = v.price * (1 - eng / 100);
+  return { men: r ? monto * r / (1 - Math.pow(1 + r, -plazo)) : monto / plazo, nombre: `${m.name} ${v.ver}` };
+}
+function alertasActivas(){
+  return LEADS.filter(l => !l.test && activo(l) && RE_ALERTA.test(String(S(l).notas || ''))).map(l => {
+    const [, modelo, ver, eng, plazo, meta] = RE_ALERTA.exec(S(l).notas);
+    const c = mensualidadDe(modelo, +ver, +eng, +plazo);
+    return { l, modelo, ver: +ver, eng: +eng, plazo: +plazo, meta: +meta, c, alcanza: c && c.men <= +meta * 1.02 };
+  });
+}
+function alertasHTML(){
+  if (!PRECIOS) return '<div class="empty">Leyendo los precios del mes…</div>';
+  const a = alertasActivas(), si = a.filter(x => x.alcanza);
+  if (!a.length) return '<p class="hint">Todavía nadie ha activado una alerta. Aparecen aquí cuando alguien toca "Avísame cuando baje" en Arma tu plan.</p>';
+  const fila = x => `<tr style="cursor:default"><td><b>${esc(x.l.nombre)}</b>${x.l.local ? '' : ' <small class="hint">fuera de zona</small>'}</td><td>${esc(x.c ? x.c.nombre : x.modelo)}</td><td class="r num">${pesos(x.meta)}</td><td class="r num" style="${x.alcanza?'color:var(--good);font-weight:700':''}">${x.c ? pesos(x.c.men) : '—'}</td>
+    <td class="r">${x.alcanza ? `<button class="btn btn-sm btn-primary" onclick="avisarAlerta(${x.l.id})">${IC.wa.replace('<svg','<svg width=\"14\" height=\"14\"')} Avisarle</button>` : '<span class="hint">aún no</span>'}</td></tr>`;
+  return `<p class="hint" style="margin-bottom:10px">Precios de <b>${esc(PRECIOS_MES || 'este mes')}</b>, leídos de precios.js. ${si.length ? `<b style="color:var(--good)">${si.length} ya les alcanza</b> de ${a.length} alertas activas.` : `${a.length} alertas activas; a nadie le alcanza todavía.`}</p>
+    <div style="overflow-x:auto"><table class="tbl" style="min-width:560px"><thead><tr><th>Prospecto</th><th>Plan</th><th class="r">Puede pagar</th><th class="r">Mensualidad hoy</th><th></th></tr></thead><tbody>${si.concat(a.filter(x => !x.alcanza)).slice(0, 30).map(fila).join('')}</tbody></table></div>`;
+}
+const pesos = n => '$' + Math.round(n).toLocaleString('es-MX');
+function avisarAlerta(id){
+  const x = alertasActivas().find(a => a.l.id === id); if (!x) return;
+  const msg = `Hola ${firstName(x.l.nombre)}, te escribo de Geely Serdán. Te teníamos en la alerta del ${x.c.nombre}: con las promociones de ${PRECIOS_MES || 'este mes'} quedó en ${pesos(x.c.men)} al mes (${x.eng}% de enganche a ${x.plazo} meses). ¿Quieres que te arme el plan?`;
+  window.open(`https://wa.me/${telLimpio(x.l)}?text=${encodeURIComponent(msg)}`, '_blank');
+  const notas = String(S(x.l).notas || '').replace('[alerta ', '[alerta-avisada ');
+  guardar(id, {notas, ultimoContacto: isoHora(new Date())}, {log:`🔔 Se le avisó que el ${x.c.nombre} ya quedó en ${pesos(x.c.men)}/mes`, k:'c'});
+  if ($('alertas-mens')) $('alertas-mens').innerHTML = alertasHTML();
 }
 
 function renderPanel(){
@@ -2011,12 +2101,14 @@ function renderPanel(){
   if (!esContenido()) {
     const activosLoc = reales.filter(l => l.local && activo(l));
     const sinA = activosLoc.filter(l => !S(l).asignado);
+    const calSinA = sinA.filter(esCaliente);
     const sinTocar = reales.filter(l => S(l).asignado && activo(l) && etapa(l)==='nuevo' && !tocado(l) && horasDesde(refAsignacion(l)) > HORAS_PRIMER_CONTACTO);
     const porAse = {}; sinTocar.forEach(l => { const n = nombreAsesor(S(l).asignado); porAse[n] = (porAse[n]||0)+1; });
     const venc = reales.filter(l => activo(l) && siguientePaso(l)?.estado === 'vencido');
     const citas = reales.filter(l => activo(l) && (()=>{ const c = citaInfo(l); return c && c.dd >= 0 && c.dd <= 2; })());
     const sinPlan = reales.filter(l => activo(l) && contactado(l) && !siguientePaso(l));
     const alerts = [
+      ...(calSinA.length ? [[calSinA.length, '🔥 Leads calientes sin asignar', 'Quieren comprar este mes y tienen buen perfil. Asígnalos ya.', `irLeads({sinAsignar:true,calientes:true})`, 'Asignar', 'bad']] : []),
       [sinA.length, 'Leads locales sin asignar', 'Cada hora sin asesor baja la probabilidad de que contesten.', `irLeads({sinAsignar:true})`, 'Asignar', 'bad'],
       [sinTocar.length, `Asignados hace más de ${HORAS_PRIMER_CONTACTO} h sin primer contacto`, Object.entries(porAse).sort((a,b)=>b[1]-a[1]).map(([n,c])=>`${n} (${c})`).join(', ') || 'Nadie', `irLeads({cola:'primer'})`, 'Ver', 'bad'],
       [venc.length, 'Pasos vencidos', 'Seguimientos que se quedaron sin hacer.', `irLeads({cola:'vencido'})`, 'Ver', 'warn'],
@@ -2027,6 +2119,12 @@ function renderPanel(){
       <span class="big" style="color:${n?`var(--${tone})`:'var(--ink-3)'}">${n}</span>
       <div style="min-width:0"><div class="t">${t}</div><div class="d">${esc(d)}</div></div>
       ${n ? `<button class="btn btn-sm" onclick="${fn}">${b}</button>` : '<span class="chip good">Al día</span>'}</div>`).join('')}</div></div>`;
+  }
+
+  // ── Alertas de mensualidad (solo administrador) ──
+  if (esAdmin()) {
+    cargarPrecios();
+    html += `<div class="block" style="margin-top:16px"><div class="h2-row"><div class="h2">🔔 Alertas de mensualidad</div><span class="hint">A quién ya le alcanza con los precios del mes</span></div><div id="alertas-mens">${alertasHTML()}</div></div>`;
   }
 
   // ── Indicadores del periodo ──
@@ -2207,9 +2305,9 @@ const ORDEN_ENG = ['Sin enganche aún','Menos de $30,000','$30,000–$60,000','M
 const ORDEN_HIS = ['Limpio y al corriente','Deudas menores al corriente','Sin historial previo','Retrasos o deudas sin pagar'];
 const ORDEN_ING = ['Menos de $12,000','$12,000–$20,000','$20,000–$35,000','Más de $35,000'];
 const REDES = [['tiktok','TikTok'],['instagram','Instagram'],['facebook','Facebook'],['youtube','YouTube'],['whatsapp','WhatsApp'],['google','Google'],['otro','Otro']];
-let LB = {red:'tiktok', destino:'quiz', contenido:'', campana:''};
+let LB = {red:'tiktok', destino:'hub', contenido:'', campana:'', auto:''};
 
-function fuenteDe(l){ const s = S(l); if (s.origen) return s.origen.toLowerCase(); if (s.fuenteContacto === 'Asesoría Personalizada') return 'landing asesoría'; return 'sin etiqueta'; }
+function fuenteDe(l){ const s = S(l); if (s.origen) return s.origen.toLowerCase(); if (s.fuenteContacto === 'Asesoría Personalizada') return 'landing asesoría'; if (s.fuenteContacto === 'Pre-calificación') return 'arma tu plan'; if (s.fuenteContacto === 'Auto a cuenta') return 'valúa tu auto'; if (s.fuenteContacto === 'Calculadora EM-i') return 'calculadora em-i'; if (s.fuenteContacto === 'Alerta de mensualidad') return 'alerta de mensualidad'; return 'sin etiqueta'; }
 const redNombre = k => (REDES.find(r => r[0]===k) || [k, k.charAt(0).toUpperCase()+k.slice(1)])[1];
 function contar(arr, fn){ const o = {}; arr.forEach(x => { const k = fn(x); if (k) o[k] = (o[k]||0)+1; }); return o; }
 function ordenado(obj, orden){ return orden ? orden.filter(k => obj[k]).map(k => [k, obj[k]]).concat(Object.entries(obj).filter(([k]) => !orden.includes(k))) : Object.entries(obj).sort((a,b) => b[1]-a[1]); }
@@ -2281,20 +2379,61 @@ function heatmap(leads){
 }
 
 function slug(s){ return String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,60); }
+const DESTINOS = [['hub','Link de la bio (hub)','hub.html'],['quiz','Quiz · ayúdame a elegir',''],['plan','Arma tu plan · ya sé cuál','arma-tu-plan.html'],
+  ['emi','Calculadora EM-i','ahorro-em-i.html'],['valua','¿Cuánto vale tu auto?','valua-tu-auto.html'],['landing','Asesoría personalizada','asesoria-personalizada.html'],['evento','Evento Monjaro EM-i','evento-monjaro.html']];
+const AUTOS_LINK = [['','Sin modelo (elige la persona)'],['monjaroemi','Monjaro EM-i'],['emgrand','Emgrand'],['ex2','EX2'],['ex5emi','EX5 EM-i'],['coolray_l','Coolray Lite'],['new_coolray','New Coolray'],['cityray','Cityray'],['gx3pro','GX3 Pro'],['starray26','Starray'],['ex5','EX5'],['okavango','Okavango'],['monjaro','Monjaro']];
 function lbURL(){
-  const base = LB.destino === 'landing' ? LANDING_URL : QUIZ_URL;
+  const base = QUIZ_URL + ((DESTINOS.find(d => d[0] === LB.destino) || DESTINOS[1])[2]);
   const p = new URLSearchParams({utm_source: LB.red, utm_medium: 'organico'});
   if (LB.contenido) p.set('utm_content', slug(LB.contenido));
   if (LB.campana) p.set('utm_campaign', slug(LB.campana));
+  if (LB.destino === 'plan' && LB.auto) p.set('auto', LB.auto);
   return `${base}?${p.toString()}`;
 }
-function lbUpdate(){ LB.red = $('lb-red').value; LB.destino = $('lb-dest').value; LB.contenido = $('lb-cont').value; LB.campana = $('lb-camp').value; $('lb-out').textContent = lbURL(); }
+function lbUpdate(){ LB.red = $('lb-red').value; LB.destino = $('lb-dest').value; LB.contenido = $('lb-cont').value; LB.campana = $('lb-camp').value; LB.auto = $('lb-auto') ? $('lb-auto').value : ''; $('lb-auto-w').style.display = LB.destino === 'plan' ? '' : 'none'; $('lb-out').textContent = lbURL(); }
 function lbCopiar(){ const u = lbURL(); (navigator.clipboard ? navigator.clipboard.writeText(u) : Promise.reject()).then(() => toast('Link copiado')).catch(() => { prompt('Copia el link:', u); }); }
+
+// ══════════════════════════════════════════════════════════════
+// EMBUDO HASTA LA VENTA — la métrica que decide: citas por cada 100 visitas
+// ══════════════════════════════════════════════════════════════
+const PAGINAS_LEAD = [['quiz','Quiz'],['precal','Arma tu plan'],['emi','Calculadora EM-i'],['alerta','Alerta de mensualidad'],['valua','¿Cuánto vale tu auto?'],['evento','Evento Monjaro EM-i'],['asesoria','Asesoría personalizada']];
+function paginaDe(l){
+  const f = String(S(l).fuenteContacto || '');
+  if (f === 'Pre-calificación') return 'precal';
+  if (f === 'Lanzamiento Monjaro EM-i') return 'evento';
+  if (f === 'Asesoría Personalizada') return 'asesoria';
+  if (f === 'Alerta de mensualidad') return 'alerta';
+  if (f === 'Auto a cuenta') return 'valua';
+  if (f === 'Calculadora EM-i') return 'emi';
+  if (f === 'Quiz incompleto') return '';
+  return 'quiz';
+}
+const tieneCita = l => S(l).citaAgenciaAgendada > 0 || S(l).videollamadasAgendadas > 0 || nivelCiclo(l) >= 4;
+function visitasEnRango(pagina, r){
+  const datos = (METRICAS || {})[pagina]; if (!datos) return null;
+  let t = 0; Object.entries(datos).forEach(([dia, o]) => { const [y,m,d] = dia.split('-').map(Number); if (enRango(new Date(y, m-1, d, 12), r)) t += (o.visita || 0); });
+  return t;
+}
+function embudoVentaHTML(enPer, r){
+  const admin = esAdmin();
+  const filas = PAGINAS_LEAD.map(([k, t]) => {
+    const g = enPer.filter(l => paginaDe(l) === k);
+    const v = admin ? visitasEnRango(k, r) : null;
+    const citas = g.filter(tieneCita).length;
+    return {k, t, v, leads: g.length, loc: g.filter(l => l.local).length, con: g.filter(contactado).length, citas, ventas: g.filter(l => etapa(l) === 'cerrado').length};
+  }).filter(f => f.leads || f.v);
+  if (!filas.length) return '<div class="empty">Todavía no hay datos en este periodo.</div>';
+  const c100 = f => f.v ? (Math.round(f.citas / f.v * 1000) / 10) + '' : '—';
+  return `<div style="overflow-x:auto"><table class="tbl" style="min-width:720px"><thead><tr><th>Página</th>${admin?'<th class="r">Visitas</th>':''}<th class="r">Leads</th><th class="r">Locales</th><th class="r">Contactados</th><th class="r">Citas</th><th class="r">Ventas</th>${admin?'<th class="r" data-tip="La métrica para decidir qué página funciona mejor">Citas por 100 visitas</th>':''}</tr></thead>
+    <tbody>${filas.map(f => `<tr style="cursor:default"><td><b>${esc(f.t)}</b></td>${admin?`<td class="r num">${f.v ?? '—'}</td>`:''}<td class="r num">${f.leads}${admin&&f.v?` <small class="hint">${pct(f.leads,f.v)}%</small>`:''}</td><td class="r num">${f.loc}</td><td class="r num">${f.con} <small class="hint">${pct(f.con,f.leads)}%</small></td><td class="r num">${f.citas} <small class="hint">${pct(f.citas,f.leads)}%</small></td><td class="r num">${f.ventas}</td>${admin?`<td class="r num"><b>${c100(f)}</b></td>`:''}</tr>`).join('')}</tbody></table></div>
+    ${admin ? '<p class="hint" style="margin-top:10px">Las visitas se cuentan desde que subiste el contador a cada página. Compara páginas con <b>citas por 100 visitas</b>: una página puede traer más leads, pero de peor calidad.</p>' : ''}`;
+}
 
 function renderContenido(){
   const el = $('s-contenido');
   const r = rango(PERIODO);
   setTitulo('Contenido', `De dónde llega el tráfico y qué pide · ${r.txt}`, segPeriodo());
+  if (esAdmin() && !METRICAS) cargarMetricas();
   const enPer = LEADS.filter(l => !l.test && enRango(l.dt, r));
   const loc = enPer.filter(l => l.local);
   const tagged = enPer.filter(l => S(l).origen);
@@ -2304,7 +2443,7 @@ function renderContenido(){
     return {k, c, loc: gl.length, sa: gl.filter(esSA).length, con: g.filter(contactado).length, cie: g.filter(l=>etapa(l)==='cerrado').length}; });
   // Contenidos
   const conts = ordenado(contar(tagged.filter(l => S(l).contenido), l => S(l).origen.toLowerCase()+'|'+S(l).contenido)).map(([k, c]) => { const [red, cont] = k.split('|'); const g = tagged.filter(l => S(l).origen.toLowerCase()===red && S(l).contenido===cont); const gl = g.filter(l=>l.local);
-    return {red, cont, c, loc: gl.length, sa: gl.filter(esSA).length, cie: g.filter(l=>etapa(l)==='cerrado').length}; }).sort((a,b) => b.loc - a.loc || b.c - a.c).slice(0, 12);
+    return {red, cont, c, loc: gl.length, sa: gl.filter(esSA).length, cit: g.filter(tieneCita).length, cie: g.filter(l=>etapa(l)==='cerrado').length}; }).sort((a,b) => b.loc - a.loc || b.c - a.c).slice(0, 12);
   // Zona por mes
   const meses = ultimosMeses(6);
   const zonaMes = meses.map(m => ({l: mesLabel(m), vals:[LEADS.filter(l=>!l.test&&l.mes===m&&l.local).length, LEADS.filter(l=>!l.test&&l.mes===m&&!l.local).length]}));
@@ -2323,6 +2462,8 @@ function renderContenido(){
       <div class="tile"><div class="tile-l">Con origen etiquetado</div><div class="tile-v num">${pct(tagged.length, enPer.length)}%</div><div class="tile-s">${tagged.length ? 'sabemos de qué red llegaron' : 'empieza a usar los links de abajo'}</div></div>
     </div>
 
+    <div class="block" style="margin-top:16px" id="embudo-venta"><div class="h2-row"><div class="h2">Embudo hasta la venta, por página</div><span class="hint">${r.txt}</span></div>${embudoVentaHTML(enPer, r)}</div>
+
     <div class="block" style="margin-top:16px"><div class="h2-row"><div class="h2">Lo que dicen los datos</div><span class="hint">Lecturas automáticas · ${r.txt}</span></div>
       ${lecturas(enPer, r).map(x => `<div class="insight"><span class="ico">${IC.bulb}</span><div><b>${esc(x.t)}</b><p>${esc(x.p)}</p>${x.b?`<div class="basis">Con base en ${esc(x.b)}</div>`:''}</div></div>`).join('')}
     </div>
@@ -2334,7 +2475,7 @@ function renderContenido(){
     </div>
 
     <div class="block" style="margin-top:16px"><div class="h2-row"><div class="h2">Qué contenido trae compradores</div><span class="hint">Ordenado por leads locales, no por vistas</span></div>
-      ${conts.length ? `<div style="overflow-x:auto"><table class="tbl" style="min-width:560px"><thead><tr><th>Contenido</th><th>Red</th><th class="r">Leads</th><th class="r">Locales</th><th class="r">Locales S/A</th><th class="r">Cierres</th></tr></thead><tbody>${conts.map(c => `<tr style="cursor:default"><td><b>${esc(c.cont)}</b></td><td>${esc(redNombre(c.red))}</td><td class="r num">${c.c}</td><td class="r num">${c.loc}</td><td class="r num">${c.sa}</td><td class="r num" style="${c.cie?'color:var(--good);font-weight:700':''}">${c.cie}</td></tr>`).join('')}</tbody></table></div>`
+      ${conts.length ? `<div style="overflow-x:auto"><table class="tbl" style="min-width:560px"><thead><tr><th>Contenido</th><th>Red</th><th class="r">Leads</th><th class="r">Locales</th><th class="r">Locales S/A</th><th class="r">Citas</th><th class="r">Cierres</th></tr></thead><tbody>${conts.map(c => `<tr style="cursor:default"><td><b>${esc(c.cont)}</b></td><td>${esc(redNombre(c.red))}</td><td class="r num">${c.c}</td><td class="r num">${c.loc}</td><td class="r num">${c.sa}</td><td class="r num">${c.cit}</td><td class="r num" style="${c.cie?'color:var(--good);font-weight:700':''}">${c.cie}</td></tr>`).join('')}</tbody></table></div>`
         : '<div class="empty"><b>Aún no hay contenidos etiquetados</b>Cuando los links lleven el nombre del video, aquí verás cuál trae gente que sí compra.</div>'}
     </div>
 
@@ -2365,12 +2506,13 @@ function renderContenido(){
       <p class="lead-in" style="margin:6px 0 16px">Usa un link distinto en la bio y en cada publicación. Así el CRM sabe qué red y qué video trajo a cada lead, y esta pantalla te dice cuál trae compradores.</p>
       <div class="grid2" style="gap:12px">
         <label class="field"><span>Red</span><select class="inp" id="lb-red" onchange="lbUpdate()">${REDES.map(([k,t])=>`<option value="${k}" ${LB.red===k?'selected':''}>${t}</option>`).join('')}</select></label>
-        <label class="field"><span>A dónde lleva</span><select class="inp" id="lb-dest" onchange="lbUpdate()"><option value="quiz" ${LB.destino==='quiz'?'selected':''}>Test (quiz)</option><option value="landing" ${LB.destino==='landing'?'selected':''}>Asesoría Personalizada</option></select></label>
+        <label class="field"><span>A dónde lleva</span><select class="inp" id="lb-dest" onchange="lbUpdate()">${DESTINOS.map(([k,t])=>`<option value="${k}" ${LB.destino===k?'selected':''}>${t}</option>`).join('')}</select></label>
+        <label class="field" id="lb-auto-w" style="${LB.destino==='plan'?'':'display:none'}"><span>Abrir directo en el modelo (para videos de un solo auto)</span><select class="inp" id="lb-auto" onchange="lbUpdate()">${AUTOS_LINK.map(([k,t])=>`<option value="${k}" ${LB.auto===k?'selected':''}>${t}</option>`).join('')}</select></label>
         <label class="field"><span>Nombre del contenido</span><input class="inp" id="lb-cont" value="${esc(LB.contenido)}" placeholder="Ej. bio, ex2-enganche-bajo, coolray-vs-mg" oninput="lbUpdate()"></label>
         <label class="field"><span>Campaña (opcional)</span><input class="inp" id="lb-camp" value="${esc(LB.campana)}" placeholder="Ej. octubre-2026" oninput="lbUpdate()"></label>
       </div>
       <div class="linkbox" style="margin-top:4px"><code id="lb-out">${esc(lbURL())}</code><button class="btn btn-primary" onclick="lbCopiar()">${IC.copy} Copiar</button></div>
-      <p class="hint" style="margin-top:10px">Tip: usa nombres cortos y siempre iguales para el mismo video (por ejemplo <b>ex2-enganche-bajo</b>). Para la bio usa <b>bio</b>.</p>
+      <p class="hint" style="margin-top:10px">Tip: usa nombres cortos y siempre iguales para el mismo video (por ejemplo <b>ex2-enganche-bajo</b>). Para la bio usa <b>bio</b> y manda al hub. Si el video habla de un solo modelo, manda a "Arma tu plan" con ese modelo: la página abre directo en él.</p>
     </div>`;
 }
 </script>
